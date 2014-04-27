@@ -30,8 +30,6 @@ vi a;
 
 void run()
 {
-    readln(n);
-    a.resize(n);
     readln(a);
     sort(a.begin(), a.end());
     writeln(a);
@@ -76,15 +74,19 @@ void print(string a){printf("%s ", a.c_str());}
 void print(long long a){printf("%lld ", a);}
 void print(unsigned long a){printf("%ld ", a);}
 void print(char a){printf("%c ", a);}
-void print(vector<int>& a){for(int i = 0; i < a.size(); ++i)printf("%d ", a[i]);}
-void print(vector<vector<int>>& a){for(int i = 0; i < a.size(); ++i)writeln(a[i]);}
+template<class Type>
+void print(vector<Type>& a){for(int i = 0; i < a.size(); ++i)print(a[i]);}
+template<class Type>
+void print(vector<vector<Type>>& a){for(int i = 0; i < a.size(); ++i)writeln(a[i]);}
 void read(double &a){scanf("%lf", &a);}
 void read(int &a){scanf("%d", &a);}
 void read(string &a){cin>>a;}
 void read(long long &a){scanf("%lld", &a);}
 void read(char &a){scanf("%c", &a);}
-void read(vector<int> &a){for(int i = 0; i < a.size(); ++i)scanf("%d", &a[i]);}
-void read(vector<vector<int>> &a){for(int i = 0; i < a.size(); ++i)readln(a[i]);}
+template<class Type>
+void read(vector<Type> &a){if (a.size() == 0){int n; read(n); a.resize(n);}for(int i = 0; i < a.size(); ++i)read(a[i]);}
+template<class Type>
+void read(vector<vector<Type>> &a){for(int i = 0; i < a.size(); ++i)readln(a[i]);}
 template <class Head, class... Tail>
 void writeln(Head head, Tail... tail){print(head);writeln(tail...);}
 template <class Head, class... Tail>
