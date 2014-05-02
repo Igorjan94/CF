@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <ctime>
 
 using namespace std;
 
@@ -24,22 +25,29 @@ double passiveSearch()
 {
     double x = l, val = l;
     double mn = f(x), temp;
+    int countOfOperations = 0;
+    double start = clock();
     while (x <= r)
     {
+        countOfOperations++;
         temp = f(x);
         if (temp < mn)
             mn = temp,
             val = x;
         x += eps;
     }
+    cout << "count of operations = " << countOfOperations << endl << "time = " << (clock() - start) / CLOCKS_PER_SEC << endl;
     return val;
 }
 
 double dihotomia()
 {
     double c, d, a = l, b = r;
+    int countOfOperations = 0;
+    double start = clock();
     do
     {
+        countOfOperations++;
         c = a + (b - a) / 2 - delta / 2;
         d = a + (b - a) / 2 + delta / 2;
         if (f(c) >= f(d))
@@ -48,14 +56,18 @@ double dihotomia()
             b = d;
     }
     while (b - a > 2 * eps);
+    cout << "count of operations = " << countOfOperations << endl << "time = " << (clock() - start) / CLOCKS_PER_SEC << endl;
     return a + (b - a) / 2;
 }
 
 double fi()
 {
     double c, d, a = l, b = r;
+    int countOfOperations = 0;
+    double start = clock();
     do
     {
+        countOfOperations++;
         c = a + (3 - sqrt(5)) * (b - a) / 2;
         d = b - (3 - sqrt(5)) * (b - a) / 2;
         if (f(c) >= f(d))
@@ -64,14 +76,18 @@ double fi()
             b = d;
     }
     while (b - a > 2 * eps);
+    cout << "count of operations = " << countOfOperations << endl << "time = " << (clock() - start) / CLOCKS_PER_SEC << endl;
     return a + (b - a) / 2;
 }
 
 double tangents()
 {
     double c, d, a = l, b = r;
+    int countOfOperations = 0;
+    double start = clock();
     do
     {
+        countOfOperations++;
         c = (f(b) - f(a) + ff(a) * a - ff(b) * b) / (ff(a) - ff(b));
         if (ff(c) >= 0)
             b = c;
@@ -79,69 +95,50 @@ double tangents()
             a = c;
     }
     while (b - a > 2 * eps);
+    cout << "count of operations = " << countOfOperations << endl << "time = " << (clock() - start) / CLOCKS_PER_SEC << endl;
     return c;
 }
 
 double newton()
 {
     double xk, xprev = l;
+    int countOfOperations = 0;
+    double start = clock();
     do
     {
+        countOfOperations++;
         xk = xprev - ff(xprev) / fff(xprev);
         xprev = xk;
     }
     while (fabs(ff(xk)) > eps);
+    cout << "count of operations = " << countOfOperations << endl << "time = " << (clock() - start) / CLOCKS_PER_SEC << endl;
     return xk;
 }
 
 double chord()
 {
     double xk, xprev = r, xprevprev = l;
+    int countOfOperations = 0;
+    double start = clock();
     do
     {
+        countOfOperations++;
         xk = xprev - (xprev - xprevprev) * ff(xprev) / (ff(xprev) - ff(xprevprev));
         xprevprev = xprev;
         xprev = xk;
     }
     while (fabs(ff(xk)) > eps);
-    return xk;
-}
-
-double grad_step_before()
-{
-    double xk, xprev = l, alpha = 0.05;
-    do
-    {
-        xk = xprev - ff(xprev) * alpha;
-        xprev = xk;
-    }
-    while (fabs(ff(xk)) > eps);
-    return xk;
-}
-
-double grad_step_drob()
-{
-    double xk, xprev = l, alpha = 0.9;
-    do
-    {
-        while (f(xk) - f(xprev) > -alpha * ff(xprev) * ff(xprev) * eps)
-            xk = xprev - ff(xprev) * alpha,
-            alpha *= 0.9;
-        xprev = xk;
-    }
-    while (fabs(ff(xk)) > eps);
+    cout << "count of operations = " << countOfOperations << endl << "time = " << (clock() - start) / CLOCKS_PER_SEC << endl;
     return xk;
 }
 
 int main()
 {
-    cout << passiveSearch() << endl;
-    cout << dihotomia() << endl;
-    cout << fi() << endl;
-    cout << tangents() << endl;
-    cout << newton() << endl;
-    cout << chord() << endl;
-    cout << grad_step_before() << endl;
-    cout << grad_step_drob() << endl;
+    cout << "passiveSearch:\n" << passiveSearch() << endl << endl;
+    cout << "dihotomia:\n" << dihotomia() << endl << endl;
+    cout << "gold:\n" << fi() << endl << endl;
+    cout << "tangents:\n" << tangents() << endl << endl;
+    cout << "newton:\n" << newton() << endl << endl;
+    cout << "chord:\n" << chord() << endl << endl;
     return 0;
 }
