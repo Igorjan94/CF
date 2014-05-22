@@ -101,7 +101,7 @@ double tangents()
 
 double newton()
 {
-    double xk, xprev = l;
+    double xk, xprev = 0;
     int countOfOperations = 0;
     double start = clock();
     do

@@ -1,3 +1,4 @@
+//template igorjan94 version from 21 may 2014
 #include <bits/stdc++.h>
 
 #define pb push_back
@@ -11,7 +12,7 @@
 #define vll vector<long long>
 #define pii pair<int, int>
 #ifndef ONLINE_JUDGE
-#define lld I64D
+#define lld I64d
 #endif
 #define FILENAME "input"
 #define INF 1000000007
@@ -73,11 +74,14 @@ void print(int a){printf("%d ", a);}
 void print(string a){printf("%s ", a.c_str());}
 void print(long long a){printf("%lld ", a);}
 void print(unsigned long a){printf("%ld ", a);}
+void print(unsigned int a){printf("%d ", a);}
 void print(char a){printf("%c ", a);}
 template<class Type>
 void print(vector<Type>& a){for(int i = 0; i < a.size(); ++i)print(a[i]);}
 template<class Type>
 void print(vector<vector<Type>>& a){for(int i = 0; i < a.size(); ++i)writeln(a[i]);}
+template<class Type1, class Type2>
+void print(pair<Type1, Type2>& a){print(a.first);print(a.second);}
 void read(double &a){scanf("%lf", &a);}
 void read(int &a){scanf("%d", &a);}
 void read(string &a){cin>>a;}

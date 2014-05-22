@@ -1,3 +1,4 @@
+//write/read igorjan94 template from 21 may 2014
 #include <bits/stdc++.h>
 #define pb push_back
 #define ll long long
@@ -13,21 +14,29 @@
 #define lld I64D
 #endif
 
+void writeln(){printf("\n");}void readln(){}
 void print(double a){printf("%f ", a);}
 void print(int a){printf("%d ", a);}
-void print(string a){printf("%s ", a.c_str());}
+void print(std::string a){printf("%s ", a.c_str());}
 void print(long long a){printf("%lld ", a);}
-void print(unsigned long a){printf("%lld ", a);}
+void print(unsigned long a){printf("%ld ", a);}
+void print(unsigned int a){printf("%d ", a);}
 void print(char a){printf("%c ", a);}
-void print(vector<int> a){for(int i = 0; i < a.size(); ++i)printf("%d ", a[i]);}
-void print(vector<vector<int>> a){for(int i = 0; i < a.size(); ++i)writeln(a[i]);}
+template<class Type>
+void print(std::vector<Type>& a){for(int i = 0; i < a.size(); ++i)print(a[i]);}
+template<class Type>
+void print(std::vector<std::vector<Type>>& a){for(int i = 0; i < a.size(); ++i)writeln(a[i]);}
+template<class Type1, class Type2>
+void print(std::pair<Type1, Type2>& a){print(a.first);print(a.second);}
 void read(double &a){scanf("%lf", &a);}
 void read(int &a){scanf("%d", &a);}
-void read(string &a){cin>>a;}
+void read(std::string &a){std::cin>>a;}
 void read(long long &a){scanf("%lld", &a);}
 void read(char &a){scanf("%c", &a);}
-void read(vector<int> &a){for(int i = 0; i < a.size(); ++i)scanf("%d", &a[i]);}
-void read(vector<vector<int>> &a){for(int i = 0; i < a.size(); ++i)readln(a[i]);}
+template<class Type>
+void read(std::vector<Type> &a){if (a.size() == 0){int n; read(n); a.resize(n);}for(int i = 0; i < a.size(); ++i)read(a[i]);}
+template<class Type>
+void read(std::vector<std::vector<Type>> &a){for(int i = 0; i < a.size(); ++i)readln(a[i]);}
 template <class Head, class... Tail>
 void writeln(Head head, Tail... tail){print(head);writeln(tail...);}
 template <class Head, class... Tail>
