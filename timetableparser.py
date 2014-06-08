@@ -1,6 +1,7 @@
 import sys
 import re
 file = open(sys.argv[1], 'r')
+sys.stdout = open(sys.argv[2], 'w+')
 Gatchina = 1
 Ligovo = 1
 Zele = 1
