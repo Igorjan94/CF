@@ -36,13 +36,37 @@ void writeln(){printf("\n");}void writeln2(){printf("\n");}void readln(){}
 ///----------------------------------------------------------------------------------------------------------------------------
 
 int n, m, k;
-vi a;
 
 void run()
 {
+    readln(n, m);
+    vvi a(n, vi(m));
+    vvi b(n, vi(0, m));
     readln(a);
-    sort(whole(a));
-    writeln(a);
+    auto f = [&](int i, int j){if (i == -1 || j == -1) return 0; return a[i][j];};
+    auto g = [&](int i, int j){if (i == -1 || j == -1) return 0; return b[i][j];};
+    fori(n)
+        forj(m)
+            b[i][j] = a[i][j] + f(i - 1, j) + f(i, j - 1) - f(i - 1, j - 1);
+    readln(k);
+    int c1, c2, c3, c4;
+    fori(k)
+    {
+        readln(c1, c2, c3, c4);
+        --c1;--c2;--c3;--c4;
+        int temp = b[c3][c4] + g(c1 - 1, c2 - 1) - g(c1 - 1, c4) - g(c3, c2 - 1);
+        if (temp == 0 || temp == (c4 - c2) * (c3 - c1))
+        {
+            writeln(1);
+            continue;
+        }
+        if (temp == 1 || temp == (c4 - c2) * (c3 - c1) - 1)
+        {
+            writeln(2);
+            continue;
+        }
+        writeln(0);
+    }
 }
 
 int main()

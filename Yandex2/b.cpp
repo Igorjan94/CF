@@ -36,13 +36,31 @@ void writeln(){printf("\n");}void writeln2(){printf("\n");}void readln(){}
 ///----------------------------------------------------------------------------------------------------------------------------
 
 int n, m, k;
-vi a;
+set<int> temp, ans;
 
 void run()
 {
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    readln(n);
+    int x, q = 0;
+    fori(n)
+        readln(x),
+        temp.insert(x);
+    bool ch = true;
+    int counter = 0;
+    while (ch && counter < n)
+    {
+        counter++;
+        ch = false;
+        set<int> temp2(temp);
+        forit(i, temp)
+            forit(j, temp)
+                if (*j)
+                    if (temp2.find(*i % *j) == temp2.end())
+                        temp2.insert(*i % *j),
+                        ch = true;
+        temp = temp2;
+    }
+    writeln(temp.size());
 }
 
 int main()

@@ -40,9 +40,13 @@ vi a;
 
 void run()
 {
+    readln(n, k);
+    a.resize(n);
     readln(a);
-    sort(whole(a));
-    writeln(a);
+    ll ans = 1;
+    fori(n)
+        ans += a[i] / k - 1;
+    writeln(ans);
 }
 
 int main()
