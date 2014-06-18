@@ -2,6 +2,10 @@ import sys
 import re
 file = open(sys.argv[1], 'r')
 sys.stdout = open(sys.argv[2], 'w+')
+if len(sys.argv) > 3:
+	flag = 1
+else:
+	flag = 0
 Gatchina = 1
 Ligovo = 1
 Zele = 1
@@ -47,7 +51,7 @@ for str in file:
 
 	str = re.sub(r'.*2\sч.*', '', str)
 	str = re.sub(r'.*1\sч\s\d{2}.*', '', str)
-	if Gatchina + Ligovo == 0:
+	if flag == 1:
 		str = re.sub(r'(3|4)\d\sм', 'б/о', str)
 	str = re.sub(r'б\/о\s+СВ', r'СВ,б/о', str)
 	str = re.sub(r'\d{1,2}\sм', '', str)
