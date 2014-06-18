@@ -1,0 +1,13 @@
+*in*
+*out*
+*TDgame*
+*.in
+*.out
+*.txt
+*.cbp
+*.depend
+*.layout
+*.save
+*~
+*.djvu
+*.pdf
