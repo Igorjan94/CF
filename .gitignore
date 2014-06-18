@@ -11,3 +11,8 @@
 *~
 *.djvu
 *.pdf
+*.png
+*.gif
+*.jpg
+*.jpeg
+*game*
