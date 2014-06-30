@@ -19,12 +19,12 @@ c="$a/timetableparser.py"
 a="$a/loadtimetable.py"
 
 #downloading timetable
-python3 $a $b 101 701
-python3 $a $b 701 101
-python3 $a $b 701 1201
-python3 $a $b 1201 701
-python3 $a $b 20600 41405
-python3 $a $b 41405 20600
+python3 $a $b "Лигово" "Тайцы"\
+ "Тайцы" "Лигово"\
+ "Лигово" "Санкт-Петербург-Балт."\
+ "Санкт-Петербург-Балт." "Лигово"\
+ "Санкт-Петербург-Финл." "Зеленогорск"\
+ "Зеленогорск" "Санкт-Петербург-Финл."
 
 #parsing every downloaded file
 for file in $b/*.txt
@@ -33,5 +33,5 @@ do
 done 
 
 #final renaming and deleting temp files
-rm $b/*.txt
+rm -f $b/*.txt
 rename '.out' '' $b/*

@@ -53,8 +53,11 @@ double minimize(std::function<double(double)> f)
 
 int main()
 {
+    cout << "WTF?\n";
+    return 0;
     cout.precision(10);
     cout << minimize(f) << "\n";
+
 //    cout << df(f)(1) << endl;
     //cout << cnk(5, 2) << endl;
     return 0;

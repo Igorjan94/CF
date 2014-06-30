@@ -88,6 +88,7 @@ void write_matrix()
 int main()
 {
         printf("program start\n");
+        return 0;
 
             while(1)
                     {

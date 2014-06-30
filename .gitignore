@@ -8,6 +8,8 @@
 *.depend
 *.layout
 *.save
+*.class
+*.o
 *~
 *.djvu
 *.pdf
