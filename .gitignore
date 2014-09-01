@@ -1,6 +1,6 @@
 *in*
 *out*
-*TDgame*
+TDGame*
 *.in
 *.out
 *.txt
@@ -18,3 +18,6 @@
 *.jpg
 *.jpeg
 *game*
+*.jar
+*TDGame*
+*.config
