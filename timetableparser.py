@@ -3,8 +3,8 @@ import re
 file = open(sys.argv[1], 'r')
 sys.stdout = open(sys.argv[2], 'w+')
 xxx = sys.argv[2]
-xxx = re.sub('\..*', '', xxx)
 xxx = re.sub('.*\/', '', xxx)
+xxx = re.sub('\..*', '', xxx)
 print(xxx)
 if len(sys.argv) > 3:
     flag = 1

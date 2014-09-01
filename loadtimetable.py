@@ -3,6 +3,7 @@ from urllib.request import urlopen
 from collections import defaultdict
 import re
 import sys
+import os
 
 def parse(url):
     html_doc = urlopen(url).read()
@@ -19,7 +20,7 @@ def parse(url):
                 if line.find('<title>') != -1:
                     line = re.sub(r'^.*?<title>Расписание электричек (.*?)\..*', r'\1', line)
                     line = re.sub(r'\s', '', line)
-                    sys.stdout = open(directory + '/' + line + '.txt', 'a')
+                    sys.stdout = open(directory + '/' + line + '.my', 'a')
                     continue
                 line = re.sub(r'<a href=".*?">(.*?)</a>', r'\1', line)
                 line = re.sub(r'^\s+(.*?)\s+</td>', r'\1', line)
@@ -38,7 +39,8 @@ def parse(url):
                 if temp == 6:
                     temp = 0
                     print(cur)
-file = open('stations.out', 'r')
+st = os.path.dirname(os.path.abspath(__file__)) + '/stations.out'
+file = open(st, 'r')
 hash = defaultdict(list)
 for string in file:
     l = string.split('\t')
