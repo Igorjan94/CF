@@ -4,6 +4,7 @@
 #include <json/json.h>
 #include <libnotifymm.h>
 #include <cstdlib>
+#include <exception>
 
 #define AUTO_REFRESH 5
 
@@ -117,12 +118,14 @@ void run()
                 notify("Message", pairs[i].first + " (" + itoa(pairs[i].second) + ")");
         }
         else
+        if (temp.size() && pairs.size())
         {
             if (pairs[0].first != temp[0].first)
             {    
-                notify("New massage", temp[0].first);
                 fori(temp.size())
-                    pairs[i] = temp[i];
+                    pairs[i].first = temp[i].first,
+                    pairs[i].second = temp[i].second;
+                notify("New massage", pairs[0].first);
             }
             else
             {
