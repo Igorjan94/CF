@@ -1,15 +1,26 @@
+import Data.List.Ordered
+import Text.Printf
+
 getInts s = map read $ words s
 
-solve :: [Int] -> Int
-solve xs = get ([-1000000007]++xs++[1000000007]) 0
+get :: [Int] -> [Int] -> ([Int], [Int])
+get f [x] = (f, [])
+get f (a:b:xs) = if (a < b) then get (a:f) (b:xs) else (f, a:b:xs)
 
-get :: [Int] -> Int -> Int
-get [x] _ = -1
-get (a:b:xs) counter = if a > b then counter else get (b:xs) counter + 1
+got :: [Int] -> [Int] -> ([Int], [Int])
+got f [x] = ([x], [])
+got f [] = ([], [])
+got f (a:b:xs) = if (a > b) then got (a:f) (b:xs) else (a:f, b:xs)
     
 main = do
     s <- getLine
     s <- getLine
-    print(solve(getInts s))
---    contents <- getContents
---    let input = map ((\(a:b:_) -> (a, b)) . map (read :: String -> Int) . words) $ lines contents
+    let t = getInts s
+        y = get [] t
+        u = got [] (snd y)
+--    print(t);
+--    print(y);
+--    print(u);
+    if isSorted ((reverse $ fst y) ++ (fst u) ++ (snd u))
+        then printf "yes\n%d %d\n" (length (fst y) + 1) (length t - (length (snd u)))
+        else printf "no\n"

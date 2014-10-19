@@ -8,7 +8,7 @@ int n;
  
 vector <pair<int, int> > ans;
  
-int main(){
+int main() {
     freopen("beautifulgraph.in", "r", stdin);
     freopen("beautifulgraph.out", "w", stdout);
     cin >> n;

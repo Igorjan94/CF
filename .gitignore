@@ -1,4 +1,5 @@
-*in*
+*input*
+*output*
 *out*
 TDGame*
 *.in
@@ -21,3 +22,4 @@ TDGame*
 *.jar
 *TDGame*
 *.config
+*.hi

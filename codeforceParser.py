@@ -15,10 +15,10 @@ from sys import argv
 from subprocess import call
 from functools import partial, wraps
 import re
- 
+
 # User modifiable constants:
 TEMPLATE='main.cpp'
-COMPILE_CMD='g++ -g -std=c++0x'
+COMPILE_CMD='clang++ -g -std=c++0x'
 SAMPLE_INPUT='input'
 SAMPLE_OUTPUT='output'
 MY_OUTPUT='my_output'
@@ -41,7 +41,7 @@ class CodeforcesProblemParser(HTMLParser):
         self.testcase = None
         self.start_copy = False
         self.add = ''
-    
+
     def handle_starttag(self, tag, attrs):
         if tag == 'div':
             if attrs == [('class', 'input')]:
@@ -54,7 +54,7 @@ class CodeforcesProblemParser(HTMLParser):
         elif tag == 'pre':
             if self.testcase != None:
                 self.start_copy = True
- 
+
     def handle_endtag(self, tag):
         if tag == 'br':
             if self.start_copy:
@@ -64,16 +64,16 @@ class CodeforcesProblemParser(HTMLParser):
                 self.testcase.close()
                 self.testcase = None
                 self.start_copy = False
-    
+
     def handle_entityref(self, name):
         if self.start_copy:
             self.add += self.unescape(('&%s;' % name))
- 
+
     def handle_data(self, data):
         if self.start_copy:
             self.testcase.write(self.add+data)
             self.add = ''
-            
+
 class CodeforcesContestParser(HTMLParser):
 
     def __init__(self, contest):
@@ -85,7 +85,7 @@ class CodeforcesContestParser(HTMLParser):
         self.name = ''
         self.problems = []
         self.problem_names = []
-    
+
     def handle_starttag(self, tag, attrs):
         if tag == 'a':
             if self.name == '' and attrs == [('style', 'color: black'), ('href', '/contest/%s' % (self.contest))]:
@@ -101,34 +101,34 @@ class CodeforcesContestParser(HTMLParser):
                         self.problems.append(search.group(0).split('/')[-1])
                     else:
                         self.toggle = True
- 
+
     def handle_endtag(self, tag):
         if tag == 'a' and self.start_contest:
             self.start_contest = False
         elif self.start_problem:
             self.start_problem = False
- 
+
     def handle_data(self, data):
         if self.start_contest:
             self.name = data
         elif self.start_problem:
             self.problem_names.append(data)
-        
- 
+
+
 def parse_problem(folder, contest, problem):
     url = 'http://codeforces.com/contest/%s/problem/%s' % (contest, problem)
     html = urlopen(url).read()
     parser = CodeforcesProblemParser(folder)
     parser.feed(html.decode('utf-8'))
     return parser.num_tests
-    
+
 def parse_contest(contest):
     url = 'http://codeforces.com/contest/%s' % (contest)
     html = urlopen(url).read()
     parser = CodeforcesContestParser(contest)
     parser.feed(html.decode('utf-8'))
     return parser
- 
+
 def generate_test_script(folder, num_tests, problem):
     with open(folder + 'test.sh', 'w') as test:
         test.write(
@@ -170,19 +170,19 @@ def generate_test_script(folder, num_tests, problem):
             'done\n'
             .format(num_tests, BOLD, NORM, GREEN_F, RED_F, TIME_CMD, TIME_AP))
     call(['chmod', '+x', folder + 'test.sh'])
- 
+
 def main():
     print (VERSION)
     if(len(argv) < 2):
         print('USAGE: ./parse.py 379')
         return
     contest = argv[1]
-    
+
     print ('Parsing contest %s, please wait...' % contest)
     content = parse_contest(contest)
     print (BOLD+GREEN_F+'*** Round name: '+content.name+' ***'+NORM)
     print ('Found %d problems!' % (len(content.problems)))
-    
+
     for index, problem in enumerate(content.problems):
         print ('Downloading Problem %s: %s...' % (problem, content.problem_names[index]))
         folder = '%s/%s/' % (contest, problem)
@@ -192,9 +192,9 @@ def main():
         print('%d sample test(s) found.' % num_tests)
         generate_test_script(folder, num_tests, problem)
         print ('========================================')
-        
+
     print ('Use ./test.sh to run sample tests in each directory.')
- 
+
 if __name__ == '__main__':
     main()
 
