@@ -115,8 +115,7 @@ void notify(string s, string t)
 
 void toBackup(std::vector<pair<string, int> >& a)
 {
-    if (fork() == 0)
-        execl("rm -rf", "vkparser.temp");
+    remove("vkparser.temp");
     ofstream out("vkparser.temp");
     fori(a.size())
         out << a[i].second << " " << ff(a[i].first, '\n', "\3") << "\n";
