@@ -4,6 +4,7 @@ from collections import defaultdict
 import re
 import sys
 import os
+import getopt
 
 def parse(url):
     html_doc = urlopen(url).read()
@@ -46,10 +47,17 @@ for string in file:
     l = string.split('\t')
     hash[l[0]].append(l[1])
 directory = sys.argv[1]
-for i in range(2, len(sys.argv), 2):
-    for fro in hash[sys.argv[i]]:
-        for to in hash[sys.argv[i + 1]]:
+opts, args = getopt.getopt(sys.argv[2:], "t", [])
+today = 0
+for o, a in opts:
+    if o == "-t":
+        today = 1
+for i in range(0, len(args), 2):
+    for fro in hash[args[i]]:
+        for to in hash[args[i + 1]]:
             url = 'http://www.tutu.ru/spb/rasp.php?st1=' + fro + '&st2=' + to + '&print=yes'
+            if today == 1:
+                url += '&date=today'
+
             url = url.replace('\n', '')
-#            print(url)
             parse(url)

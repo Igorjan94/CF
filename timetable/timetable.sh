@@ -4,13 +4,15 @@
 a="/home/igorjan/206round/timetable"
 b="/home/igorjan/documents/timetable"
 flag=0;
+today=0;
 
-while getopts "s:d:0" opt; do
+while getopts "0ts:d:" opt; do
   case $opt in
     \?) exit 1;;
     s) a=$OPTARG;;
     d) b=$OPTARG;;
     0) flag=1;;
+    t) today=1;;
   esac
 done
 
@@ -31,7 +33,11 @@ c="$a/timetableparser.py"
 a="$a/loadtimetable.py"
 
 #downloading timetable
-python3 $a $b $arg
+if [ $today -eq 1 ]
+    then python3 $a $b -t $arg
+else
+    python3 $a $b $arg
+fi
 
 #parsing every downloaded file
 for file in $b/*.my
