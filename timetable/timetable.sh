@@ -4,21 +4,22 @@
 a="/home/igorjan/206round/timetable"
 b="/home/igorjan/documents/timetable"
 flag=0;
-today=0;
+today="";
 
-while getopts "0ts:d:" opt; do
+while getopts "0ts:d:f:" opt; do
   case $opt in
     \?) exit 1;;
     s) a=$OPTARG;;
     d) b=$OPTARG;;
     0) flag=1;;
-    t) today=1;;
+    t) today="&date=today";;
+    f) today="&date=$OPTARG";;
   esac
 done
 
 shift $(($OPTIND - 1))
 if [ $# -eq 0 ]
-	then echo "usage: ./timetable.sh [-d <destination_directory>] [-s <source_directory>] \"from1 to1 ... fromN toN\""
+	then echo "usage: ./timetable.sh [-t] [-f <DD.MM.YYYY>] [-0] [-d <destination_directory>] [-s <source_directory>] \"from1 to1 ... fromN toN\""
 	exit
 fi
 
@@ -33,11 +34,7 @@ c="$a/timetableparser.py"
 a="$a/loadtimetable.py"
 
 #downloading timetable
-if [ $today -eq 1 ]
-    then python3 $a $b -t $arg
-else
-    python3 $a $b $arg
-fi
+python3 $a $b "$today" $arg
 
 #parsing every downloaded file
 for file in $b/*.my
