@@ -4,7 +4,7 @@
 #define pb push_back
 #define ll long long
 #define forit(it, r) for (auto it = r.begin(); it != r.end(); it++)
-#define forn(i, n) for (int i = 0; i < (int) n; ++i)
+#define forn(i, n) for (int i = 0; i < n; ++i)
 #define forn1(i, n) for (int i = 1; i < n; ++i)
 #define FOR(i, m, n) for (int i = m; i < n; ++i)
 #define ROF(i, m, n) for (int i = m; i >= n; --i)
@@ -35,11 +35,13 @@ void writeln(){printf("\n");}void writeln2(){printf("\n");}void readln(){}
 
 ///----------------------------------------------------------------------------------------------------------------------------
 
-int n, m, k, x, y, mx;
+int n, m, k, x, y;
 vector<vi > edges;
 vi d;
 vi depth;
 vi maxDepth;
+vi ind;
+vi sndmax;
 vector<bool> used;
 
 int bfs()
@@ -50,8 +52,10 @@ int bfs()
     while (q.size())
     {
         int u = q.front();
-        used[u] = true;
         q.pop();
+        if (used[u])
+            continue;
+        used[u] = true;
         fori(edges[u].size())
             if (!used[edges[u][i]])
                 depth[edges[u][i]] = depth[u] + 1,
@@ -63,51 +67,54 @@ int bfs()
 int dfs(int u, int p = -1)
 {
     int mx = depth[u];
+    ind[u] = -1;
+    sndmax[u] = -1;
     fori(edges[u].size())
         if (edges[u][i] != p)
-            mx = max(mx, dfs(edges[u][i], u));
+        {
+            int t = dfs(edges[u][i], u);
+            if (t > mx)
+                mx = t,
+                ind[u] = i;
+        }
+    fori(edges[u].size())
+        if (edges[u][i] != p)
+            if (i != ind[u])
+                sndmax[u] = max(sndmax[u], maxDepth[edges[u][i]]);
     return maxDepth[u] = mx;
 }
 
-void t(int u, int p, int v)
+void t(int u, int v, int p)
 {
     d[u] = v + depth[u];
     fori(edges[u].size())
         if (edges[u][i] != p)
-            t(edges[u][i], u, v);
+            t(edges[u][i], v, u);
 }
 
 
 void dfs2(int u, int v = 0, int p = -1)
 {
-    int j = -1;
-    int mx = 0;
-    int snd = 0;
-    ++v;
-    fori(edges[u].size())
-        if (edges[u][i] != p)
-            if (mx < maxDepth[edges[u][i]])
-                mx = maxDepth[edges[u][i]],
-                j = i;
-    fori(edges[u].size())
-        if (edges[u][i] != p)
-            if (i != j)
-                t(edges[u][i], u, max(v, mx) - depth[u]),
-                snd = max(snd, maxDepth[edges[u][i]]);
     d[u] = max(maxDepth[u] - depth[u], v);
-    writeln(u + 1, v, d[u], snd);
-    writeln(d);
-    if (j != -1)
-        dfs2(edges[u][j], max(v, snd + 1), u);
+    fori(edges[u].size())
+        if (edges[u][i] != p)
+            if (i != ind[u])
+                t(edges[u][i], d[u] - depth[u], u);
+    if (ind[u] != -1)
+        dfs2(edges[u][ind[u]], max(v, sndmax[u] - depth[u]) + 1, u);
 }
 
 void run()
 {
     readln(n);
-    d.resize(n);
+    d.resize(n, 0);
     depth.resize(n, 0);
     edges.resize(n);
+    ind.resize(n, -1);
+    sndmax.resize(n, -1);
     maxDepth.resize(n, 0);
+    used.resize(n, false);
+    used.clear();
     used.resize(n, false);
     fori(n - 1)
         readln(x, y),
@@ -121,7 +128,7 @@ void run()
 
 int main()
 {
-    //freopen(FILENAME".in", "r", stdin);
+//    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
     run();
     return 0;
