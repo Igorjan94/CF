@@ -83,6 +83,8 @@ int main()
 template<class Type>
 Type powbin(Type a, int n)
 {
+    if (n == 0)
+        return (Type) 0;
     Type result = a;
     --n;
     while (n)
