@@ -1,7 +1,28 @@
 #include <vector>
+#include <iostream>
 
 #define FORI(n) for (unsigned i = 0; i < n; ++i)
 #define FORJ(n) for (unsigned j = 0; j < n; ++j)
+
+template<class Type> Type powbin(Type a, int n);
+
+template <typename T>
+std::vector<T> operator-(const std::vector<T>& a, const std::vector<T>& b)
+{
+    std::vector<T> c(a.size());
+    FORI(a.size())
+        c[i] = a[i] - b[i];
+    return c;
+}
+
+template <typename T>
+std::vector<T> operator*(const std::vector<T>& a, T b)
+{
+    std::vector<T> c(a.size());
+    FORI(a.size())
+        c[i] = a[i] * b;
+    return c;
+}
 
 template <typename T> class Matrix
 {
@@ -23,15 +44,61 @@ public:
     Matrix<T>& operator-=(const Matrix<T>& rhs);
     Matrix<T> operator*(const Matrix<T>& rhs);
     Matrix<T>& operator*=(const Matrix<T>& rhs);
+    Matrix<T> operator^(int i);
     Matrix<T> transpose();
+    Matrix<T> invert();
 
     Matrix<T> operator+(const T& rhs);
     Matrix<T> operator-(const T& rhs);
     Matrix<T> operator*(const T& rhs);
     Matrix<T> operator/(const T& rhs);
+    Matrix<T> operator!();
 
+    std::vector<T>& operator[](int i);
     std::vector<T> operator*(const std::vector<T>& rhs);
 };
+
+template<typename T>
+std::vector<T>& Matrix<T>::operator[](int i)
+{
+    return a[i];
+}
+
+
+template<typename T>
+Matrix<T> Matrix<T>::transpose()
+{
+    Matrix<T> b(m, n, 0);
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j)
+            b.a[j][i] = a[i][j];
+    return b;
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::invert()
+{
+    Matrix<T> b(n, n, 0);
+    for (int i = 0; i < n; i++)
+        b.a[i][i] = 1;
+    for (int i = 0; i < n; i++)
+    {
+        b.a[i] = b.a[i] * (1 / a[i][i]);
+        a[i] = a[i] * (1 / a[i][i]);
+        for (int j = i + 1; j < n; ++j)
+            b.a[j] = b.a[j] - b.a[i] * a[j][i],
+            a[j] = a[j] - a[i] * a[j][i];
+    }
+    for (int i = n - 1; i >= 0; --i)
+    {
+        b.a[i] = b.a[i] * (1 / a[i][i]);
+        a[i] = a[i] * (1 / a[i][i]);
+        for (int j = i - 1; j >= 0; --j)
+            b.a[j] = b.a[j] - b.a[i] * a[j][i],
+            a[j] = a[j] - a[i] * a[j][i];
+    }
+    return b;
+}
 
 template<typename T>
 std::vector<T> operator*(const std::vector<T>& a, const Matrix<T>& rhs)
@@ -191,7 +258,6 @@ Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs)
 template<typename T>
 std::vector<T> Matrix<T>::operator*(const std::vector<T>& rhs)
 {
-    printf("here\n");
     std::vector<T> result(this->n, (T) 0);
     FORI(this->n)
         FORJ(this->n)
@@ -199,3 +265,55 @@ std::vector<T> Matrix<T>::operator*(const std::vector<T>& rhs)
     return result;
 }
 
+template<typename T>
+Matrix<T> Matrix<T>::operator!()
+{
+    Matrix<T> temp(a);
+    temp = temp.transpose();
+    return temp;
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::operator^(int i)
+{
+    Matrix<T> temp(a);
+    if (i < 0)
+        temp = temp.invert();
+    i = abs(i);
+    if (i > 0)
+        temp = powbin(temp, i);
+    return temp;
+}
+
+template<class Type>
+Type powbin(Type a, int n)
+{
+    Type result = a;
+    --n;
+    while (n)
+    {
+        if (n & 1)
+            result *= a;
+        a *= a;
+        n >>= 1;
+    }
+    return result;
+}
+
+/*
+
+    ll t = clock();
+    int n = 3;
+    Matrix<double> a(n, n, 0.0);
+    fori(n)
+        forj(n)
+            a[i][j] = rand() % 10;
+    writeln(a);
+    vi s({1, 2});
+    fori(1000)
+        forj(1000)
+            writeln(s, "asdf", 1, 1.0, i + j);
+    writeln("time=", clock() - t);
+//time= 1576302
+//time= 1731351
+   */
