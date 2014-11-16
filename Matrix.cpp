@@ -56,7 +56,23 @@ public:
 
     std::vector<T>& operator[](int i);
     std::vector<T> operator*(const std::vector<T>& rhs);
+    T det();
 };
+
+template<typename T>
+T Matrix<T>::det()
+{
+    if (n == 2)
+        return a[0][0] * a[1][1] - a[0][1] * a[1][0];
+    if (n == 3)
+        return a[0][0] * a[1][1] * a[2][2] +
+               a[0][1] * a[1][2] * a[2][0] +
+               a[0][2] * a[1][0] * a[2][1] - 
+               a[0][2] * a[1][1] * a[2][0] -
+               a[0][1] * a[1][0] * a[2][2] -
+               a[0][0] * a[1][2] * a[2][1];
+    return 0;
+}
 
 template<typename T>
 std::vector<T>& Matrix<T>::operator[](int i)
@@ -184,7 +200,7 @@ Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& rhs)
 template<typename T>
 Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs)
 {
-    Matrix result(this);
+    Matrix result(a);
     FORI(this->n)
         FORJ(this->m)
             result.a[i][j] -= rhs.a[i][j];
@@ -204,7 +220,7 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& rhs)
 template<typename T>
 Matrix<T> Matrix<T>::operator+(const T& rhs)
 {
-    Matrix result(this);
+    Matrix result(a);
     FORI(n)
         FORJ(m)
             result.a[i][j] += rhs;
@@ -215,18 +231,27 @@ Matrix<T> Matrix<T>::operator+(const T& rhs)
 template<typename T>
 Matrix<T> Matrix<T>::operator-(const T& rhs)
 {
-    Matrix result(this);
+    Matrix result(a);
     FORI(n)
         FORJ(m)
             result.a[i][j] -= rhs;
     return result;
 }
 
+template<typename T>
+Matrix<T> Matrix<T>::operator/(const T& rhs)
+{
+    Matrix result(a);
+    FORI(n)
+        FORJ(m)
+            result.a[i][j] /= rhs;
+    return result;
+}
 
 template<typename T>
 Matrix<T> Matrix<T>::operator*(const T& rhs)
 {
-    Matrix result(this);
+    Matrix result(a);
     FORI(n)
         FORJ(m)
             result.a[i][j] *= rhs;
@@ -260,7 +285,7 @@ std::vector<T> Matrix<T>::operator*(const std::vector<T>& rhs)
 {
     std::vector<T> result(this->n, (T) 0);
     FORI(this->n)
-        FORJ(this->n)
+        FORJ(this->m)
             result[i] += a[i][j] * rhs[j];
     return result;
 }

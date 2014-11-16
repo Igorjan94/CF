@@ -67,9 +67,9 @@ void run()
     while (cin >> r >> cc >> s >> cc >> c)
         flats.pb(flat(r, s, c));
     int k = 5;
-//    random_shuffle(whole(flats));
+    random_shuffle(whole(flats));
     fori(flats.size())
-        (!(i % k) ? test : trains).pb(flats[i]);
+        (i % k ? trains : test).pb(flats[i]);
     int n = trains.size();
     Matrix<double> X(n, 3, 0);
     vector<double> Y(n);
@@ -79,8 +79,7 @@ void run()
         X[i][2] = trains[i].r,
         Y[i]    = trains[i].c;
     Matrix<double> XT = !X;
-    vector<double> B = ((XT * X)^(-1)) * XT * Y;
-    writeln(B);
+    vector<double> B = ((XT * X) ^ (-1)) * XT * Y;
     double res = 0.0;
     double t;
     fori(test.size())
