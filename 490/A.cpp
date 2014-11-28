@@ -1,4 +1,4 @@
-//template igorjan94 version from 24 November 2014
+//template igorjan94 version from 17 November 2014
 #include <bits/stdc++.h>
 
 #define pb push_back
@@ -44,7 +44,15 @@ void inline writeln(){printf("\n");}void inline writeln2(){printf("\n");}void in
 
 void run()
 {
-	
+    vi a;
+    vector<vi> x(4);
+    readln(a);
+    fori(a.size())
+        x[a[i]].pb(i + 1);
+    int t = min(x[1].size(), min(x[2].size(), x[3].size()));
+    writeln(t);
+    fori(t)
+        writeln(x[1][i], x[2][i], x[3][i]);
 }
 
 int main()

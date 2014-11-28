@@ -1,4 +1,4 @@
-//template igorjan94 version from 24 November 2014
+//template igorjan94 version from 17 November 2014
 #include <bits/stdc++.h>
 
 #define pb push_back
@@ -17,8 +17,6 @@
 #define vll vector<long long>
 #define pii pair<int, int>
 #define whole(a) a.begin(), a.end()
-#define fst first
-#define cnd second
 
 #ifndef ONLINE_JUDGE
 #define lld I64d
@@ -42,9 +40,36 @@ void inline writeln(){printf("\n");}void inline writeln2(){printf("\n");}void in
 
 ///----------------------------------------------------------------------------------------------------------------------------
 
+int n, m;
+vector<vi> edges;
+vi used;
+
+ll dfs(int u)
+{
+    ll ans = 0;
+    fori(edges[u].size())
+        forj(edges[edges[u][i]].size())
+            if (edges[edges[u][i]][j] != u)
+                used[edges[edges[u][i]][j]]++;
+    fori(n)
+        ans += used[i] * (used[i] - 1) / 2;
+    return ans;
+}
+
 void run()
 {
-	
+    readln(n, m);
+    edges.resize(n);
+    int x, y;
+    fori(m)
+        readln(x, y),
+        edges[--x].pb(--y);
+    ll ans = 0;
+    fori(n)
+        used.clear(),
+        used.resize(n, 0),
+        ans += dfs(i);
+    writeln(ans);
 }
 
 int main()
@@ -81,7 +106,6 @@ int main()
 
 inline void print(double a){printf(" " DOUBLEFORMAT,a);}
 inline void print(int a){printf(" %d",a);}
-inline void print(const char* a){printf(" %s",a);}
 inline void print(string a){printf(" %s",a.c_str());}
 inline void print(long long a){printf(" %lld",a);}
 inline void print(unsigned long a){printf(" %ld",a);}
@@ -89,7 +113,6 @@ inline void print(unsigned int a){printf(" %d",a);}
 inline void print(char a){printf(" %c",a);}
 inline void print_no_space(double a){printf(DOUBLEFORMAT, a);}
 inline void print_no_space(int a){printf("%d", a);}
-inline void print_no_space(const char* a){printf("%s", a);}
 inline void print_no_space(string a){printf("%s", a.c_str());}
 inline void print_no_space(long long a){printf("%lld", a);}
 inline void print_no_space(unsigned long a){printf("%ld", a);}

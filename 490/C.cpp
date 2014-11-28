@@ -1,4 +1,4 @@
-//template igorjan94 version from 24 November 2014
+//template igorjan94 version from 17 November 2014
 #include <bits/stdc++.h>
 
 #define pb push_back
@@ -41,10 +41,28 @@ template <class Head, class... Tail> inline void print_no_space(Head& head, Tail
 void inline writeln(){printf("\n");}void inline writeln2(){printf("\n");}void inline readln(){}
 
 ///----------------------------------------------------------------------------------------------------------------------------
-
 void run()
 {
-	
+    string s;
+    int a, b;
+    readln(s, a, b);
+    int n = s.size();
+    vi aa(1), bb(1);
+    int t = 0, deg = 1;
+    fori(n)
+        aa.pb(t = (t * 10 + s[i] - '0') % a);
+    t = 0;
+    for (int i = n - 1; i >= 0; --i)
+        bb.pb(t = (t + deg * (s[i] - '0')) % b),
+        deg = (deg * 10) % b;
+    reverse(whole(bb));
+    fori1(n)
+        if (aa[i] + bb[i] == 0 && s[i] != '0')
+            writeln("YES"),
+            writeln(s.substr(0, i)),
+            writeln(s.substr(i)),
+            exit(0);
+    writeln("NO");
 }
 
 int main()

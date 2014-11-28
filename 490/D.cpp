@@ -1,4 +1,4 @@
-//template igorjan94 version from 24 November 2014
+//template igorjan94 version from 17 November 2014
 #include <bits/stdc++.h>
 
 #define pb push_back
@@ -41,10 +41,72 @@ template <class Head, class... Tail> inline void print_no_space(Head& head, Tail
 void inline writeln(){printf("\n");}void inline writeln2(){printf("\n");}void inline readln(){}
 
 ///----------------------------------------------------------------------------------------------------------------------------
+map<ll, pair<pair<ll, ll>, int> > can;
+map<int, vector<pair<ll, ll>>> ans;
+
+void s(ll x, ll a, ll b, int d)
+{
+    while (x % 2 == 0)
+    {
+        x /= 2;
+        a % 2 == 0 ? a /= 2 : b /= 2;
+        ++d;
+        if (can.find(x) == can.end() || can[x].second > d)
+            can[x] = {{a, b}, d};
+    }
+}
+
+void t(ll x, ll a, ll b, int d)
+{
+    if (can.find(x) != can.end())
+        ans[d + can[x].second] = {can[x].first, {a, b}};
+    while (x % 2 == 0)
+    {
+        d++;
+        x /= 2;
+        a % 2 == 0 ? a /= 2 : b /= 2;
+        if (can.find(x) != can.end())
+            ans[d + can[x].second] = {can[x].first, {a, b}};
+    }
+}
 
 void run()
 {
-	
+    ll a, b, c, d;
+    readln(a, b, c, d);
+    ll x = a * b,
+       y = c * d;
+    int depth = 0;
+    can[x] = {{a, b}, depth};
+    s(x, a, b, depth);
+    while (x % 3 == 0)
+    {
+        x = x / 3 * 2;
+        a % 3 == 0 ? a = a / 3 * 2 : b = b / 3 * 2;
+        can[x] = {{a, b}, ++depth};
+        s(x, a, b, depth);
+    }
+    depth = 0;
+    t(y, c, d, depth);
+    while (y % 3 == 0)
+    {
+        y = y / 3 * 2;
+        c % 3 == 0 ? c = c / 3 * 2 : d = d / 3 * 2;
+        t(y, c, d, ++depth);
+    }
+    if (ans.size() == 0)
+    {
+        writeln(-1);
+        return;
+    }
+    int i = -1;
+    while (i++ >= -1)
+        if (ans.find(i) != ans.end())
+        {
+            writeln(i);
+            writeln(ans[i]);
+            return;
+        }
 }
 
 int main()

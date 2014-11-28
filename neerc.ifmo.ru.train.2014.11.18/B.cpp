@@ -1,4 +1,4 @@
-//template igorjan94 version from 24 November 2014
+//template igorjan94 version from 17 November 2014
 #include <bits/stdc++.h>
 
 #define pb push_back
@@ -17,14 +17,12 @@
 #define vll vector<long long>
 #define pii pair<int, int>
 #define whole(a) a.begin(), a.end()
-#define fst first
-#define cnd second
 
 #ifndef ONLINE_JUDGE
 #define lld I64d
 #endif
 
-#define FILENAME "input"
+#define FILENAME "binary"
 #define INF 1000000007
 #define DOUBLEFORMAT "%f"
 
@@ -42,15 +40,27 @@ void inline writeln(){printf("\n");}void inline writeln2(){printf("\n");}void in
 
 ///----------------------------------------------------------------------------------------------------------------------------
 
+int m, k;
+
 void run()
 {
-	
+    readln(m);
+    int n = 0;
+    for (; (1 << n) < m; n++);
+    k = (1 << n) - m;
+    n--;
+    for(int i = 0; i < k; ++i, printf("\n"))
+        for (int l = n - 1; l >= 0; l--)
+            printf("%d", (i & (1 << l)) != 0);
+    for(int i = k; i < m; ++i, printf("\n"))
+        for (int l = n; l >= 0; l--)
+            printf("%d", ((i + k) & (1 << l)) != 0);
 }
 
 int main()
 {
-//    freopen(FILENAME".in", "r", stdin);
-//    freopen(FILENAME".out", "w", stdout);
+    freopen(FILENAME".in", "r", stdin);
+    freopen(FILENAME".out", "w", stdout);
     run();
     return 0;
 }
@@ -81,7 +91,6 @@ int main()
 
 inline void print(double a){printf(" " DOUBLEFORMAT,a);}
 inline void print(int a){printf(" %d",a);}
-inline void print(const char* a){printf(" %s",a);}
 inline void print(string a){printf(" %s",a.c_str());}
 inline void print(long long a){printf(" %lld",a);}
 inline void print(unsigned long a){printf(" %ld",a);}
@@ -89,7 +98,6 @@ inline void print(unsigned int a){printf(" %d",a);}
 inline void print(char a){printf(" %c",a);}
 inline void print_no_space(double a){printf(DOUBLEFORMAT, a);}
 inline void print_no_space(int a){printf("%d", a);}
-inline void print_no_space(const char* a){printf("%s", a);}
 inline void print_no_space(string a){printf("%s", a.c_str());}
 inline void print_no_space(long long a){printf("%lld", a);}
 inline void print_no_space(unsigned long a){printf("%ld", a);}

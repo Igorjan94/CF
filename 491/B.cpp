@@ -1,4 +1,4 @@
-//template igorjan94 version from 24 November 2014
+//template igorjan94 version from 17 November 2014
 #include <bits/stdc++.h>
 
 #define pb push_back
@@ -17,8 +17,6 @@
 #define vll vector<long long>
 #define pii pair<int, int>
 #define whole(a) a.begin(), a.end()
-#define fst first
-#define cnd second
 
 #ifndef ONLINE_JUDGE
 #define lld I64d
@@ -41,10 +39,35 @@ template <class Head, class... Tail> inline void print_no_space(Head& head, Tail
 void inline writeln(){printf("\n");}void inline writeln2(){printf("\n");}void inline readln(){}
 
 ///----------------------------------------------------------------------------------------------------------------------------
+ll dst(pii& a, pii& b)
+{
+    return abs(a.first - b.first) + abs(a.second - b.second);
+}
+
 
 void run()
 {
-	
+    int n, m;
+    vector<pair<ll, ll>> C, H;
+    readln(n, m, C, H);
+    ll mn = INF * 2, 
+       xn = INF * 2, 
+       xx = -INF * 2, 
+       yn = INF * 2, 
+       yx = -INF * 2, 
+       temp;
+    int index = -1;
+    fori(C.size())
+        xn = min(xn, C[i].first + C[i].second),
+        xx = max(xx, C[i].first + C[i].second),
+        yn = min(yn, C[i].first - C[i].second),
+        yx = max(yx, C[i].first - C[i].second);
+    fori(H.size())
+        if (mn > (temp = max(max(abs(xn - H[i].first - H[i].second), abs(xx - H[i].first - H[i].second)), max(abs(yn - H[i].first + H[i].second), abs(yx - H[i].first + H[i].second)))))
+            mn = temp,
+            index = i;
+    writeln(mn);
+    writeln(index + 1);
 }
 
 int main()
@@ -81,7 +104,6 @@ int main()
 
 inline void print(double a){printf(" " DOUBLEFORMAT,a);}
 inline void print(int a){printf(" %d",a);}
-inline void print(const char* a){printf(" %s",a);}
 inline void print(string a){printf(" %s",a.c_str());}
 inline void print(long long a){printf(" %lld",a);}
 inline void print(unsigned long a){printf(" %ld",a);}
@@ -89,7 +111,6 @@ inline void print(unsigned int a){printf(" %d",a);}
 inline void print(char a){printf(" %c",a);}
 inline void print_no_space(double a){printf(DOUBLEFORMAT, a);}
 inline void print_no_space(int a){printf("%d", a);}
-inline void print_no_space(const char* a){printf("%s", a);}
 inline void print_no_space(string a){printf("%s", a.c_str());}
 inline void print_no_space(long long a){printf("%lld", a);}
 inline void print_no_space(unsigned long a){printf("%ld", a);}

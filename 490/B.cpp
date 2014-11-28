@@ -1,4 +1,4 @@
-//template igorjan94 version from 24 November 2014
+//template igorjan94 version from 17 November 2014
 #include <bits/stdc++.h>
 
 #define pb push_back
@@ -42,9 +42,32 @@ void inline writeln(){printf("\n");}void inline writeln2(){printf("\n");}void in
 
 ///----------------------------------------------------------------------------------------------------------------------------
 
+#define N 1000002
+int nxt[N], cnt[N];
+int x, y, n;
+set<int> s;
+
 void run()
 {
-	
+    readln(n);
+    fori(n)
+        readln(x, y),
+        cnt[x] ^= 1,
+        cnt[y] ^= 1,
+        nxt[x] = y;
+    vi ans(n);
+    int t = 0;
+    fori(n / 2)
+        cnt[ans[i * 2 + 1] = t = nxt[t]] = 0;
+    fori1(N)
+        if (cnt[i] && (nxt[i] || n == 2))
+        {
+            t = i;
+            forj(n / 2 + n % 2)
+                ans[j * 2] = t, t = nxt[t];
+            break;
+        }
+    writeln(ans);
 }
 
 int main()
