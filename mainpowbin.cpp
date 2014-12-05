@@ -1,24 +1,29 @@
-//template igorjan94 version from 24 November 2014
+//template igorjan94 version from 05 December 2014
 #include <bits/stdc++.h>
 
-#define pb push_back
-#define ll long long
 #define forit(it, r) for (auto it = r.begin(); it != r.end(); it++)
-#define forn(i, n) for (int i = 0; i < n; ++i)
-#define forn1(i, n) for (int i = 1; i < n; ++i)
-#define FOR(i, m, n) for (int i = m; i < n; ++i)
+#define FOR(i, m, n) for (int i = m; i <  n; ++i)
 #define ROF(i, m, n) for (int i = m; i >= n; --i)
-#define fori(n) for (int i = 0; i < n; ++i)
-#define forj(n) for (int j = 0; j < n; ++j)
-#define fori1(n) for (int i = 1; i < n; ++i)
-#define forj1(n) for (int j = 1; j < n; ++j)
-#define vi vector<int>
-#define vvi vector<vector<int> >
-#define vll vector<long long>
-#define pii pair<int, int>
-#define whole(a) a.begin(), a.end()
-#define fst first
-#define cnd second
+#define forn1(i, n)  for (int i = 1; i < n; ++i)
+#define forn(i, n)   for (int i = 0; i < n; ++i)
+#define  fori1(n)    for (int i = 1; i < n; ++i)
+#define  forj1(n)    for (int j = 1; j < n; ++j)
+#define   fori(n)    for (int i = 0; i < n; ++i)
+#define   forj(n)    for (int j = 0; j < n; ++j)
+
+#define     fst      first
+#define     cnd      second
+#define      pb      push_back
+#define      ll      long long
+#define      vi      vector<int>
+#define     pii      pair<int, int>
+#define     vll      vector<long long>
+#define     vvi      vector<vector<int> >
+#define     pll      pair<long long, long long>
+#define   whole(a)   a.begin(), a.end()
+
+#define argmax(a) max_element(whole(a)) - (a).begin()
+#define argmin(a) min_element(whole(a)) - (a).begin()
 
 #ifndef ONLINE_JUDGE
 #define lld I64d
@@ -30,24 +35,26 @@
 
 using namespace std;
 
-template <class Head, class... Tail> inline void writeln(Head head, Tail... tail);
-template <class Head, class... Tail> inline void writeln2(Head head, Tail... tail);
-template <class Head, class... Tail> inline void readln(Head& head, Tail&... tail);
-template <class Head, class... Tail> inline void read(Head& head, Tail&... tail);
-template <class Head, class... Tail> inline void print(Head& head, Tail&... tail);
-template <class Type1, class Type2>  inline void print(pair<Type1, Type2>& p);
-template <class Type1, class Type2>  inline void print_no_space(pair<Type1, Type2>& p);
-template <class Head, class... Tail> inline void print_no_space(Head& head, Tail&... tail);
-void inline writeln(){printf("\n");}void inline writeln2(){printf("\n");}void inline readln(){}
+template <class Head,  class... Tail> inline void writeln (Head head,  Tail... tail);
+template <class Head,  class... Tail> inline void writeln2(Head head,  Tail... tail);
+template <class Head,  class... Tail> inline void readln  (Head& head, Tail&... tail);
+template <class Head,  class... Tail> inline void read    (Head& head, Tail&... tail);
+template <class Head,  class... Tail> inline void print   (Head& head, Tail&... tail);
+template <class Type1, class Type2>   inline void print   (pair<Type1, Type2>& p);
+template <class Type1, class Type2>   inline void print_no_space(pair<Type1, Type2>& p);
+template <class Head,  class... Tail> inline void print_no_space(Head& head, Tail&... tail);
+template <typename Type> Type binpow (Type a, int n);
+void inline writeln() {printf("\n");}
+void inline writeln2(){printf("\n");}
+void inline readln()  {}
 
 ///----------------------------------------------------------------------------------------------------------------------------
 
 void run()
 {
-    std::vector<std::vector<ll>> x = {{0, 1}, {1, 1}};
-    Matrix<ll> a(x);
-    std::vector<ll> fi = {1, 1};
-    writeln(powbin(a, 90) * fi);
+    vi a;
+	readln(a);
+    writeln(argmax(a));
 }
 
 int main()
@@ -87,6 +94,7 @@ inline void print(int a){printf(" %d",a);}
 inline void print(const char* a){printf(" %s",a);}
 inline void print(string a){printf(" %s",a.c_str());}
 inline void print(long long a){printf(" %lld",a);}
+inline void print(long a){printf(" %ld",a);}
 inline void print(unsigned long a){printf(" %ld",a);}
 inline void print(unsigned int a){printf(" %d",a);}
 inline void print(char a){printf(" %c",a);}
@@ -94,6 +102,7 @@ inline void print_no_space(double a){printf(DOUBLEFORMAT, a);}
 inline void print_no_space(int a){printf("%d", a);}
 inline void print_no_space(const char* a){printf("%s", a);}
 inline void print_no_space(string a){printf("%s", a.c_str());}
+inline void print_no_space(long a){printf("%ld", a);}
 inline void print_no_space(long long a){printf("%lld", a);}
 inline void print_no_space(unsigned long a){printf("%ld", a);}
 inline void print_no_space(unsigned int a){printf("%d", a);}
@@ -118,3 +127,22 @@ inline void read(char &a){scanf("%c",&a);}
 template<class Type1, class Type2> inline void read(pair<Type1, Type2>&a){readln(a.first, a.second);}
 template<class Type> inline void read(vector<Type> &a){if(a.size()==0){int n;read(n);a.resize(n);}for(int i=0;i<a.size();++i)readln(a[i]);}
 template <class Head,class... Tail> inline void readln(Head& head,Tail&... tail){read(head);readln(tail...);}
+
+template<typename Type>
+Type binpow (Type a, int n)
+{
+    if (n == 0)
+        return (Type) 1;
+    if (n == 1)
+        return a;
+    Type res = a;
+    --n;
+    while (n)
+    {
+        if (n & 1)
+            res *= a;
+        a *= a;
+        n >>= 1;
+    }
+    return res;
+}
