@@ -1,18 +1,18 @@
-//template igorjan94 version from 05 December 2014
+//template igorjan94 version from 22 December 2014
 #include <bits/stdc++.h>
 
 #define forit(it, r) for (auto it = r.begin(); it != r.end(); it++)
-#define FOR(i, m, n) for (int i = m; i <  n; ++i)
-#define ROF(i, m, n) for (int i = m; i >= n; --i)
-#define forn1(i, n)  for (int i = 1; i < n; ++i)
-#define forn(i, n)   for (int i = 0; i < n; ++i)
-#define  fori1(n)    for (int i = 1; i < n; ++i)
-#define  forj1(n)    for (int j = 1; j < n; ++j)
-#define   fori(n)    for (int i = 0; i < n; ++i)
-#define   forj(n)    for (int j = 0; j < n; ++j)
+#define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
+#define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
+#define forn1(i, n)  for (int i = 1; i < (int) (n); ++i)
+#define forn(i, n)   for (int i = 0; i < (int) (n); ++i)
+#define  fori1(n)    for (int i = 1; i < (int) (n); ++i)
+#define  forj1(n)    for (int j = 1; j < (int) (n); ++j)
+#define   fori(n)    for (int i = 0; i < (int) (n); ++i)
+#define   forj(n)    for (int j = 0; j < (int) (n); ++j)
 
 #define     fst      first
-#define     cnd      second
+#define     snd      second
 #define      pb      push_back
 #define      ll      long long
 #define      vi      vector<int>
@@ -22,8 +22,8 @@
 #define     pll      pair<long long, long long>
 #define   whole(a)   a.begin(), a.end()
 
-#define argmax(a) max_element(whole(a)) - (a).begin()
-#define argmin(a) min_element(whole(a)) - (a).begin()
+#define argmax(a) (max_element(whole(a)) - (a).begin())
+#define argmin(a) (min_element(whole(a)) - (a).begin())
 
 #ifndef ONLINE_JUDGE
 #define lld I64d
@@ -50,10 +50,9 @@ void inline readln()  {}
 ///----------------------------------------------------------------------------------------------------------------------------
 
 void run()
-{
-    vi a;
-	readln(a);
-    writeln(argmax(a));
+{ 
+    int n;
+    readln(n);
 }
 
 int main()
