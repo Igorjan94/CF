@@ -61,12 +61,12 @@ def parse(url):
         if s != "":
             print(y["tra"]["dep"]["tim"] + "\t\t" + s)
 
-st = os.path.dirname(os.path.abspath(__file__)) + '/stations.out'
+st = os.path.dirname(os.path.abspath(__file__)) + '/stations.in'
 file = open(st, 'r')
 hash = defaultdict(list)
 reve = defaultdict(list)
 for string in file:
-    l = string[:-1].split('\t')
+    l = string[:-1].rsplit(' ', 1)
     hash[l[0]].append(l[1])
     reve[l[1]].append(l[0])
 
