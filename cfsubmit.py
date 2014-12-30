@@ -8,8 +8,12 @@ import time
 from time import sleep
 
 # Edit these four variables according to your needs:
-x_user          =  "17f14c322c8e6b4875f2bc5304b57e32ecaf193510ca990bd0d47959df482cf6c19421403d300aab"
-csrf_token      =  "547AB530B568F9EE92DCAA8F57C2BC81"
+x_user          =  "\
+7b574782bf1f44c672a2fcf8c811d75f6653b4aa8562946ef67f0ae2473095f10941195e358e85c4\
+"
+csrf_token      =  "\
+E85FE076CB952D49AEC83F33835D8286\
+"
 cf_domain       =  "ru" #"com" if you prefer codeforces.com
 username        =  "igorjan94"
 updateInterval  =  2 #in seconds
@@ -119,6 +123,7 @@ r = requests.post("http://codeforces." + cf_domain + "/contest/" + contest_id + 
               params = {"csrf_token": csrf_token},
               files = parts,
               cookies = {"X-User": x_user})
+print(r)
 if r.status_code == requests.codes.ok:
     print("Solution is successfully sent. Current time is " + time.strftime("%H:%M:%S"))
 

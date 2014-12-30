@@ -253,7 +253,6 @@ public class HeatSolutionVisualizer extends JFrame {
 	static final long serialVersionUID = 0xE1A;
 
 	public static void main(String[] args) {
-        System.
 		HeatSolutionVisualizer hsv = new HeatSolutionVisualizer();
 		hsv.setVisible(true);
 		hsv.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
