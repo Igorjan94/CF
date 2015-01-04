@@ -4,6 +4,7 @@ import sys
 import os
 import getopt
 import requests
+import subprocess
 
 def defineDays(s):
     s = s.replace('ежедневно', '')
@@ -60,6 +61,7 @@ def parse(url):
         s = removeRepeatingStations(s)
         if s != "":
             print(y["tra"]["dep"]["tim"] + "\t\t" + s)
+    subprocess.Popen(['mousepad', filename + ".out"])
 
 st = os.path.dirname(os.path.abspath(__file__)) + '/stations.in'
 file = open(st, 'r')
