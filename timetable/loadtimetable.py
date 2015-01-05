@@ -61,6 +61,7 @@ def parse(url):
         s = removeRepeatingStations(s)
         if s != "":
             print(y["tra"]["dep"]["tim"] + "\t\t" + s)
+    sys.stdout.close()
     subprocess.Popen(['mousepad', filename + ".out"])
 
 st = os.path.dirname(os.path.abspath(__file__)) + '/stations.in'
