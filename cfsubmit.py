@@ -8,12 +8,12 @@ import time
 from time import sleep
 
 # Edit these four variables according to your needs:
-x_user          =  "\
-7b574782bf1f44c672a2fcf8c811d75f6653b4aa8562946ef67f0ae2473095f10941195e358e85c4\
-"
-csrf_token      =  "\
-E85FE076CB952D49AEC83F33835D8286\
-"
+x_user          =  '''
+e78a574fb8b2d3040ea734b9731ecc270d15d913688d31b7bbdbbd58ecf7ac54cc48f1ecdd8b5b57
+'''[1:-1]
+csrf_token      =  '''
+78A7AD12D31FBFA7653E80B6C08099F8
+'''[1:-1]
 cf_domain       =  "ru" #"com" if you prefer codeforces.com
 username        =  "igorjan94"
 updateInterval  =  2 #in seconds

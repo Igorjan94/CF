@@ -57,16 +57,29 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 
-int n, m, k;
-vi a;
+int n, k;
+string s, t, m;
+char c;
 
 void run()
 { 
     readln(n);
-    a.resize(n);
-    readln(a);
-    sort(elohw(a));
-    writeln(a);
+    fori(n)
+        readln(c),
+        s.push_back(c - '0');
+    m = s;
+    s += s;
+    fori(n)
+    {
+        t = s.substr(i, n);
+        int d = 10 - s[i];
+        forj(n)
+            t[j] = (t[j] + d) % 10;
+        m = min(m, t);
+    }
+    fori(n)
+        m[i] += '0';
+    writeln(m);
 }
 
 int main()
