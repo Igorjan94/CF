@@ -1,4 +1,5 @@
-#usage: ./timetable.sh [-t] [-f <DD.MM.YYYY>] [-0] [-d <destination_directory>] [-s <source_directory>] \"from1 to1 ... fromN toN\""
+#!/usr/bin/env sh
+#usage: ./timetable [-t] [-f <DD.MM.YYYY>] [-0] [-d <destination_directory>] [-s <source_directory>] \"from1 to1 ... fromN toN\""
 
 #setting default parametres
 a="/home/igorjan/206round/timetable"

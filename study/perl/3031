@@ -1,0 +1,33 @@
+#!/usr/bin/perl
+while(<>)
+{
+    while ($_ =~ /<a href=\"(.*?)\".*?>/) 
+    {
+#        print "was: ", $_, "!\n";
+        s/.*?<(a) href=\"(.*?)\".*?>//;
+#        print "\$_ = ", $_, "!\n";
+#        print "\$1 = ", $1, "!\n";
+#        print "\$2 = ", $2, "!\nnext\n";
+        $s = $_;
+        $_ = $2;
+        s/^.*?:\/\/(.*)/$1/;
+        s/^(.*?)(:|\/|\?|\#|\[|\]|\@|\!|\$|\&|\'|\(|\)|\*|\+|,|;|=).*/$1/;
+        s/^www\.(.*?)/$1/;
+        push(@array, $_);
+        $_ = $s;
+    }
+}
+@array = sort(@array);
+$i = 1;
+$size = @array;
+print $array[0];
+print "\n";
+while ($i < $size)
+{
+    if ($array[$i] ne $array[$i - 1])
+    {
+        print $array[$i];
+        print "\n";
+    }
+    $i++;
+}
