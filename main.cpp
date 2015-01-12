@@ -1,4 +1,4 @@
-//Igorjan94, template version from 08 January 2015
+//Igorjan94, template version from 11 January 2015
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -16,8 +16,9 @@ using namespace std;
 #define     fst      first
 #define     snd      second
 #define      ll      long long
+#define      pb      push_back
 #define      vi      vector<int>
-#define      pb      emplace_back
+#define      eb      emplace_back
 #define      vs      vector<string>
 #define     pii      pair<int, int>
 #define     vll      vector<long long>
@@ -30,11 +31,10 @@ using namespace std;
 
 #define argmax(a)    (max_element(whole(a)) - (a).begin())
 #define argmin(a)    (min_element(whole(a)) - (a).begin())
-#define wr(args...)  {err(split(#args,',').begin(),args);}
+#define wr(args...)  err(split(#args,',').begin(),args)
 
 #define FILENAME "input"
 #define INF 1000000007
-#define DOUBLEFORMAT "%f"
 
 #define tthti  template<typename Head, typename... Tail> inline
 #define ttt12i template<typename T1, typename T2> inline
@@ -52,17 +52,20 @@ tthti void readln (Head& head,Tail&... tail){read(head); readln  (tail...);}
 tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
 tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
 ttti  void writeln_range(T f,T s){priws(*f);for(auto i=++f;i!=s;++i)print(*i);}
-tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' ',INF),"=",head);err(++it, tail...);}
+tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
+
+#define ints(args...) int args; readln(args)
+#define lll (args...) ll  args; readln(args)
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 
-int n, m, k;
+int m, k;
 vi a;
 
 void run()
 { 
-    readln(n);
+    ints(n);
     a.resize(n);
     readln(a);
     sort(elohw(a));
