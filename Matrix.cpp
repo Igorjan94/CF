@@ -324,21 +324,3 @@ Type powbin(Type a, int n)
     }
     return result;
 }
-
-/*
-
-    ll t = clock();
-    int n = 3;
-    Matrix<double> a(n, n, 0.0);
-    fori(n)
-        forj(n)
-            a[i][j] = rand() % 10;
-    writeln(a);
-    vi s({1, 2});
-    fori(1000)
-        forj(1000)
-            writeln(s, "asdf", 1, 1.0, i + j);
-    writeln("time=", clock() - t);
-//time= 1576302
-//time= 1731351
-   */
