@@ -79,7 +79,17 @@ flag      = sys.argv[3]
 args      = sys.argv[4:]
 if directory[-1] != os.sep:
     directory += os.sep
-for i in range(0, len(args), 2):
-    for fro in hash[args[i]]:
-        for to in hash[args[i + 1]]:
+i = 0
+while i < len(args):
+    arg1 = args[i]
+    if hash[arg1] == []:
+        arg1 += " " + args[i + 1]
+        i += 1
+    for fro in hash[arg1]:
+        arg2 = args[i + 1]
+        if hash[arg2] == []:
+            arg2 += " " + args[i + 2]
+            i += 1
+        for to in hash[arg2]:
             parse('http://www.tutu.ru/spb/rasp.php?st1=' + fro + '&st2=' + to + '&json' + today)
+    i += 2
