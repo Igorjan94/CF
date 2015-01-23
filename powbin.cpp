@@ -47,6 +47,7 @@ ttti void read(T&);
 ttti void priws(T);
 ttti void print(T);
 
+ttti T binpow(T,ll);
 void err(vector<string>::iterator it){++it;}
 tthti void readln (Head& head,Tail&... tail){read(head); readln  (tail...);}
 tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
@@ -110,3 +111,21 @@ ttti   istream&operator>>(istream&is,vector<T>&a){if(a.size()==0){int n;is>>n;a.
 ttti void print(T a){cout<<" "<<a;}
 ttti void priws(T a){cout<<a;}
 ttti void read(T& a){cin>>a;}
+
+ttti T binpow (T a, ll n)
+{
+    if (n == 0)
+        return (T) 1;
+    if (n == 1)
+        return a;
+    T res = a;
+    --n;
+    while (n)
+    {
+        if (n & 1)
+            res *= a;
+        a *= a;
+        n >>= 1;
+    }
+    return res;
+}

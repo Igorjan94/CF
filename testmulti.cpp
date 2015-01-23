@@ -75,7 +75,11 @@ int main()
     ios_base::sync_with_stdio(false);
 //    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
-    run();
+    ints(T);
+    fori(T)
+        cerr << "test " << (i + 1) << "/" << T << "\n",
+        //cout << "Case #" << (i + 1) << ": ",
+        run();
     return 0;
 }
 

@@ -43,9 +43,9 @@ using namespace std;
 inline void writeln2(){cout<<"\n";}
 inline void writeln() {cout<<"\n";}
 inline void readln()  {}
-ttti void read(T&);
-ttti void priws(T);
-ttti void print(T);
+ttti void read(T &a);
+ttti void priws(T a);
+ttti void print(T a);
 
 void err(vector<string>::iterator it){++it;}
 tthti void readln (Head& head,Tail&... tail){read(head); readln  (tail...);}
@@ -55,27 +55,65 @@ ttti  void writeln_range(T f,T s){if(f!=s){priws(*f);for(auto i=++f;i!=s;++i)pri
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
-#define  ints(args...) int args; readln(args)
-#define   lls(args...)  ll args; readln(args)
-#define vints(args...)  vi args; readln(args)
+#define ints(args...) int args; readln(args)
+#define lls(args...)  ll  args; readln(args)
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
+vector<bool> used;
+
+int dfs(int i, vector<vi>& x, vector<set<int>>& y, vi& sal)
+{
+    int ans = sal[i];
+    used[i] = true;
+    for (int u : x[i])
+    {
+        y[u].erase(i);
+        if (!y[u].size() && !used[u])
+            ans += dfs(u, x, y, sal);
+    }
+    return ans;
+}
 
 void run()
 {
-    ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    vector<pii> ans;
+    ints(n, c);
+    vi sal(n);
+    vector<vi> neg(n);
+    vector<set<int>> par(n);
+    fori(n)
+    {
+        readln(sal[i], neg[i]);
+        forj(neg[i].size())
+            par[neg[i][j]].insert(i);
+    }
+    fori(n)
+    {
+        used.clear();
+        used.resize(n, false);
+        vector<set<int> > y(par);
+        int C = dfs(i, neg, y, sal);
+        for (int u : y[i])
+            C += dfs(u, neg, y, sal);
+        if (C >= c)
+            ans.pb({C, -i});
+        for(auto r : y)
+            writeln_range(whole(r));
+    }
+//    if (ans.size())
+  //      writeln(-min_element(whole(ans))->second);
+    //else writeln("FUCK");
+    writeln(ans);
 }
 
 int main()
 {
     ios_base::sync_with_stdio(false);
-//    freopen(FILENAME".in", "r", stdin);
+    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
-    run();
+    ints(T);
+    fori(T)
+        run();
     return 0;
 }
 

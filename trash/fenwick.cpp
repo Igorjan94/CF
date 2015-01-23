@@ -40,14 +40,14 @@ vi t, a;
 
 void update(int i, int d)
 {
-    for (; i < n; i = (i | (i + 1)))
+    for (; i <= n; i += i&-i)
         t[i] += d;
 }
 
 int sum(int i)
 {
     int res = 0;
-    for (; i >= 0; i = (i & (i + 1)) - 1)
+    for (; i; i -= i&-i)
         res += t[i];
     return res;
 }
@@ -55,22 +55,21 @@ int sum(int i)
 void run()
 {
     readln(n, m);
-    t.resize(n, 0);
+    t.resize(n + 1, 0);
     a.resize(n);
     readln(a);
     fori(n)
-        update(i, a[i]);
+        update(i + 1, a[i]);
     char c;
     int l, r;
     fori(m)
     {
         readln(c, c, l, r);
         if (c == '?')
-            writeln(sum(r - 1) - sum(l - 2));
+            writeln(sum(r) - sum(l - 1));
         else
-            update(l - 1, r - a[l - 1]),
-            a[l - 1] = r,
-            writeln(a);
+            update(l, r - a[l - 1]),
+            a[l - 1] = r;
     }
 
 
