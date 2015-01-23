@@ -90,8 +90,8 @@ void run()
 int main()
 {
     ios_base::sync_with_stdio(false);
-    freopen(FILENAME".txt", "r", stdin);
-    freopen(FILENAME".out", "w", stdout);
+//    freopen(FILENAME".txt", "r", stdin);
+//    freopen(FILENAME".out", "w", stdout);
 
     empty.resize(26, 0);
     int T;

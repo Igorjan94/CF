@@ -65,6 +65,11 @@ void run()
     int a, b;
     char c;
     readln(a, c, b);
+    if (b == 0)
+    {
+	writeln(1, 1);
+	return;
+    }
     vector<vll> table(a + 2, vll(b + 2, 0));
     vector<vll> table2(a + 2, vll(b + 2, 0));
     table[1][0] = 1;
@@ -83,8 +88,8 @@ void run()
 int main()
 {
     ios_base::sync_with_stdio(false);
-    freopen(FILENAME".txt", "r", stdin);
-    freopen(FILENAME".out", "w", stdout);
+//    freopen(FILENAME".txt", "r", stdin);
+//    freopen(FILENAME".out", "w", stdout);
     int T;
     readln(T);
     fori(T)

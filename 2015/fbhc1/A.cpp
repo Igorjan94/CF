@@ -71,8 +71,8 @@ void run()
 int main()
 {
     ios_base::sync_with_stdio(false);
-    freopen(FILENAME".txt", "r", stdin);
-    freopen(FILENAME".out", "w", stdout);
+//    freopen(FILENAME".txt", "r", stdin);
+//    freopen(FILENAME".out", "w", stdout);
     int n = 10000007;
     sieve.resize(n, 1);
     cnts.resize(n, 0);
