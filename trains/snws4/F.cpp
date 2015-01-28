@@ -207,6 +207,8 @@ void run()
     if (ans == "")
         ans = "empty spell";
     writeln(ans);
+
+    writeln(xxx);
 }
 
 int main()
@@ -246,6 +248,7 @@ int main()
 
 #define a _a
 #define n _n
+ttti   ostream&operator<<(ostream&os,vector<T>&a);
 ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
 ttt12i ostream&operator<<(ostream&os,pair<T1,T2>&a){return os<<a.first<<" "<<a.second;}
 ttti   ostream&operator<<(ostream&os,vector<T>&a){if(a.size())os<<a[0];else os<<"\n";for(int i=1;i<a.size();++i)os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
