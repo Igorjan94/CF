@@ -47,7 +47,13 @@ def removeRepeatingStations(s):
 
 
 def parse(url):
-    x = requests.get(url).json()
+    try:
+        x = requests.get(url).json()
+    except:
+        print('something went wrong in tutu, or just stations with same names', file=sys.stderr)
+        return
+    if "error" in x:
+        return
     filename = directory + reve[x["dep-st"]][0] + '—' + reve[x["arr-st"]][0]
     if not (x["dat"] is None):
         filename += ", " + x["dat"]
@@ -85,11 +91,12 @@ while i < len(args):
     if hash[arg1] == []:
         arg1 += " " + args[i + 1]
         i += 1
+    fl = 0
     for fro in hash[arg1]:
         arg2 = args[i + 1]
         if hash[arg2] == []:
             arg2 += " " + args[i + 2]
-            i += 1
+            fl = 1
         for to in hash[arg2]:
             parse('http://www.tutu.ru/spb/rasp.php?st1=' + fro + '&st2=' + to + '&json' + today)
-    i += 2
+    i += 2 + fl
