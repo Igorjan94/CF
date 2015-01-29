@@ -64,20 +64,16 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 void run()
 {
     ints(n, s);
-    ll q, w;
-    ll ans = 0, x = 0;
-    fori(n)
-    {
-        readln(q, w);
-        if (i + 1 == s)
-        {
-            ans += q;
-            continue;
-        }
-        if (q - w >= 0)
-            x++,
-            ans += q - w;
-    }
+    vector<pll> a(n);
+    readln(a);
+    ll ans = a[s - 1].first, x = 1;
+    a.erase(a.begin() + s - 1);
+    sort(whole(a), [](pll const&c, pll const&b){return c.second < b.second;});
+    fori(a.size()) 
+        if (a[i].first >= a[i].second)
+            if (ans >= a[i].second)
+                ans += a[i].first - a[i].second,
+                x++;
     writeln(ans);
     writeln(x);
 }
