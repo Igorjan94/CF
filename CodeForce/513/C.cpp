@@ -47,7 +47,6 @@ ttti void read(T&);
 ttti void priws(T);
 ttti void print(T);
 
-ttti T binpow(T,ll);
 void err(vector<string>::iterator it){++it;}
 tthti void readln (Head& head,Tail&... tail){read(head); readln  (tail...);}
 tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
@@ -62,13 +61,42 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 
+int N = 100001;
+
 void run()
 {
-    ints(n);
-    vi a(n);
+    vector<pii> a;
     readln(a);
-    sort(whole(a));
-    writeln(a);
+    vector<double> len(a.size());
+    fori(a.size())
+        len[i] = 1.0 + a[i].second - a[i].first;
+    double answer = 0;
+    auto p = [&a, &len](int x)
+    {
+        double ans = 0;
+        forj(a.size()) 
+            if (a[j].first <= x && a[j].second >= x)
+                fori(a.size())
+                    if (i != j)
+                        if (a[i].second + (i < j) > x)
+                        {
+                            double l = min(len[i], 0. + a[i].second - x + (i < j)) / len[i] / len[j];
+                            forn(q, a.size())
+                                if (q != i && q != j)
+                                {
+                                    if (a[q].first < x + (q > j))
+                                        l *= min(len[q], 0. + x - a[q].first + (q > j)) / len[q];
+                                    else 
+                                        l = 0;
+                                }
+                            ans += l;
+                        }
+        return ans;
+    };
+    fori1(N)
+        answer += p(i) * i;
+    cout.precision(11);
+    cout << fixed << answer;
 }
 
 int main()
@@ -112,21 +140,3 @@ ttti   istream&operator>>(istream&is,vector<T>&a){if(a.size()==0){int n;is>>n;a.
 ttti void print(T a){cout<<" "<<a;}
 ttti void priws(T a){cout<<a;}
 ttti void read(T& a){cin>>a;}
-
-ttti T binpow (T a, ll n)
-{
-    if (n == 0)
-        return (T) 1;
-    if (n == 1)
-        return a;
-    T res = a;
-    --n;
-    while (n)
-    {
-        if (n & 1)
-            res *= a;
-        a *= a;
-        n >>= 1;
-    }
-    return res;
-}

@@ -47,7 +47,6 @@ ttti void read(T&);
 ttti void priws(T);
 ttti void print(T);
 
-ttti T binpow(T,ll);
 void err(vector<string>::iterator it){++it;}
 tthti void readln (Head& head,Tail&... tail){read(head); readln  (tail...);}
 tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
@@ -62,13 +61,54 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 
+ll f(vi& a)
+{
+    ll ans = 0;
+    fori(a.size())
+        FOR(j, i, a.size())
+            ans += *min_element(a.begin() + i, a.begin() + j + 1);
+    return ans;
+}
+
 void run()
 {
     ints(n);
+    lls(m);
+    m--;
     vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    iota(whole(a), 1);
+    map<ll, vector<vi>> mp;
+    do
+    {
+        ll temp = f(a);
+        if (mp.find(temp) == mp.end())
+            mp[temp] = {a};
+        else
+            mp[temp].pb(a);
+    }
+    while (next_permutation(whole(a)));
+    for (auto x : (mp.rbegin())->second)
+        writeln(x);
+    vi ans(n);
+    int l = 0, r = n - 1;
+    vll degs;
+    degs.pb(0);
+    degs.pb(1);
+    fori(n - 2)
+        degs.pb(degs.back() * 2);
+    reverse(whole(degs));
+    writeln(degs);
+    fori(n)
+    {
+        if (m >= degs[i])
+            ans[r--] = i + 1,
+            m -= degs[i];
+        else
+            ans[l++] = i + 1;
+    }
+    writeln(ans);
+//    writeln(*mp.rbegin());
+//    writeln(((mp.rbegin())->second)[m - 1]);
 }
 
 int main()
@@ -112,21 +152,3 @@ ttti   istream&operator>>(istream&is,vector<T>&a){if(a.size()==0){int n;is>>n;a.
 ttti void print(T a){cout<<" "<<a;}
 ttti void priws(T a){cout<<a;}
 ttti void read(T& a){cin>>a;}
-
-ttti T binpow (T a, ll n)
-{
-    if (n == 0)
-        return (T) 1;
-    if (n == 1)
-        return a;
-    T res = a;
-    --n;
-    while (n)
-    {
-        if (n & 1)
-            res *= a;
-        a *= a;
-        n >>= 1;
-    }
-    return res;
-}

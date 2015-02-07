@@ -47,12 +47,11 @@ ttti void read(T&);
 ttti void priws(T);
 ttti void print(T);
 
-ttti T binpow(T,ll);
 void err(vector<string>::iterator it){++it;}
 tthti void readln (Head& head,Tail&... tail){read(head); readln  (tail...);}
 tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
 tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
-ttti  void writeln_range(T f,T s){if(f!=s){priws(*f);for(auto i=++f;i!=s;++i)print(*i);}writeln();}
+ttti  void writeln_range(T f,T s){if(f!=s){writeln(*f);for(auto i=++f;i!=s;++i)writeln(*i);}}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
@@ -62,13 +61,41 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 
+ll inversions(vi& p)
+{
+    int answer = 0;
+    fori(p.size())
+        FOR(j, i + 1, p.size())
+            if (p[i] > p[j])
+                answer++;
+    return answer;
+}
+
 void run()
 {
-    ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    ints(n, k);
+    vi p(n);
+    readln(p);
+    double ans = 0;
+    multiset<vi> s, t;
+    s.insert(p);
+    forn(qq, k)
+    {
+        for (auto x : s)
+            fori(n)
+                FOR(j, i, n)
+                    reverse(x.begin() + i, x.begin() + j + 1),
+                    t.insert(x),
+                    reverse(x.begin() + i, x.begin() + j + 1);
+        s = t;
+        t.clear();
+    }
+    for (auto x : s)
+        ans += inversions(x);
+//    wr(ans);
+//    writeln_range(whole(s));
+    cout.precision(13);
+    cout << fixed << ans / s.size();
 }
 
 int main()
@@ -112,21 +139,3 @@ ttti   istream&operator>>(istream&is,vector<T>&a){if(a.size()==0){int n;is>>n;a.
 ttti void print(T a){cout<<" "<<a;}
 ttti void priws(T a){cout<<a;}
 ttti void read(T& a){cin>>a;}
-
-ttti T binpow (T a, ll n)
-{
-    if (n == 0)
-        return (T) 1;
-    if (n == 1)
-        return a;
-    T res = a;
-    --n;
-    while (n)
-    {
-        if (n & 1)
-            res *= a;
-        a *= a;
-        n >>= 1;
-    }
-    return res;
-}
