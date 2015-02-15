@@ -62,38 +62,36 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 ///-------------------------------------------------------------------------------------------------------------------------------------
 
 #define N 3000000
-vi automaton[N];
+int automaton[N][3];
 bool term[N];
-vi zero = {0, 0, 0};
-int counter = 0;
+int counter = 1;
 
-void add(string s)
+void add(string& s)
 {
     int root = 0;
     for (char c : s)
     {
         if (automaton[root][c - 'a'] == 0)
-            automaton[root][c - 'a'] = counter++,
-            automaton[counter] = zero;
+            automaton[root][c - 'a'] = counter++;
         root = automaton[root][c - 'a'];
     }
     term[root] = true;
 }
 
-bool check(string s)
+bool check(string& s)
 {
-    set<pii> a, b;
-    a.insert({0, 1});
+    vector<pii> a, b;
+    a.pb({0, 1});
     for (char c : s)
     {
         for (auto x : a)
         {
             if (automaton[x.first][c - 'a'])
-                b.insert({automaton[x.first][c - 'a'], x.second});
+                b.pb({automaton[x.first][c - 'a'], x.second});
             if (x.second)
                 forj(3)
                     if (j != c - 'a' && automaton[x.first][j])
-                        b.insert({automaton[x.first][j], 0});
+                        b.pb({automaton[x.first][j], 0});
         }
         a = b;
         b.clear();
