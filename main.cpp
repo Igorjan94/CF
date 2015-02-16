@@ -1,5 +1,14 @@
-//Igorjan94, template version from 23 January 2015
+//Igorjan94, template version from 16 February 2015
 #include <bits/stdc++.h>
+/*
+#include <ext/rope>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+
+using namespace __gnu_cxx;
+using namespace __gnu_pbds;
+typedef tree<int, int/null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> orderedMap;
+*/
 
 using namespace std;
 
