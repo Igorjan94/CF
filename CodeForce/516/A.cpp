@@ -74,40 +74,11 @@ void run()
 {
     int n;
     string s, answer = "";
+    vector<string> t = {"", "", "2", "3", "223", "5", "53", "7", "7222", "7332"};
     readln(n, s);
     for (char c : s)
-        if (c >= '1')
-        {
-            switch (c)
-            {
-                case '2' :
-                    answer += "2";
-                    break;
-                case '3' : 
-                    answer += "3";
-                    break;
-                case '4' : 
-                    answer += "223";
-                    break;
-                case '5' : 
-                    answer += "5";
-                    break;
-                case '6' : 
-                    answer += "53";
-                    break;
-                case '7' : 
-                    answer += "7";
-                    break;
-                case '8' : 
-                    answer += "7222";
-                    break;
-                case '9' : 
-                    answer += "7332";
-                    break;
-
-            }
-        }
-    sort(whole(answer), std::greater<char>());
+        answer += t[c - 'a'];
+    sort(elohw(answer));
     writeln(answer);
 }
 
