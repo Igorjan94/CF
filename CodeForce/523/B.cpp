@@ -75,7 +75,7 @@ void run()
     int n, T;
     double c;
     readln(n, T, c);
-    vector<double> a(n);
+    vector<int> a(n);
     readln(a);
     vector<int> p;
     readln(p);
@@ -83,7 +83,7 @@ void run()
     int j = 0;
     double real = 0;
     double app = 0;
-    double sum = 0;
+    ll sum = 0;
     cout.precision(8);
     fori(n)
     {
@@ -92,8 +92,8 @@ void run()
         sum += a[i];
         if (i >= T)
             sum -= a[i - T];
-        real = sum / T;
-        app = (app + a[i] / T) / c;
+        real = (0.0 + sum) / T;
+        app = (app + (0.0 + a[i]) / T) / c;
         if (p[j] == i + 1)
             j++,
             cout << fixed << real << " " << app << " " << fabs(app - real) / real << "\n";
