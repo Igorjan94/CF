@@ -84,7 +84,7 @@ void run()
     double real = 0;
     double app = 0;
     ll sum = 0;
-    cout.precision(8);
+    cout.precision(6);
     fori(n)
     {
         if (j == m)
