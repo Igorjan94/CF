@@ -72,46 +72,20 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
-    ints(w, h, n);
-    char c;
-    int x;
-    set<int> cutv, cuth;
-    cuth.insert(0);
-    cuth.insert(h);
-    cutv.insert(0);
-    cutv.insert(w);
-    map<int, int> hh, vv;
-    hh[h] = 1;
-    vv[w] = 1;
+    ints(n);
+    vector<pii> a;
+    int x, y;
     fori(n)
-    {
-        readln(c, x);
-        if (c == 'H')
-        {
-            auto it2 = cuth.upper_bound(x);
-            auto it = it2;it--;
-            int diff = *it2 - *it;
-            hh[diff]--;
-            if (hh[diff] == 0)
-                hh.erase(diff);
-            cuth.insert(x);
-            hh[x - *it]++;
-            hh[*it2 - x]++;
-        }
-        else
-        {
-            auto it2 = cutv.upper_bound(x);
-            auto it = it2;it--;
-            int diff = *it2 - *it;
-            vv[diff]--;
-            if (vv[diff] == 0)
-                vv.erase(diff);
-            cutv.insert(x);
-            vv[x - *it]++;
-            vv[*it2 - x]++;
-        }
-        writeln(1ll * vv.rbegin()->first * hh.rbegin()->first);
-    }
+        readln(x, y),
+        a.pb({x + y, x - y});
+    sort(whole(a));
+    int ans = 0,
+        last = -INF * 2;
+    fori(n)
+        if (a[i].second >= last)
+            last = a[i].first,
+            ans++;
+    writeln(ans);
 }
 
 int main()
