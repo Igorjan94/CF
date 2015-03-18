@@ -1,7 +1,13 @@
 //Igorjan94, template version from 11 January 2015
 #include <bits/stdc++.h>
+#include <ext/rope>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <ext/numeric>
 
 using namespace std;
+using namespace __gnu_cxx;
+using namespace __gnu_pbds;
 
 #define forit(it, r) for (auto it = r.begin(); it != r.end(); it++)
 #define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
@@ -60,16 +66,24 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 
-int m, k;
-vi a;
-
 void run()
 { 
-    ints(n);
-    a.resize(n);
-    readln(a);
-    sort(elohw(a));
-    writeln(a);
+    ints(n, m);
+    rope<int> a(n, 0);
+    iota(a.mutable_begin(), a.mutable_end(), 1);
+    fori(m)
+    {
+        ints(l, r);--l;
+        auto x = a.substr(l, r - l);
+        a.erase(l, r - l);
+        a.insert(a.mutable_begin(), x);
+    }
+    writeln_range(a.mutable_begin(), a.mutable_end());
+    tree<int, int, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
+    ordered_set.insert({1, 4});
+    ordered_set.insert({2, 5});
+    writeln(*ordered_set.find_by_order(1));
+    writeln(ordered_set.order_of_key(2));
 }
 
 int main()

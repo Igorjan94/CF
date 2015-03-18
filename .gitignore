@@ -24,3 +24,6 @@ TDGame
 *.config
 *.hi
 vk
+C++*
+study*
+temp*

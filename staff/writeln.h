@@ -1,10 +1,15 @@
 //Igorjan94, template version from 23 January 2015
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <sstream>
+
 using namespace std;
 
 #define tthti  template<typename Head, typename... Tail> inline
 #define ttt12i template<typename T1, typename T2> inline
 #define ttti   template<typename T> inline
+#define wr(args...)  err(split(#args,',').begin(),args)
 
 inline void writeln2(){cout<<"\n";}
 inline void writeln() {cout<<"\n";}

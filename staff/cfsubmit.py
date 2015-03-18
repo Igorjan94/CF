@@ -9,10 +9,10 @@ from time import sleep
 
 # Edit these four variables according to your needs:
 x_user          =  '''
-e78a574fb8b2d3040ea734b9731ecc270d15d913688d31b7bbdbbd58ecf7ac54cc48f1ecdd8b5b57
+02fe1afec55722d5cff82dbe3e7f105636bdd737bdcf7737c4cf1e2730af1e46b3c1f225e120de2c
 '''[1:-1]
 csrf_token      =  '''
-78A7AD12D31FBFA7653E80B6C08099F8
+C363C50288B310C45669A1A17F711C00
 '''[1:-1]
 cf_domain       =  "ru" #"com" if you prefer codeforces.com
 username        =  "igorjan94"
@@ -22,7 +22,7 @@ ext_id          =  {
     "cpp":   "16",
     "hs":    "12",
     "java":  "36",
-    "py":    "31",
+    "py":    "41",
 }
 
 # programTypeId - Language
@@ -44,7 +44,9 @@ ext_id          =  {
 # 13 - Perl 5.12
 # 6  - PHP 5.3
 # 7  - Python 2.7
-# 31 - Python 3.3
+# 31 - Python 3.4
+# 40 - PyPy 2.5
+# 41 - PyPy 3.2
 # 8  - Ruby 2
 # 20 - Scala 2.11
 # 34 - JavaScript V8 3

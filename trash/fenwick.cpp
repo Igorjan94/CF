@@ -38,41 +38,67 @@ void writeln(){printf("\n");}void writeln2(){printf("\n");}void readln(){}
 int n, m, k;
 vi t, a;
 
-void update(int i, int d)
+template <typename T>
+struct fenwickTree
 {
-    for (; i <= n; i += i&-i)
-        t[i] += d;
-}
+    vector<T> t;
+    int n;
 
-int sum(int i)
-{
-    int res = 0;
-    for (; i; i -= i&-i)
-        res += t[i];
-    return res;
-}
+    fenwickTree(int size, T value = 0)
+    {
+        n = size;
+        t.resize(n + 1, value);
+    }
+
+    fenwickTree(vector<T>& arr)
+    {
+        t.resize(n = arr.size(), 0);
+        fori(n)
+            update(i + 1, arr[i]);
+    }
+
+    void update(int index, T value)
+    {
+        for (; index <= n; index += index & -index)
+            t[index] += value;
+    }
+
+    T sum(int i)
+    {
+        T res = 0;
+        for (; i; i -= i & -i)
+            res += t[i];
+        return res;
+    }
+
+    T sum(int l, int r)
+    {
+        return sum(r) - sum(l - 1);
+    }
+
+    T sum0(int l, int r)
+    {
+        return sum(r + 1) - sum(l);
+    }
+};
 
 void run()
 {
     readln(n, m);
-    t.resize(n + 1, 0);
     a.resize(n);
     readln(a);
-    fori(n)
-        update(i + 1, a[i]);
+    fenwickTree<int> tree(a);
     char c;
     int l, r;
     fori(m)
     {
         readln(c, c, l, r);
         if (c == '?')
-            writeln(sum(r) - sum(l - 1));
+            writeln(tree.sum(l, r));
         else
-            update(l, r - a[l - 1]),
+            tree.update(l, r - a[l - 1]),
             a[l - 1] = r;
     }
-
-
 }
 
 int main()

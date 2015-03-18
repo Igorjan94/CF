@@ -47,28 +47,35 @@ auto df(std::function<double(double)> f) -> decltype(f)
 
 double f(double x1, double x2)
 {
+
     return ((x2 - x1 * x1) * (x2 - x1 * x1) * 100 + (x1 - 1) * (x1 - 1) * 5) / 400;
 }
 
 double minimize(std::function<double(double)> f) //Newton method for minimization of one-dimensional function
 {
+
     for (double x = -df(f)(0) / df(df(f))(0); ; x -= df(f)(x) / df(df(f))(x))
         if (fabs(df(f)(x)) <= eps)
             return x;
 }
 
+
 double fx1(double x1, double x2)
 {
     return df(bind(f, _1, x2))(x1);
+
 }
 
 double fx2(double x1, double x2)
 {
+
     return df(bind(f, x1, _1))(x2);
+
 }
 
 bool check(double x1, double x2)
 {
+
     cout << x1 << " " << x2 << "\n";
     return (fabs(fx1(x1, x2)) <= eps && fabs(fx2(x1, x2)) <= eps);
 }
@@ -98,6 +105,7 @@ pair<double, double> gradientDownFragmentation()
         x2 = x21;
     }
     cout << "count of operations = " << countOfOperations << endl << "time = " << (clock() - start) / CLOCKS_PER_SEC << endl << "qwe";
+
     return {x1, x2};
 }
 
@@ -174,6 +182,7 @@ pair<double, double> Gradppor()
         p1 = a * f1 + b * f2;
         p2 = c * f1 + d * f2;
         alpha = minimize(fun);
+
         if (f(x1, x2) <= f(x1 - alpha * p1, x2 - alpha * p2))
         {
             p1 = f1;
@@ -235,9 +244,9 @@ int main()
     freopen("output.txt", "w", stdout);
     cout << "gradient down with fragmentation:\n" << (temp = gradientDownFragmentation()).first << " ";cout << temp.second << endl << endl;
     cout << "fastest gradient down:\n" << (temp = fastestGradientDown()).first << " ";cout << temp.second << endl << endl;
-    cout << "sopr direction(Fletchera-Rivsa):\n" << (temp = soprDirection()).first << " ";cout << temp.second << endl << endl;
-    cout << "newton:\n" << (temp = newton()).first << " " << temp.second << endl << endl;
-    cout << "gradient p poryadka:\n" << (temp = Gradppor()).first << " ";cout << temp.second << endl << endl;
+//    cout << "sopr direction(Fletchera-Rivsa):\n" << (temp = soprDirection()).first << " ";cout << temp.second << endl << endl;
+//    cout << "newton:\n" << (temp = newton()).first << " " << temp.second << endl << endl;
+//    cout << "gradient p poryadka:\n" << (temp = Gradppor()).first << " ";cout << temp.second << endl << endl;
     fclose(stdout);
     system("javac *.java");
     system("java MainFrame &");
