@@ -1,14 +1,5 @@
-//Igorjan94, template version from 16 February 2015
+//Igorjan94, template version from 19 March 2015
 #include <bits/stdc++.h>
-/*
-#include <ext/rope>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-
-using namespace __gnu_cxx;
-using namespace __gnu_pbds;
-typedef tree<int, int/null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> orderedMap;
-*/
 
 using namespace std;
 
@@ -37,6 +28,7 @@ using namespace std;
 #define   whole(a)   a.begin(), a.end()
 #define    next      _next
 #define    prev      _prev
+#define   count      _count
 
 #define argmax(a)    (max_element(whole(a)) - (a).begin())
 #define argmin(a)    (min_element(whole(a)) - (a).begin())
