@@ -70,46 +70,33 @@ int timetoint(string s)
     return c + m * 60 + h * 60 * 60;
 }
 
-#define N 87000
-int times[N];
-
 void run()
 {
-    ints(n, m, t);
     string s;
-    fori(n)
-        readln(s),
-        times[timetoint(s)]++;
-    int curr = 0;
-    deque<pii> d;
+    queue<pii> d;
     vi ans;
-    int counter = 1;
+    int counter = 1, i, curr = 0;
     bool ok = false;
-    fori(N)
-        forj(times[i])
-        {
-            while (d.size() && d.front().first + t <= i)
-                d.pop_front(),
-                curr--;
-            if (curr < m)
-            {
-                curr++;
-                ans.pb(counter);
-                d.push_back({i, counter++});
-            }
-            else
-            {
-                d.back().first = i;
-                ans.pb(d.back().second);
-            }
-            if (curr == m)
-                ok = true;
-        }
-    if (ok)
+    ints(n, m, t);
+    forj(n)
     {
-        writeln(counter - 1);
-        writeln_range(whole(ans));
+        readln(s);
+        i = timetoint(s);
+        while (d.size() && d.front().first + t <= i)
+            d.pop(),
+            curr--;
+        if (curr < m)
+            curr++,
+            ans.pb(counter),
+            d.push({i, counter++});
+        else
+            d.back().first = i,
+            ans.pb(d.back().second);
+        ok |= curr == m;
     }
+    if (ok)
+        writeln(counter - 1),
+        writeln_range(whole(ans));
     else
         writeln("No solution");
 }
