@@ -62,61 +62,39 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 vector<string> s;
-vector<vector<bool> > used;
-int mx, my, mu, md, n, m;
+int n, m;
 
-void dfs(int i, int j)
+bool check(int i, int j)
 {
-    if (i < 0 || j < 0 || i >= n || j >= m || s[i][j] == '*' || used[i][j])
-        return;
-    used[i][j] = true;
-    mx = max(mx, i);
-    my = min(my, i);
-    mu = min(mu, j);
-    md = max(md, j);
-    dfs(i + 1, j);
-    dfs(i - 1, j);
-    dfs(i, j + 1);
-    dfs(i, j - 1);
+    if (i == n - 1 || j == m - 1)
+        return false;
+    return  (s[i    ][j    ] == '*') + 
+            (s[i    ][j + 1] == '*') + 
+            (s[i + 1][j    ] == '*') + 
+            (s[i + 1][j + 1] == '*') == 1;
 }
 
 void run()
 {
     readln(n, m);
     s.resize(n);
-    used.resize(n, vector<bool>(m, false));
     readln(s);
+    set<pii> q;
     fori(n)
         forj(m)
-            if (!used[i][j])
-            {
-                bool ch;
-                int t = i;
-                int r = j;
-                do
-                {
-                    ch = false;
-                    mx = -1;
-                    my = INF;
-                    mu = INF;
-                    md = -1;
-                    dfs(t, r);
-                    FOR(q, my, mx + 1)
-                        FOR(w, mu, md + 1)
-                        {
-                            if (s[q][w] != '.')
-                                ch = true;
-                            s[q][w] = '.';
-                            if (q == my || q == mx || w == mu || w == md)
-                                used[q][w] = false;
-                            else
-                                used[q][w] = true;
-                        }
-                    t = my;
-                    r = mu;
-                }
-                while (ch);
-            }
+            if (check(i, j))
+                q.insert({i, j});
+    int i, j;
+    while (q.size())
+    {
+        tie(i, j) = *q.begin();
+        q.erase(q.begin());
+        s[i][j] = s[i][j + 1] = s[i + 1][j] = s[i + 1][j + 1] = '.';
+        FOR(dx, -1, 2)
+            FOR(dy, -1, 2)
+                if (i + dx >= 0 && j + dy >= 0 && check(i + dx, j + dy))
+                    q.insert({i + dx, j + dy});
+    }
     writeln(s);
 }
 
