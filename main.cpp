@@ -73,10 +73,16 @@ void run()
 
 int main()
 {
+#ifndef ONLINE_JUDGE
+    double time = clock();
+#endif
     ios_base::sync_with_stdio(false);
 //    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
     run();
+#ifndef ONLINE_JUDGE
+    writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
+#endif
     return 0;
 }
 
