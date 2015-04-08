@@ -2,32 +2,19 @@ import requests
 from html.parser import HTMLParser
 import re
 
+roundId = 35
 
-roundId = 34
-'''
-csrftoken = 'DMy8z06JC3ixYG07AtcVDfieO186Xx8B'
-fullPath = '/home/igorjan/206round/2015/RCCWU/B.cpp'
-userId = '8068fee5f49946b3a8f85b1007cd40bb'
-Authorized = 'igorjan94'
-RegisteredOnChamp = 'true'
-sessionId = '".eJxNjDkOgCAQAP-ytYEYG0OnL_AHBGGNxAOzy4bC-HcpLCwnmZkbrJO8WmEkOzu_4RnAgE-E6kM1OeaSKOzIPFR5_LTm38aadX3bNrBQOqxQrJs158toXUpRJMzRnT4F9HJV1PC8TSAtXA:1YSu8g:QYsP_htL32aJs5bHb0y231UfYVI"'
-
-
-parts = {
-        'csrftoken':             csrftoken,
-        'action':                '/send_solution/',
-        'filesolution':          fullPath,
-#        'source':                open(fullPath, 'rb'),
-        'id_language':           '7'
-}
-r = requests.post('http://www.russiancodecup.ru/championship/round/{}/problem{}/'.format(roundId, index),
-    params  = {'csrftoken': csrftoken},
-    files   = parts,
-    cookies = {'sessionId' : sessionId})
-print(r.text)
-if r.status_code == requests.codes.ok:
-    print('Solution is successfully sent. Current time is ' + time.strftime('%H:%M:%S'))
-'''
+def entity2char(x):
+    if x.startswith('&#x'):
+        return chr(int(x[3:-1],16))
+    elif x.startswith('&#'):
+        return chr(int(x[2:-1]))
+    else:
+        if x == 'x2264':
+            return '<='
+        if x == 'xab' or x == 'xbb':
+            return '"'
+        return 'FAIL ' + x + ' FAIL'
 
 class RCCParser(HTMLParser):
 

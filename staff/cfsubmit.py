@@ -9,10 +9,10 @@ from time import sleep
 
 # Edit these four variables according to your needs:
 x_user          =  '''
-02fe1afec55722d5cff82dbe3e7f105636bdd737bdcf7737c4cf1e2730af1e46b3c1f225e120de2c
+befc869903e1e2823f952d4ca3ef711cc022ae970e1500fda01a0d36e4577428c15f887ad41cf31a
 '''[1:-1]
 csrf_token      =  '''
-C363C50288B310C45669A1A17F711C00
+11ca34aab13acda04d037ddcfabb4f19
 '''[1:-1]
 cf_domain       =  "ru" #"com" if you prefer codeforces.com
 username        =  "igorjan94"
