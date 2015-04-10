@@ -1,4 +1,4 @@
-//Igorjan94, template version from 23 January 2015
+//Igorjan94, template version from 19 March 2015
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -28,6 +28,7 @@ using namespace std;
 #define   whole(a)   a.begin(), a.end()
 #define    next      _next
 #define    prev      _prev
+#define   count      _count
 
 #define argmax(a)    (max_element(whole(a)) - (a).begin())
 #define argmin(a)    (min_element(whole(a)) - (a).begin())
@@ -51,7 +52,7 @@ void err(vector<string>::iterator it){++it;}
 tthti void readln (Head& head,Tail&... tail){read(head); readln  (tail...);}
 tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
 tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
-ttti  void writeln_range(T f,T s){if(f!=s){priws(*f);for(auto i=++f;i!=s;++i)print(*i);}writeln();}
+ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
@@ -72,15 +73,21 @@ void run()
 
 int main()
 {
+#ifndef ONLINE_JUDGE
+    double time = clock();
+#endif
     ios_base::sync_with_stdio(false);
-//    freopen(FILENAME".in", "r", stdin);
-//    freopen(FILENAME".out", "w", stdout);
+    freopen(FILENAME".in", "r", stdin);
+    freopen(FILENAME".out", "w", stdout);
     ints(T);
     fori(T)
         cerr << "running test " << (i + 1) << "/" << T << "\n",
         //cout << "Case #" << (i + 1) << ": ",
         run(),
         cerr << "finished test " << (i + 1) << "/" << T << "\n";
+#ifndef ONLINE_JUDGE
+    writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
+#endif
     return 0;
 }
 
