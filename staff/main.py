@@ -1,8 +1,9 @@
 import sys
+import functools
 
 def main():
     writeln_range(sorted(read_int_array()))
-    writeln(1, 2, 3, 4, 5)
+
 
 
 
@@ -33,3 +34,5 @@ def writeln_range(array, **kwargs):
 
 if __name__ == '__main__':
     main()
+
+#@functools.lru_cache(None)
