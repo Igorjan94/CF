@@ -2,7 +2,7 @@ import requests
 from html.parser import HTMLParser
 import re
 
-roundId = 35
+roundId = 36
 
 def entity2char(x):
     if x.startswith('&#x'):
@@ -10,7 +10,7 @@ def entity2char(x):
     elif x.startswith('&#'):
         return chr(int(x[2:-1]))
     else:
-        if x == 'x2264':
+        if x == 'x2264' or x == '8804':
             return '<='
         if x == 'xab' or x == 'xbb':
             return '"'
