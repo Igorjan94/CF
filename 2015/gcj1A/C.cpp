@@ -1,5 +1,7 @@
 //Igorjan94, template version from 19 March 2015
 #include <bits/stdc++.h>
+#include <thread>
+#include <unistd.h>
 
 using namespace std;
 
@@ -26,9 +28,9 @@ using namespace std;
 #define     pll      pair<long long, long long>
 #define   elohw(a)   a.rbegin(), a.rend()
 #define   whole(a)   a.begin(), a.end()
-#define    next      next__
-#define    prev      prev__
-#define   count      count__
+#define    next      _next
+#define    prev      _prev
+#define   count      _count
 
 #define argmax(a)    (max_element(whole(a)) - (a).begin())
 #define argmin(a)    (min_element(whole(a)) - (a).begin())
@@ -61,28 +63,96 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 #define vints(args...)  vi args; readln(args)
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
+#define TYPE vi
+vector<TYPE> answer;
 
-void run()
+/*
+| a b 1 |
+| c d 1 |
+| e f 1 |
+*/
+int ori(ll a, ll b, ll c, ll d, ll e, ll f)
 {
-    ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    ll ans = a * d - b * c - a * f + b * e + c * f - d * e;
+    return ans == 0 ? 0 : ans < 0 ? -1 : 1;
+}
+
+int inside(int x1, int y1, int x2, int y2, int x3, int y3, int a, int b)
+{
+    int c = ori(x1, y1, x2, y2, a, b);
+    int d = ori(x2, y2, x3, y3, a, b);
+    int e = ori(x3, y3, x1, y1, a, b);
+    return (c == 0 && d == e || d == 0 && c == e || e == 0 && c == d) ? 1 : (c == d && d == e) ? 1000 : 0;
+}
+
+void run(int test, vector<pii> & a)
+{
+    int n = a.size();
+    vi ans;
+    vi used(n, 0);
+    forj(n)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            int r = -2;
+            for (int k = i + 1; k < n; k++)
+                if (i != j && k != j)
+                    if (r == -2)
+                        r = ori(a[j].first, a[j].second, a[i].first, a[i].second, a[k].first, a[k].second);
+                    else
+                        if (r != ori(a[j].first, a[j].second, a[i].first, a[i].second, a[k].first, a[k].second))
+                            break;
+            used[j] = true;
+        }
+    }
+    forj(n)
+        if (!used[j])
+    {
+        int t = 0;
+        for (int i = 0; i < (1 << n); i++)
+        {
+            int count = 0;
+            for (int q = 0; q < n; q++)
+                for (int w = q + 1; w < n; w++)
+                    for (int e = w + 1; e < n; e++)
+                        if (
+                                ((1 << q) & i)
+                            &&  ((1 << w) & i)
+                            &&  ((1 << e) & i)
+                            &&  (q != j) 
+                            &&  (w != j) 
+                            &&  (e != j))
+                            count += inside(a[q].first, a[q].second, a[w].first, a[w].second, a[e].first, a[e].second, a[j].first, a[j].second);
+            if (count < 1000)
+                t = max(__builtin_popcount(i), t);
+        }
+        ans.pb(n - t);
+    }
+    else
+        ans.pb(0);
+    answer[test] = ans;
+    cerr << "finished test " << (test + 1) << "\n";
 }
 
 int main()
 {
-#ifndef ONLINE_JUDGE
-    double time = clock();
-#endif
     ios_base::sync_with_stdio(false);
-//    freopen(FILENAME".in", "r", stdin);
-//    freopen(FILENAME".out", "w", stdout);
-    run();
-#ifndef ONLINE_JUDGE
-    writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
-#endif
+    freopen(FILENAME".in", "r", stdin);
+    freopen(FILENAME".out", "w", stdout);
+    ints(T);
+    vector<thread> threads;
+    answer.resize(T);
+    fori(T)
+    {
+        cerr << "running test " << (i + 1) << "/" << T << "\n";
+
+        ints(n);
+        vector<pii> a(n);
+        readln(a);
+        run(i, a);
+        cout << "Case #" << (i + 1) << ":\n";
+        writeln_range(whole(answer[i]));
+    }
     return 0;
 }
 

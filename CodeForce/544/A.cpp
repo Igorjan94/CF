@@ -65,10 +65,21 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 void run()
 {
     ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    string s;
+    readln(s);
+    vector<string> ans;
+    ans.pb("YES");
+    vector<bool> used(256, false);
+    for (char c : s)
+    {
+        if (n && !used[c])
+            used[c] = true, --n, ans.pb("");
+        ans.back() += c;
+    }
+    if (n)
+        writeln("NO");
+    else
+        writeln(ans);
 }
 
 int main()

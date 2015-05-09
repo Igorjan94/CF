@@ -61,14 +61,59 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 #define vints(args...)  vi args; readln(args)
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
+template<typename S, typename T, typename F1, typename F2>
+vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParameter)
+{
+    int n = a.size();
+    vector<T> d(n, numeric_limits<T>::max());
+    vector<bool> used(n, false);
+    d[start] = T(0);
+    used[start] = true;
+    queue<int> q;
+    q.push(start);
+    while (q.size())
+    {
+        int u = q.front();
+        q.pop();
+        for (S x : a[u])
+        {
+            int to = get(x);
+            if (!used[to])
+                q.push(to),
+                d[to] = d[u] + dist(x),
+                used[to] = true;
+        }
+    }
+    return move(d);
+}
 
 void run()
 {
-    ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    ints(n, m);
+    vector<vi> a(n), d(n);
+    int x, y;
+    fori(m)
+        readln(x, y),
+        a[--x].pb(--y),
+        a[y].pb(x);
+    ints(s1, t1, l1, s2, t2, l2);
+    fori(n)
+        d[i] = bfs(a, i, [](int x){return x;}, [](int x){return 1;}, 0);
+    if (d[--s1][--t1] > l1 || d[--s2][--t2] > l2)
+    {
+        writeln(-1);
+        return;
+    }
+    int ans = m - d[s1][t1] - d[s2][t2];
+    fori(n)
+        forj(n)
+        {
+            if (d[s1][i] + d[i][j] + d[j][t1] <= l1 && d[s2][i] + d[i][j] + d[j][t2] <= l2)
+                ans = max(ans, m - d[s1][i] - d[i][j] - d[j][t1] - d[s2][i] - d[j][t2]);
+            if (d[t1][i] + d[i][j] + d[j][s1] <= l1 && d[s2][i] + d[i][j] + d[j][t2] <= l2)
+                ans = max(ans, m - d[t1][i] - d[i][j] - d[j][s1] - d[s2][i] - d[j][t2]);
+        }
+    writeln(ans);
 }
 
 int main()

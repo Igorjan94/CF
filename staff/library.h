@@ -282,4 +282,31 @@ struct segmentTree
         }
     }
 };
+
+template<typename S, typename T, typename F1, typename F2>
+vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParameter)
+{
+    int n = a.size();
+    vector<T> d(n, numeric_limits<T>::max());
+    vector<bool> used(n, false);
+    d[start] = T(0);
+    used[start] = true;
+    queue<int> q;
+    q.push(start);
+    while (q.size())
+    {
+        int u = q.front();
+        q.pop();
+        for (S x : a[u])
+        {
+            int to = get(x);
+            if (!used[to])
+                q.push(to),
+                d[to] = d[u] + dist(x),
+                used[to] = true;
+        }
+    }
+    return move(d);
+}
+
 #endif /* IGORJAN94 */

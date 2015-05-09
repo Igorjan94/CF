@@ -26,9 +26,9 @@ using namespace std;
 #define     pll      pair<long long, long long>
 #define   elohw(a)   a.rbegin(), a.rend()
 #define   whole(a)   a.begin(), a.end()
-#define    next      next__
-#define    prev      prev__
-#define   count      count__
+#define    next      _next
+#define    prev      _prev
+#define   count      _count
 
 #define argmax(a)    (max_element(whole(a)) - (a).begin())
 #define argmin(a)    (min_element(whole(a)) - (a).begin())
@@ -65,10 +65,47 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 void run()
 {
     ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    vector<vi> a(n * n * n + 1, vi(n)), b;
+    readln(a[0]);
+    fori(n)
+        --a[0][i];
+    vll to(n, -1ll);
+    FOR(i, 0, a.size())
+    {
+        if (i)
+            forj(n)
+                a[i][j] = a[0][a[i - 1][j]];
+        forj(n)
+            if (to[j] == -1)
+                if (a[i][a[i][j]] == a[i][j])
+                    to[j] = i + 1;
+    }
+    ll ans = 1;
+    set<ll> g;
+    for (ll x : to)
+        g.insert(x);
+    for (ll x : g)
+    {
+        writeln(x, ans, __gcd(x, ans));
+        ans = ans * x / __gcd(x, ans);
+    }
+    writeln_range(whole(g));
+    writeln(ans);
+    return;
+    if (ans > 1000)
+    {
+        writeln(ans);
+        return;
+    }
+    b.pb(a[n - 1]);
+    FOR(i, 1, ans - n)
+        forj(n)
+            b[i][j] = a[0][b[i - 1][j]];
+    int i = b.size() - 1;
+    forj(n)
+        if (b[i][b[i][j]] != b[i][j])
+            42;
+    writeln(ans);
 }
 
 int main()
@@ -81,7 +118,6 @@ int main()
 //    freopen(FILENAME".out", "w", stdout);
     run();
 #ifndef ONLINE_JUDGE
-    writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
 #endif
     return 0;
 }
