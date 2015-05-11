@@ -2,6 +2,7 @@
 #ifndef IGORJAN94
 #define IGORJAN94 1
 
+//IgorjanIncludes
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -12,6 +13,7 @@ using namespace __gnu_cxx;
 using namespace __gnu_pbds; 
 */ //typedef tree<int, int/*null_type*/, less<int>, rb_tree_tag, tree_order_statistics_node_update> orderedMap;
 
+//IgorjanDefines
 #define forit(it, r) for (auto it = r.begin(); it != r.end(); it++)
 #define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
 #define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
@@ -35,9 +37,9 @@ using namespace __gnu_pbds;
 #define     pll      pair<long long, long long>
 #define   elohw(a)   a.rbegin(), a.rend()
 #define   whole(a)   a.begin(), a.end()
-#define    next      _next
-#define    prev      _prev
-#define   union      _union
+#define    next      next__
+#define    prev      prev__
+#define   union      union__
 
 #define argmax(a)    (max_element(whole(a)) - (a).begin())
 #define argmin(a)    (min_element(whole(a)) - (a).begin())
@@ -50,6 +52,12 @@ using namespace __gnu_pbds;
 #define ttt12i template<typename T1, typename T2> inline
 #define ttti   template<typename T> inline
 
+#define    ints(args...)     int args; readln(args)
+#define     lls(args...)      ll args; readln(args)
+#define   vints(args...)      vi args; readln(args)
+#define strings(args...)  string args; readln(args)
+
+//IgorjanWriteln-Readln
 inline void writeln2(){cout<<"\n";}
 inline void writeln() {cout<<"\n";}
 inline void readln()  {}
@@ -65,10 +73,6 @@ ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
-#define  ints(args...) int args; readln(args)
-#define   lls(args...)  ll args; readln(args)
-#define vints(args...)  vi args; readln(args)
-
 ttti   ostream&operator<<(ostream&os,vector<T>&a);
 ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
 ttt12i ostream&operator<<(ostream&os,pair<T1,T2>&a){return os<<a.first<<" "<<a.second;}
@@ -78,6 +82,7 @@ ttti void print(T a){cout<<" "<<a;}
 ttti void priws(T a){cout<<a;}
 ttti void read(T& a){cin>>a;}
 
+//Igorjanbin_search
 //x -> min, f(x) == true
 template<typename T, typename F>
 T bin_search(T l, T r, F f, T eps)
@@ -89,6 +94,7 @@ T bin_search(T l, T r, F f, T eps)
     return f(l) ? l : r;
 }
 
+//Igorjandsu
 struct dsu
 {
     vector<int> a;
@@ -113,7 +119,8 @@ struct dsu
     }
 };
 
-vector<bool> isPrime(int n)
+//Igorjansieve
+vector<bool> sieve(int n)
 {
     vector<bool> x(n, true);
     x[0] = x[1] = false;
@@ -124,6 +131,7 @@ vector<bool> isPrime(int n)
     return x;
 }
 
+//IgorjanlinearSieve
 struct linearSieve
 {
     vector<int> primes;
@@ -165,6 +173,7 @@ struct linearSieve
     }
 };
 
+//IgorjanfenwickTree
 template <typename T>
 struct fenwickTree
 {
@@ -209,6 +218,7 @@ struct fenwickTree
     }
 };
 
+//IgorjansegmentTree
 template<typename T>
 struct segmentTree
 {
@@ -283,6 +293,7 @@ struct segmentTree
     }
 };
 
+//Igorjanbfs
 template<typename S, typename T, typename F1, typename F2>
 vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParameter)
 {
@@ -309,4 +320,5 @@ vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParamete
     return move(d);
 }
 
+//Igorjanendif
 #endif /* IGORJAN94 */

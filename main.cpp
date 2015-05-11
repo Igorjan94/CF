@@ -1,4 +1,4 @@
-//Igorjan94, template version from 19 March 2015
+// Igorjan94, template version from 19 March 2015
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -56,11 +56,13 @@ ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
-#define  ints(args...) int args; readln(args)
-#define   lls(args...)  ll args; readln(args)
-#define vints(args...)  vi args; readln(args)
+#define    ints(args...)     int args; readln(args)
+#define     lls(args...)      ll args; readln(args)
+#define   vints(args...)      vi args; readln(args)
+#define strings(args...)  string args; readln(args)
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
+//Igorjan
 
 void run()
 {
