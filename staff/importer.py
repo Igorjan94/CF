@@ -11,7 +11,7 @@ def main():
         if len(library[i]) == 2 and library[i][0] in source:
             toAppend.append(library[i][1])
     source = source.split(pattern, 1)
-    open(sys.argv[1], 'w').write(source[0] + '\n' + ''.join(toAppend) + source[1])
+    open(sys.argv[1], 'w').write(source[0] + '\n' + pattern + '\n' + ''.join(toAppend) + source[1])
 
 if __name__ == '__main__':
     main()
