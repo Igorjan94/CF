@@ -320,5 +320,5 @@ vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParamete
     return move(d);
 }
 
-//Igorjanendif
+//IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
