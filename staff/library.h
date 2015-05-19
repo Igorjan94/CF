@@ -320,5 +320,25 @@ vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParamete
     return move(d);
 }
 
+//Igorjanbinpow
+template<typename T>
+T binpow (T a, ll n)
+{
+    if (n == 0)
+        return (T) 1;
+    if (n == 1)
+        return a;
+    T res = a;
+    --n;
+    while (n)
+    {
+        if (n & 1)
+            res *= a;
+        a *= a;
+        n >>= 1;
+    }
+    return res;
+}
+
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
