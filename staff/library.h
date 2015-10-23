@@ -340,5 +340,54 @@ T binpow (T a, ll n)
     return res;
 }
 
+//Igorjanfft
+typedef complex<double> base;
+ 
+void fft(vector<base>& a, bool invert)
+{
+    int n = a.size();
+    if (n == 1)
+        return;
+    vector<base> a0, a1;
+    fori(n)
+        (i % 2 ? a1 : a0).pb(a[i]);
+    fft(a0, invert);
+    fft(a1, invert);
+    n /= 2;
+
+    double ang = M_PI / n * (invert ? -1 : 1);
+    base w(1);
+    base wn(cos(ang), sin(ang));
+    fori(n)
+    {
+        a[i + 0] = a0[i] + w * a1[i];
+        a[i + n] = a0[i] - w * a1[i];
+        if (invert)
+            a[i + 0] /= 2,
+            a[i + n] /= 2;
+        w *= wn;
+    }
+}
+
+vector<int> multiply(const vector<int>& a, const vector<int>& b)
+{
+    vector<base> fa(a.begin(), a.end()), fb(b.begin(), b.end());
+    vector<int> res;
+    size_t n = 1;
+    while (n < max(a.size(), b.size())) 
+        n <<= 1;
+    n <<= 1;
+    fa.resize(n);
+    fb.resize(n);
+    fft(fa, false);
+    fft(fb, false);
+    fori(n)
+        fa[i] *= fb[i];
+    fft(fa, true);
+    fori(n)
+        res.pb(int(fa[i].real() + 0.5));
+    return move(res);
+}
+
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
