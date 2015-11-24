@@ -1,4 +1,3 @@
-public interface A
-{
+public interface A {
     void good(int x);
 }
