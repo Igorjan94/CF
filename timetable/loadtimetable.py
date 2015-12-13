@@ -7,6 +7,7 @@ import requests
 import subprocess
 
 def defineDays(s):
+    s = s.replace('по пятницам и выходным', 'ПСВ')
     s = s.replace('ежедневно', '')
     s = s.replace('по выходным', 'СВ')
     s = s.replace('по рабочим', 'КСВ')
@@ -16,14 +17,12 @@ def defineDays(s):
     s = s.replace('кроме пятн. и субб.', 'КПС')
     s = s.replace('кроме пятниц и вых.', 'КПСВ')
     s = s.replace('кроме воскресений', 'КВ')
-    s = s.replace('по пятницам и выходным', 'ПСВ')
-    s = re.sub(r'.*отменен.*', '', s)
     return s
 
 def defineTime(s):
     if flag == 1:
         s = re.sub(r'\t\t00:[34]\d:00', ' б/о', s)
-        s = re.sub(r'.*?\d\d:[1..9]\d:00.*?', '', s)
+        s = re.sub(r'\d\d:[1..9]\d:00', '', s)
         s = re.sub(r'\d\d:\d\d:\d\d', '', s)
     else:
         s = re.sub(r'00:(\d\d):00', r'\1 м', s)
@@ -35,7 +34,6 @@ def removeRepeatingStations(s):
     if flag == 0:
         return s
     s = re.sub(r'Санкт-Петербург-.*?(\s|$)', r'\1', s)
-    s = s.replace('Зеленогорск', '')
     s = s.replace('Лигово', '')
     s = s.replace('Калище', '')
     s = s.replace('Лебяжье', '')
@@ -46,7 +44,7 @@ def removeRepeatingStations(s):
     return s
 
 
-def parse(url):
+def parse(directory, url):
     try:
         x = requests.get(url).json()
     except:
@@ -65,10 +63,12 @@ def parse(url):
         s = defineDays(s)
         s = defineTime(s)
         s = removeRepeatingStations(s)
-        if s != "":
-            print(y["tra"]["dep"]["tim"] + "\t\t" + s)
+        s = re.sub(r'.*отменен.*', '!!!', s)
+        if s != "!!!":
+            print(y["tra"]["dep"]["tim"] + "\t\t" + s + "\t\t" + y["tra"]["cha"].replace('. Уточните дату поездки', ''))
     sys.stdout.close()
     subprocess.Popen(['mousepad', filename + ".out"])
+
 
 st = os.path.dirname(os.path.abspath(__file__)) + '/stations.in'
 file = open(st, 'r')
@@ -81,7 +81,7 @@ for string in file:
 
 directory = sys.argv[1]
 today     = sys.argv[2]
-flag      = sys.argv[3]
+flag      = int(sys.argv[3])
 args      = sys.argv[4:]
 if directory[-1] != os.sep:
     directory += os.sep
@@ -98,5 +98,5 @@ while i < len(args):
             arg2 += " " + args[i + 2]
             fl = 1
         for to in hash[arg2]:
-            parse('http://www.tutu.ru/spb/rasp.php?st1=' + fro + '&st2=' + to + '&json' + today)
+            parse(directory, 'http://www.tutu.ru/spb/rasp.php?st1=' + fro + '&st2=' + to + '&json' + today)
     i += 2 + fl
