@@ -1,0 +1,87 @@
+MyStrategy.cpp: В функции-члене «virtual void MyStrategy::move(const model::Car&, const model::World&, const model::Game&, model::Move&)»:
+MyStrategy.cpp:315:27: предупреждение: сравнение знакового и беззнакового целых выражений [-Wsign-compare]
+         for (int i = 0; i < a.size(); ++i)
+                           ^
+MyStrategy.cpp:316:31: предупреждение: сравнение знакового и беззнакового целых выражений [-Wsign-compare]
+             for (int j = 0; j < a[0].size(); ++j)
+                               ^
+MyStrategy.cpp:331:31: предупреждение: сравнение знакового и беззнакового целых выражений [-Wsign-compare]
+             for (int i = 0; i < once.size(); ++i)
+                               ^
+MyStrategy.cpp:707:114: предупреждение: suggest parentheses around «&&» within «||» [-Wparentheses]
+                     if ((b.getDistanceTo(targetX, targetY) > tileSize * 2 && (fabs(self.getAngleTo(b)) < PI / 27 && fabs(self.getAngleTo(targetX, targetY) < PI / 36) || (bonus.getType() == PURE_SCORE || (bonus.getType() == REPAIR_KIT && self.getDurability() < 20)) && self.getAngleTo(b) < PI / 5) && self.getDistanceTo(b) > tileSize * 0.75))
+                                                                                                                  ^
+MyStrategy.cpp:754:60: предупреждение: suggest parentheses around «&&» within «||» [-Wparentheses]
+                                 if (targetX <= self.getX() && self.getX() <= car.getX() || targetX >= self.getX() && self.getX() >= car.getX())
+                                                            ^
+MyStrategy.cpp:770:60: предупреждение: suggest parentheses around «&&» within «||» [-Wparentheses]
+                                 if (targetY <= self.getY() && self.getY() <= car.getY() || targetY >= self.getY() && self.getY() >= car.getY())
+                                                            ^
+MyStrategy.cpp:805:52: предупреждение: suggest parentheses around «&&» within «||» [-Wparentheses]
+                         if (targetX <= self.getX() && self.getX() <= o.getX() || targetX >= self.getX() && self.getX() >= o.getX())
+                                                    ^
+MyStrategy.cpp:821:52: предупреждение: suggest parentheses around «&&» within «||» [-Wparentheses]
+                         if (targetY <= self.getY() && self.getY() <= o.getY() || targetY >= self.getY() && self.getY() >= o.getY())
+                                                    ^
+MyStrategy.cpp:861:35: предупреждение: сравнение знакового и беззнакового целых выражений [-Wsign-compare]
+             for (int i = 2; i + 1 < path.size(); ++i)
+                                   ^
+MyStrategy.cpp:937:40: предупреждение: suggest parentheses around «&&» within «||» [-Wparentheses]
+                 bool fas = is131(path) && speedModule > 16.5 || world.getMapName() == "map14" && speedModule > 18 && count < 3;
+                                        ^
+MyStrategy.cpp:973:27: предупреждение: сравнение знакового и беззнакового целых выражений [-Wsign-compare]
+         for (int i = 0; i < vvv.size(); ++i)
+                           ^
+MyStrategy.cpp:974:31: предупреждение: сравнение знакового и беззнакового целых выражений [-Wsign-compare]
+             for (int j = 0; j < vvv[0].size(); ++j)
+                               ^
+In file included from MyStrategy.cpp:28:0:
+/home/igorjan/206round/staff/library.h: In instantiation of «std::ostream& operator<<(std::ostream&, std::vector<_RealType>&) [with T = std::vector<std::vector<int> >; std::ostream = std::basic_ostream<char>]»:
+/home/igorjan/206round/staff/library.h:82:26:   required from «void priws(T) [with T = std::vector<std::vector<std::vector<int> > >]»
+/home/igorjan/206round/staff/library.h:71:51:   required from «void writeln(Head, Tail ...) [with Head = std::vector<std::vector<std::vector<int> > >; Tail = {}]»
+MyStrategy.cpp:1059:19:   required from here
+/home/igorjan/206round/staff/library.h:79:99: предупреждение: сравнение знакового и беззнакового целых выражений [-Wsign-compare]
+ ttti   ostream&operator<<(ostream&os,vector<T>&a){if(a.size())os<<a[0];else os<<"\n";for(int i=1;i<a.size();++i)os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
+                                                                                                   ^
+/home/igorjan/206round/staff/library.h: In instantiation of «std::ostream& operator<<(std::ostream&, std::vector<_RealType>&) [with T = std::vector<int>; std::ostream = std::basic_ostream<char>]»:
+/home/igorjan/206round/staff/library.h:79:65:   required from «std::ostream& operator<<(std::ostream&, std::vector<_RealType>&) [with T = std::vector<std::vector<int> >; std::ostream = std::basic_ostream<char>]»
+/home/igorjan/206round/staff/library.h:82:26:   required from «void priws(T) [with T = std::vector<std::vector<std::vector<int> > >]»
+/home/igorjan/206round/staff/library.h:71:51:   required from «void writeln(Head, Tail ...) [with Head = std::vector<std::vector<std::vector<int> > >; Tail = {}]»
+MyStrategy.cpp:1059:19:   required from here
+/home/igorjan/206round/staff/library.h:79:99: предупреждение: сравнение знакового и беззнакового целых выражений [-Wsign-compare]
+/home/igorjan/206round/staff/library.h: In instantiation of «std::ostream& operator<<(std::ostream&, std::vector<_RealType>&) [with T = int; std::ostream = std::basic_ostream<char>]»:
+/home/igorjan/206round/staff/library.h:79:65:   recursively required from «std::ostream& operator<<(std::ostream&, std::vector<_RealType>&) [with T = std::vector<int>; std::ostream = std::basic_ostream<char>]»
+/home/igorjan/206round/staff/library.h:79:65:   required from «std::ostream& operator<<(std::ostream&, std::vector<_RealType>&) [with T = std::vector<std::vector<int> >; std::ostream = std::basic_ostream<char>]»
+/home/igorjan/206round/staff/library.h:82:26:   required from «void priws(T) [with T = std::vector<std::vector<std::vector<int> > >]»
+/home/igorjan/206round/staff/library.h:71:51:   required from «void writeln(Head, Tail ...) [with Head = std::vector<std::vector<std::vector<int> > >; Tail = {}]»
+MyStrategy.cpp:1059:19:   required from here
+/home/igorjan/206round/staff/library.h:79:99: предупреждение: сравнение знакового и беззнакового целых выражений [-Wsign-compare]
+MyStrategy.cpp:987:20: предупреждение: «R» may be used uninitialized in this function [-Wmaybe-uninitialized]
+             double R, G, B;
+                    ^
+MyStrategy.cpp:987:23: предупреждение: «G» may be used uninitialized in this function [-Wmaybe-uninitialized]
+             double R, G, B;
+                       ^
+MyStrategy.cpp:987:26: предупреждение: «B» may be used uninitialized in this function [-Wmaybe-uninitialized]
+             double R, G, B;
+                          ^
+MyStrategy.cpp:641:13: предупреждение: «pj» may be used uninitialized in this function [-Wmaybe-uninitialized]
+             if (pj == tj)
+             ^
+MyStrategy.cpp:683:21: предупреждение: «pi» may be used uninitialized in this function [-Wmaybe-uninitialized]
+                     if (pi == ti && pi == fi);
+                     ^
+MyStrategy.cpp:678:34: предупреждение: «fj» may be used uninitialized in this function [-Wmaybe-uninitialized]
+                     if (pj == tj && pj == fj);
+                                  ^
+MyStrategy.cpp:1018:20: предупреждение: «fi» may be used uninitialized in this function [-Wmaybe-uninitialized]
+         visual.line(getCenter(ti), getCenter(tj), getCenter(fi), getCenter(fj), 0x00ff00);
+                    ^
+csimplesocket/PassiveSocket.cpp: В функции-члене «bool CPassiveSocket::BindMulticast(const uint8*, const uint8*, int16)»:
+csimplesocket/PassiveSocket.cpp:57:20: предупреждение: variable «nReuse» set but not used [-Wunused-but-set-variable]
+     int32          nReuse;
+                    ^
+/tmp/ccQzvVXG.o: In function `Debug::Debug()':
+Debug.cpp:(.text+0x3d): warning: Using 'getaddrinfo' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/tmp/cc9a41aW.o: In function `CActiveSocket::ConnectTCP(unsigned char const*, short)':
+ActiveSocket.cpp:(.text+0x51): warning: Using 'gethostbyname' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking

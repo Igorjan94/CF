@@ -21,7 +21,6 @@ using namespace std;
 #define     pll      pair<long long, long long>
 #define   whole(a)   a.begin(), a.end()
 #define    next      next__
-#define    prev      prev__
 #define   count      count__
 #define  argmax(a)   (max_element(whole(a)) - (a).begin())
 #define  argmin(a)   (min_element(whole(a)) - (a).begin())
@@ -58,10 +57,86 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 void run()
 {
     ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    vi x(n);
+    readln(x);
+    sort(whole(x));
+    set<pii> a;
+    set<pii, greater<pii>> b;
+    fori1(n - 1)
+        a.insert({x[i + 1] - x[i - 1], i});
+    b.insert({x[1] - x[0], 0});
+    b.insert({x[n - 1] - x[n - 2], n - 1});
+    set<int> nn, pp;
+    fori(n)
+        nn.insert(i),
+        pp.insert(-i);
+
+    fori(n - 2)
+    {
+        if (i % 2 == 0)
+        {
+            int w = b.begin()->second, u, v;
+            b.erase(b.begin());
+            nn.erase(w);
+            pp.erase(w);
+            //wr(w);
+            auto c = nn.lower_bound(w + 1);
+            if (c != nn.end())
+            {
+                u = *c;
+                v = *nn.lower_bound(u + 1);
+                b.insert({x[v] - x[u], u});
+            }
+            else
+            {
+                v = w;
+                u = -*pp.lower_bound(-v + 1);
+                w = -*pp.lower_bound(-u + 1);
+                b.insert({x[u] - x[w], u});
+            }
+            a.erase({x[v] - x[w], u});
+            //detele first or last
+        }
+        else
+        {
+            int u = a.begin()->second;
+            int v = *nn.lower_bound(u + 1);
+            int w = -*pp.lower_bound(-u + 1);
+            auto d = nn.lower_bound(v);
+            auto c = pp.lower_bound(-w + 1);
+            a.erase({x[v] - x[w], u});
+            nn.erase(u);
+            pp.erase(u);
+            if (d != nn.end())
+            {
+                a.erase({x[*d] - x[u], v});
+                a.insert({x[*d] - x[w], v});
+            }
+            else
+            {
+                b.erase({x[v] - x[u], v});
+                b.insert({x[v] - x[w], v});
+            }
+            if (c != pp.end())
+            {
+                a.erase({x[v] - x[*c], w});
+                a.insert({x[v] - x[*c], w});
+            } 
+            else
+            {
+                b.erase({x[u] - x[w], w});
+                b.insert({x[v] - x[w], w});
+            }
+            //delete with smallest dist
+        }
+        //writeln("b");
+        //writeln_range(whole(b));
+        //writeln();
+        //for (auto t : nn)
+            //print(x[t]);
+        //writeln();
+    }
+    writeln(abs(x[b.begin()->second] - x[b.rbegin()->second]));
 }
 
 int main()

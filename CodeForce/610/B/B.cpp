@@ -60,8 +60,16 @@ void run()
     ints(n);
     vi a(n);
     readln(a);
-    sort(whole(a));
-    writeln(a);
+    int x = argmin(a);
+    int c = 0;
+    vector<int> b;
+    fori(n)
+        if (a[i] == a[x])
+            b.pb(i);
+    fori1(b.size())
+        c = max(c, b[i] - b[i - 1] - 1);
+    c = max(c, b[0] - b.back() + n - 1);
+    writeln(n * 1ll * a[x] + c);
 }
 
 int main()

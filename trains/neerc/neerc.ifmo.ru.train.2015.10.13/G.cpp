@@ -1,9 +1,9 @@
-// Igorjan94, template version from 19 March 2015 (deleted unused defines & reorganization from 05 November 2015)
+// Igorjan94, template version from 19 March 2015
 #include <bits/stdc++.h>
 
 using namespace std;
 
-#define forit(it, r) for (auto it = r.begin(); it != r.end(); ++it)
+#define forit(it, r) for (auto it = r.begin(); it != r.end(); it++)
 #define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
 #define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
 #define forn1(i, n)  for (int i = 1; i < (int) (n); ++i)
@@ -13,29 +13,33 @@ using namespace std;
 #define   fori(n)    for (int i = 0; i < (int) (n); ++i)
 #define   forj(n)    for (int j = 0; j < (int) (n); ++j)
 
+#define     fst      first
+#define     snd      second
 #define      ll      long long
 #define      pb      push_back
 #define      vi      vector<int>
+#define      eb      emplace_back
+#define      vs      vector<string>
 #define     pii      pair<int, int>
 #define     vll      vector<long long>
+#define     vvi      vector<vector<int>>
 #define     pll      pair<long long, long long>
+#define   elohw(a)   a.rbegin(), a.rend()
 #define   whole(a)   a.begin(), a.end()
 #define    next      next__
 #define    prev      prev__
 #define   count      count__
-#define  argmax(a)   (max_element(whole(a)) - (a).begin())
-#define  argmin(a)   (min_element(whole(a)) - (a).begin())
 
-#define  ints(a...)  int a; readln(a)
-#define  lls(a...)   ll a; readln(a)
+#define argmax(a)    (max_element(whole(a)) - (a).begin())
+#define argmin(a)    (min_element(whole(a)) - (a).begin())
 #define wr(args...)  err(split(#args,',').begin(),args)
-                    
-#define  FILENAME    "input"
-#define     INF      1000000007
-                    
-#define    tthti     template<typename Head, typename... Tail> inline
-#define   ttt12i     template<typename T1, typename T2> inline
-#define    ttti      template<typename T> inline
+
+#define FILENAME "input"
+#define INF 1000000007
+
+#define tthti  template<typename Head, typename... Tail> inline
+#define ttt12i template<typename T1, typename T2> inline
+#define ttti   template<typename T> inline
 
 inline void writeln2(){cout<<"\n";}
 inline void writeln() {cout<<"\n";}
@@ -52,16 +56,54 @@ ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
+#define    ints(args...)     int args; readln(args)
+#define     lls(args...)      ll args; readln(args)
+#define   vints(args...)      vi args; readln(args)
+#define strings(args...)  string args; readln(args)
+
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
+double xs, ys, vy, vx, x, y, r, h, a;
+int n;
+
+double distToLine(double x1, double y1, double x2, double y2, double xp, double yp)
+{
+    double dx = y1 - y2;
+    double dy = x2 - x1;
+    double l = dx * dx + dy * dy;
+    double t = abs(xp * dx + yp * dy + x1 * y2 - x2 * y1);
+    return t <= r * sqrt(l) + 0.000000001;
+}
+
+double getCenter(double x, double y, double vx, double vy)
+{
+    double b = vx * x + vy * y;
+    double c = x * x + y * y - r * r;
+    //writeln((-b - sqrt(b * b - a * c)) / a, (-b + sqrt(b * b - a * c)) / a);
+    return (-b - sqrt(b * b - a * c)) / a;
+}
 
 void run()
 {
-    ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    readln(xs, ys, vx, vy, r, h, n);
+    vector<pair<int, pair<double, double>>> ans;
+    cout.precision(6);
+    cout << fixed;
+    h = (h + r) / r;
+    a = vx * vx + vy * vy;
+    fori(n)
+    {
+        readln(x, y);
+        if (distToLine(xs, ys, xs + vx, ys + vy, x, y))
+        {
+            double t = getCenter(xs - x, ys - y, vx, vy);
+            double xc = xs + t * vx;
+            double yc = ys + t * vy;
+            ans.pb({i + 1, {xc + (x - xc) * h, yc + (y - yc) * h}});
+        }
+    }
+    writeln(ans.size());
+    writeln(ans);
 }
 
 int main()
@@ -70,7 +112,7 @@ int main()
     double time = clock();
 #endif
     ios_base::sync_with_stdio(false);
-//    freopen(FILENAME".in", "r", stdin);
+    //freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
     run();
 #ifndef ONLINE_JUDGE

@@ -1,9 +1,9 @@
-// Igorjan94, template version from 19 March 2015 (deleted unused defines & reorganization from 05 November 2015)
+// Igorjan94, template version from 19 March 2015
 #include <bits/stdc++.h>
 
 using namespace std;
 
-#define forit(it, r) for (auto it = r.begin(); it != r.end(); ++it)
+#define forit(it, r) for (auto it = r.begin(); it != r.end(); it++)
 #define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
 #define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
 #define forn1(i, n)  for (int i = 1; i < (int) (n); ++i)
@@ -13,29 +13,33 @@ using namespace std;
 #define   fori(n)    for (int i = 0; i < (int) (n); ++i)
 #define   forj(n)    for (int j = 0; j < (int) (n); ++j)
 
+#define     fst      first
+#define     snd      second
 #define      ll      long long
 #define      pb      push_back
 #define      vi      vector<int>
+#define      eb      emplace_back
+#define      vs      vector<string>
 #define     pii      pair<int, int>
 #define     vll      vector<long long>
+#define     vvi      vector<vector<int>>
 #define     pll      pair<long long, long long>
+#define   elohw(a)   a.rbegin(), a.rend()
 #define   whole(a)   a.begin(), a.end()
 #define    next      next__
 #define    prev      prev__
 #define   count      count__
-#define  argmax(a)   (max_element(whole(a)) - (a).begin())
-#define  argmin(a)   (min_element(whole(a)) - (a).begin())
 
-#define  ints(a...)  int a; readln(a)
-#define  lls(a...)   ll a; readln(a)
+#define argmax(a)    (max_element(whole(a)) - (a).begin())
+#define argmin(a)    (min_element(whole(a)) - (a).begin())
 #define wr(args...)  err(split(#args,',').begin(),args)
-                    
-#define  FILENAME    "input"
-#define     INF      1000000007
-                    
-#define    tthti     template<typename Head, typename... Tail> inline
-#define   ttt12i     template<typename T1, typename T2> inline
-#define    ttti      template<typename T> inline
+
+#define FILENAME "input"
+#define INF 1000000007
+
+#define tthti  template<typename Head, typename... Tail> inline
+#define ttt12i template<typename T1, typename T2> inline
+#define ttti   template<typename T> inline
 
 inline void writeln2(){cout<<"\n";}
 inline void writeln() {cout<<"\n";}
@@ -52,16 +56,82 @@ ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
+#define    ints(args...)     int args; readln(args)
+#define     lls(args...)      ll args; readln(args)
+#define   vints(args...)      vi args; readln(args)
+#define strings(args...)  string args; readln(args)
+
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
+#define x first
+#define y second
+
+int ori(pll& a, pll& b, pll& c)
+{
+    auto t = a.x * b.y - a.y * b.x + a.y * c.x - a.x * c.y + b.x * c.y - b.y * c.x;
+    return t == 0 ? 0 : t > 0 ? 1 : -1;
+}
 
 void run()
 {
-    ints(n);
-    vi a(n);
+    lls(n, c, d);
+    pll C = {c, d};
+    pll D = {c + 1, d};
+    pll Z = {0, 0};
+    vector<pll> a(n);
     readln(a);
-    sort(whole(a));
-    writeln(a);
+    auto f = [&C, &D](pll& a, pll& b)
+        {
+            int t1 = ori(D, C, a);
+            int t2 = ori(D, C, b);
+            if (t1 == t2)
+                return t1 != 0 ? ori(a, C, b) == -1 : (a.x > b.x);
+            if (t1 == 0)
+                return a.x > C.x ? true : t2 == 1;
+            if (t2 == 0)
+                return b.x > C.x ? false : t1 == -1;
+            return t1 < t2;
+        };
+    sort(a.begin(), a.end(), f);
+    fori(n)
+        a.pb(a[i]);
+    ll ans = n * (n - 1) * (n - 2) / 6;
+    fori(n)
+    {
+        int l = i;
+        int r = i + n;
+        int m;
+        int t;
+        while (r - l > 1)
+        {
+            m = (r + l) >> 1;
+            t = ori(a[i], C, a[m]);
+            if (m >= n)
+                t != -1 ? r = m : l = m;
+            else
+                t == 1 ? r = m : l = m;
+        }
+        t = ori(a[i], C, a[l]);
+        if (l >= n)
+        {
+            if (t != -1)
+                l = r;
+        }
+        else
+        {
+            if (t == 1)
+                l = r;
+        }
+        //if (ori(a[i], C, a[r]) == 1)
+            //l = r ;
+        //--l;
+        //if (l == i)
+            //wr("lol"),
+            //l += n - 1;
+        //writeln(i, l);
+        ans -= (l - i) * (l - i - 1) / 2;
+    }
+    writeln(ans);
 }
 
 int main()

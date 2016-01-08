@@ -1,0 +1,2667 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="-1"/>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <title>Песочница: Результаты - CodeRacing 2015</title>
+    <meta name="author" content="(c) Mail.Ru Group, Saratov State University"/>
+        <meta name="description" content="CodeRacing 2015 - AI-соревнование для программистов"/>
+        <meta name="keywords"
+              content="codetanks codetroopers codehockey ии программирование игра соревнование информатика java c++ codechallenge codegame codegamechallenge aichallenge aicup"/>
+    <meta name="robots" content="index, follow"/>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="http://russianaicup.ru/s/1448658350412/assets/jquery/js/jquery.js"></script>
+    <script type="text/javascript" src="http://russianaicup.ru/s/1448658350412/assets/jquery.noty/js/jquery.noty.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="http://russianaicup.ru/s/1448658350412/assets/jquery.tablesorter/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="http://russianaicup.ru/s/1448658350412/assets/jquery.tablesorter/jquery.tablesorter.widgets.min.js"></script>
+    <script type="text/javascript" src="http://russianaicup.ru/s/1448658350412/assets/jquery.autocomplete/js/jquery.autocomplete.pack.js" charset="UTF-8"></script>
+
+    <link rel="stylesheet" type="text/css" href="http://russianaicup.ru/s/1448658350412/assets/jquery.noty/css/jquery.noty.css"/>
+    <link rel="stylesheet" type="text/css" href="http://russianaicup.ru/s/1448658350412/assets/jquery.noty/css/noty_theme_default.css"/>
+    <script src="http://russianaicup.ru/s/1448658350412/assets/prettify/js/prettify.js"></script>
+
+    <link rel="shortcut icon" href="http://russianaicup.ru/s/1448658350412/assets/application/img/favicon.ico" type="image/x-icon" />
+    <link href="http://russianaicup.ru/s/1448658350412/assets/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="http://russianaicup.ru/s/1448658350412/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet"/>
+    <link href="http://russianaicup.ru/s/1448658350412/assets/jquery.autocomplete/css/jquery.autocomplete.css" rel="stylesheet"/>
+    <link href="http://russianaicup.ru/s/1448658350412/assets/prettify/css/prettify.css" rel="stylesheet">
+    <link href="http://russianaicup.ru/s/1448658350412/assets/application/css/application.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/application.css"/>
+    <script type="text/javascript" src="http://russianaicup.ru/s/1448658350412/assets/application/js/application.js"></script>
+
+    <link href="http://russianaicup.ru/s/1448658350412/assets/jquery.jqplot/jquery.jqplot.min.css" rel="stylesheet">
+    <script type="text/javascript" src="http://russianaicup.ru/s/1448658350412/assets/jquery.jqplot/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="http://russianaicup.ru/s/1448658350412/assets/jquery.jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+    <script type="text/javascript" src="http://russianaicup.ru/s/1448658350412/assets/jquery.flot/js/jquery.flot.min.js"></script>
+    <script type="text/javascript" src="http://russianaicup.ru/s/1448658350412/assets/jquery.flot/js/jquery.flot.symbol.min.js"></script>
+
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  console.log("_setAccount: " + _gaq.push(['_setAccount', 'UA-35926951-1']));
+  console.log("_setDomainName: " + _gaq.push(['_setDomainName', 'russianaicup.ru']));
+  console.log("_trackPageview: " + _gaq.push(['_trackPageview']));
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = (document.location.protocol == 'https:' ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+    <div class="button-up" style="display: none; opacity: 0.7; width: 50px; height:100%; position: fixed; left: 0; top: 0; cursor: pointer; text-align: center; line-height: 35px; color: #d3dbe4; font-weight: bold; font-size: 30px;"><i class="icon-circle-arrow-up"></i></div>
+    <script type="text/javascript">
+        $(function () {
+            setSmartFocus();
+
+        });
+    </script>
+
+<div class="header">
+    <div class="container">
+        <div class="topheader">
+            <div class="pull-left mpReset">
+                <a href="/"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/logo-150.png" class="logo"/></a>
+            </div>
+
+            <div class="span3 pull-left mpReset">
+                <p class="logotext">
+                    Открытое соревнование по программированию искусственного интеллекта
+                </p>
+            </div>
+
+            <div class="offset1 pull-left header-item">
+
+<div class="follow-us mpReset">
+    <table style="width: 156px;">
+        <tr>
+                <td style="width: 30px; height: 27px; margin: 0; padding: 0 3px 0 0;">
+                    <a title="Поделиться" href="http://share.yandex.ru/go.xml?service=moimir&amp;url=http%3A%2F%2Frussianaicup.ru&amp;title=Russian+AI+Cup+2015%3A+CodeRacing" class="ic mpReset" style="background-position: 0px;"></a>
+                </td>
+                <td style="width: 30px; height: 27px; margin: 0; padding: 0 3px 0 0;">
+                    <a title="Поделиться" href="http://share.yandex.ru/go.xml?service=odnoklassniki&amp;url=http%3A%2F%2Frussianaicup.ru&amp;title=Russian+AI+Cup+2015%3A+CodeRacing" class="ic mpReset" style="background-position: -27px;"></a>
+                </td>
+                <td style="width: 30px; height: 27px; margin: 0; padding: 0 3px 0 0;">
+                    <a title="Поделиться" href="http://share.yandex.ru/go.xml?service=vkontakte&amp;url=http%3A%2F%2Frussianaicup.ru&amp;title=Russian+AI+Cup+2015%3A+CodeRacing" class="ic mpReset" style="background-position: -54px;"></a>
+                </td>
+                <td style="width: 30px; height: 27px; margin: 0; padding: 0 3px 0 0;">
+                    <a title="Поделиться" href="http://share.yandex.ru/go.xml?service=gplus&amp;url=http%3A%2F%2Frussianaicup.ru&amp;title=Russian+AI+Cup+2015%3A+CodeRacing" class="ic mpReset" style="background-position: -81px;"></a>
+                </td>
+                <td style="width: 30px; height: 27px; margin: 0; padding: 0 3px 0 0;">
+                    <a title="Поделиться" href="http://share.yandex.ru/go.xml?service=twitter&amp;url=http%3A%2F%2Frussianaicup.ru&amp;title=Russian+AI+Cup+2015%3A+CodeRacing" class="ic mpReset" style="background-position: -108px;"></a>
+                </td>
+                <td style="width: 30px; height: 27px; margin: 0; padding: 0 3px 0 0;">
+                    <a title="Поделиться" href="http://share.yandex.ru/go.xml?service=facebook&amp;url=http%3A%2F%2Frussianaicup.ru&amp;title=Russian+AI+Cup+2015%3A+CodeRacing" class="ic mpReset" style="background-position: -135px;"></a>
+                </td>
+        </tr>
+    </table>
+</div>
+            </div>
+
+            <div class="pull-right header-item">
+                    <div class="dropdown" id="profileMenu">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Igorjan94<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/profile/Igorjan94">Моя страница</a></li>
+                                <li><a href="/messages">Сообщения</a></li>
+                            <li><a href="/friends">Друзья</a></li>
+                                <li><a href="https://it.mail.ru/users/profile/?r=http%3A%2F%2Frussianaicup.ru%2Fcontest%2F1%2Fstandings%3FupdateProfile%3Dtrue&t=AiCup">Редактировать профиль</a></li>
+                        </ul>
+                        <a href="/signOut" class="logout">Выход</a>
+                    </div>
+            </div>
+        </div>
+
+
+<section id="dropdowns" xmlns="http://www.w3.org/1999/html">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="nav-collapse">
+                    <ul class="nav">
+                            <li><a href="/">Главная</a></li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" 
+                                   data-toggle="dropdown" href="#">Личное</a>
+                                <ul class="dropdown-menu">
+                                                <li>
+                                                        <a href="/messages">Сообщения</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/friends">Друзья</a>
+                                                </li>
+                                            <li class="divider">&nbsp;</li>
+                                                <li>
+                                                        <a href="/submit">Отослать стратегию</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/submissions/Igorjan94">Попытки</a>
+                                                </li>
+                                            <li class="divider">&nbsp;</li>
+                                                <li>
+                                                        <a href="/game/create">Создать игру</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/games/creator/Igorjan94">Мои игры</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/games/with/Igorjan94">Игры со мной</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/games/with/Igorjan94/other/Igorjan94">Созданные другими</a>
+                                                </li>
+                                </ul>
+                            </li>
+                            <li class="active dropdown">
+                                <a class="dropdown-toggle"  style="color: #D91A00 !important;" 
+                                   data-toggle="dropdown" href="#">Песочница</a>
+                                <ul class="dropdown-menu">
+                                                <li>
+                                                        <a href="/contest/1/games">Игры</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/contest/1/with/Igorjan94/games">Игры со мной</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/contest/1/standings">Результаты</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/p/sandbox">Правила</a>
+                                                </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" 
+                                   data-toggle="dropdown" href="#">Чемпионат</a>
+                                <ul class="dropdown-menu">
+                                                    
+                                                    <strong>Раунд 1</strong>
+                                                <li>
+                                                        <a href="/contest/2/games">Игры</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/contest/2/with/Igorjan94/games">Игры со мной</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/contest/2/standings">Результаты</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/p/round1">Правила</a>
+                                                </li>
+                                                    <li class="divider">&nbsp;</li>
+                                                    <strong>Раунд 2</strong>
+                                                <li>
+                                                        <span class="disabled">Игры</span>
+                                                </li>
+                                                <li>
+                                                        <span class="disabled">Игры со мной</span>
+                                                </li>
+                                                <li>
+                                                        <span class="disabled">Результаты</span>
+                                                </li>
+                                                <li>
+                                                        <a href="/p/round2">Правила</a>
+                                                </li>
+                                                    <li class="divider">&nbsp;</li>
+                                                    <strong>Финал</strong>
+                                                <li>
+                                                        <span class="disabled">Игры</span>
+                                                </li>
+                                                <li>
+                                                        <span class="disabled">Игры со мной</span>
+                                                </li>
+                                                <li>
+                                                        <span class="disabled">Результаты</span>
+                                                </li>
+                                                <li>
+                                                        <a href="/p/finals">Правила</a>
+                                                </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" 
+                                   data-toggle="dropdown" href="#">Документация</a>
+                                <ul class="dropdown-menu">
+                                                <li>
+                                                        <a href="/p/announcement">Объявление о конкурсе</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/p/rules">Правила</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/p/quick">Быстрый старт</a>
+                                                </li>
+                                            <li class="divider">&nbsp;</li>
+                                                <li>
+                                                        <a href="/p/packs">Языковые пакеты</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/p/repeater">Утилита Repeater</a>
+                                                </li>
+                                                <li>
+                                                        <a href="/p/localrunner">Local runner</a>
+                                                </li>
+                                </ul>
+                            </li>
+                            <li><a href="/gotoForum" target="_blank">Форум</a></li>
+                    </ul>
+                    <div class="nav pull-right">
+                        <form class="navbar-search" id="searchUsersForm">
+                            <b>Поиск</b>
+                            <input type="text" class="search-query skip-autofocus" placeholder="логин" id="searchUsersInput" />
+                            <a id="searchUsersLink" class="search-btn"></a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        function redirectToProfilePage() {
+            $.post("/data/suggestUser", { action: "findLinkToProfileByUser", userLogin: $("#searchUsersInput").val()}, function(response) {
+                var result = response["result"];
+                if (result) {
+                    document.location.replace(response["linkToProfile"]);
+                }
+            }, "json");
+
+            return false;
+        }
+
+        $("#searchUsersForm").attr("autocomplete", "off").submit(function() {
+            redirectToProfilePage();
+            return false;
+        });
+
+        $("#searchUsersLink").click(function() {
+            redirectToProfilePage();
+            return false;
+        });
+
+        $("#searchUsersInput").autocomplete("/data/suggestUser?action=findUsersBySubstring", {
+            minChars: 2,
+            delay: 150,
+            width: 129,
+            selectFirst: false,
+            matchContains: true
+        });
+    });
+</script>
+
+
+    </div>
+</div>
+
+    <div id="enterModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="enterModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 style="margin-bottom: 0; padding-bottom: 0; border-bottom: none;" id="enterModalLabel">Войти на сайт</h3>
+        </div>
+        <div class="modal-body">
+            <p>
+Мы запустили единую систему регистрации для чемпионатов Mail.Ru Group.
+Авторизуйтесь, используя ваш e-mail от russianaicup.ru или зарегистрируйтесь на портале единой регистрации.
+После регистрации вы будете перенаправлены назад.
+</p>
+<p>
+Пароли учетных записей сайта russianaicup.ru не были перенесены в единую систему регистрации. Если вы впервые используете единую систему регистрации, вам будет необходимо восстановить пароль.
+</p>
+        </div>
+        <div class="modal-footer">
+            <a href="/oauth/back" class="btn" aria-hidden="true"
+               onclick="_gaq.push(['_trackEvent', 'Preregistration', 'GotoItMailRuButtonClicked']);">Перейти</a>
+        </div>
+    </div>
+
+<script>
+    $(function () {
+        $(".follow-us a").click(function () {
+            var href = $(this).attr("href");
+            window.open(href, '', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=800,height=600');
+            return false;
+        });
+    })
+</script>
+    <div class="container body-content">
+                <div class="fluid-grid">
+                    <div class="row" style="overflow: hidden;">
+                        <div class="span9">
+                            <h1>Песочница:<span class='grayLight'> Результаты</span></h1>
+                                <div class="breadcrumb">
+                                        <a href="/">CodeRacing</a>
+                                        &nbsp;&ndash;&nbsp;
+                                        <a href="/p/sandbox">Песочница</a>
+                                        &nbsp;&ndash;&nbsp;
+                                        <a href="/contest/1/standings">Результаты</a>
+                                        
+                                </div>
+                        </div>
+                            <div class="span3">
+
+
+<div>
+    <h2 class="orange alignRight">Раунд 1: до заморозки</h2>
+
+    <dl class="date" style="margin-left: 25px;">
+        <dd class="day days-before"></dd>
+        <dd class="hours-before"></dd>
+        <dd class="minutes-before"></dd>
+        <dd class="seconds-before"></dd>
+    </dl>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var shouldReload = true;
+        var secondsBefore = 41942;
+        injectSecondsBefore(secondsBefore);
+
+        setInterval(function () {
+            secondsBefore -= 1;
+            if (secondsBefore < 0 && shouldReload) {
+                shouldReload = false;
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000 + Math.random() * 3000);
+            }
+            secondsBefore = Math.max(secondsBefore, 0);
+            injectSecondsBefore(secondsBefore);
+        }, 1000);
+    });
+
+    function getMessageIndex(count) {
+        var lastDigit = count % 10;
+        var tens = Math.floor(count / 10) % 10;
+
+        if (lastDigit == 1 && tens != 1) {
+            return count == 1 ? 0 : 1;
+        }
+
+        if (lastDigit > 1 && lastDigit <= 4 && tens != 1) {
+            return 2;
+        }
+
+        return 3;
+    }
+
+    function injectSecondsBefore(seconds) {
+        var secondsPerDay = 24 * 60 * 60;
+        var days = Math.floor(seconds / secondsPerDay);
+        seconds -= days * secondsPerDay;
+
+        var secondsPerHour = 60 * 60;
+        var hours = Math.floor(seconds / secondsPerHour);
+        seconds -= hours * secondsPerHour;
+
+        var secondsPerMinute = 60;
+        var minutes = Math.floor(seconds / secondsPerMinute);
+        seconds -= minutes * secondsPerMinute;
+
+        var dayCaptions = ["день", "день", "дня", "дней"];
+        var hourCaptions = ["час", "час", "часа", "часов"];
+        var minuteCaptions = ["минута", "минута", "минуты", "минут"];
+        var secondCaptions = ["секунда", "секунда", "секунды", "секунд"];
+
+        $(".days-before").html(days + "<small>" + dayCaptions[getMessageIndex(days)] + "</small>");
+        $(".hours-before").html(hours + "<small>" + hourCaptions[getMessageIndex(hours)] + "</small>");
+        $(".minutes-before").html(": " + preciseDigits(minutes) + " :<small>" + minuteCaptions[getMessageIndex(minutes)] + "</small>");
+        $(".seconds-before").html(preciseDigits(seconds) + "<small>" + secondCaptions[getMessageIndex(seconds)] + "</small>");
+    }
+
+    function preciseDigits(x) {
+        var result = "" + x;
+        while (result.length < 2) {
+            result = "0" + result;
+        }
+        return result;
+    }
+</script>
+                            </div>
+                    </div>
+                </div>
+
+        <div class="fluid-grid">
+            <div class="row" style="overflow: hidden;">
+
+                    <div class="span2">
+
+    
+
+        <h2 class="withBord">Проект</h2>
+        <ul class="subMenu">
+            <li>
+                        <a href="/p/about">О Russian AI Cup</a>
+            </li>
+            <li>
+                        <a href="/p/CodeRacing">Чемпионат &laquo;CodeRacing&raquo;</a>
+            </li>
+            <li>
+                        <a href="/p/quick">Быстрый старт</a>
+            </li>
+        </ul>
+
+    
+    
+
+        <h2 class="withBord">CodeRacing</h2>
+        <ul class="subMenu">
+            <li>
+                        <a href="/messages">Сообщения</a>
+            </li>
+            <li>
+                        <a href="/friends">Друзья</a>
+            </li>
+            <li>
+                        <a href="/submit">Отослать стратегию</a>
+            </li>
+            <li>
+                        <a href="/submissions/Igorjan94">Попытки</a>
+            </li>
+            <li>
+                        <a href="/game/create">Создать игру</a>
+            </li>
+            <li>
+                        <a href="/games/creator/Igorjan94">Мои игры</a>
+            </li>
+            <li>
+                        <a href="/games/with/Igorjan94">Игры со мной</a>
+            </li>
+            <li>
+                        <a href="/games/with/Igorjan94/other/Igorjan94">Созданные другими</a>
+            </li>
+        </ul>
+
+    
+    
+
+        <h2 class="withBord">Песочница</h2>
+        <ul class="subMenu">
+            <li>
+                        <a href="/contest/1/games">Игры</a>
+            </li>
+            <li>
+                        <a href="/contest/1/with/Igorjan94/games">Игры со мной</a>
+            </li>
+            <li>
+                        <a href="/contest/1/standings">Результаты</a>
+            </li>
+            <li>
+                        <a href="/p/sandbox">Правила</a>
+            </li>
+        </ul>
+
+    
+    
+
+        <h2 class="withBord">Раунд 1</h2>
+        <ul class="subMenu">
+            <li>
+                        <a href="/contest/2/games">Игры</a>
+            </li>
+            <li>
+                        <a href="/contest/2/with/Igorjan94/games">Игры со мной</a>
+            </li>
+            <li>
+                        <a href="/contest/2/standings">Результаты</a>
+            </li>
+            <li>
+                        <a href="/p/round1">Правила</a>
+            </li>
+        </ul>
+
+    
+    <div class="disable">
+
+        <h2 class="withBord">Раунд 2</h2>
+        <ul class="subMenu">
+            <li>
+                    <span>Игры</span>
+            </li>
+            <li>
+                    <span>Игры со мной</span>
+            </li>
+            <li>
+                    <span>Результаты</span>
+            </li>
+            <li>
+                        <a href="/p/round2">Правила</a>
+            </li>
+        </ul>
+
+    </div>
+    <div class="disable">
+
+        <h2 class="withBord">Финал</h2>
+        <ul class="subMenu">
+            <li>
+                    <span>Игры</span>
+            </li>
+            <li>
+                    <span>Игры со мной</span>
+            </li>
+            <li>
+                    <span>Результаты</span>
+            </li>
+            <li>
+                        <a href="/p/finals">Правила</a>
+            </li>
+        </ul>
+
+    </div>
+
+<div class="section">
+    <h2 class="withBord">Последние комментарии</h2>
+
+    <div style="margin-bottom: 15px;">
+        <a href="#" class="all-comments-link comments-link label">Все</a>
+        <a href="#" class="post-comments-link comments-link label">К постам</a>
+        <a href="#" class="game-comments-link label-info comments-link label">К играм</a>
+    </div>
+
+
+    <div class="all-comments-block comments-block" style="display: none;">
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:17:
+
+                <a href="/profile/santa324" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">santa324</span></a> написал
+                <a href="/post/27#comment-1116" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:16:
+
+                <a href="/profile/4way" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">4way</span></a> написал
+                <a href="/post/27#comment-1115" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:15:
+
+                <a href="/profile/tehnar" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">tehnar</span></a> написал
+                <a href="/post/27#comment-1114" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:15:
+
+                <a href="/profile/vovanz123" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">vovanz123</span></a> написал
+                <a href="/post/27#comment-1113" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:15:
+
+                <a href="/profile/TongoHiti" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">TongoHiti</span></a> написал
+                <a href="/post/27#comment-1112" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:15:
+
+                <a href="/profile/Diversus" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Diversus</span></a> написал
+                <a href="/post/27#comment-1111" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:14:
+
+                <a href="/profile/Gassa" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Gassa</span></a> написал
+                <a href="/post/27#comment-1110" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:13:
+
+                <a href="/profile/vovanz123" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">vovanz123</span></a> написал
+                <a href="/post/27#comment-1109" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:13:
+
+                <a href="/profile/moden" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">moden</span></a> написал
+                <a href="/post/27#comment-1108" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:13:
+
+                <a href="/profile/TongoHiti" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">TongoHiti</span></a> написал
+                <a href="/post/27#comment-1107" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+    </div>
+    <div class="post-comments-block comments-block" style="display: none;">
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:17:
+
+                <a href="/profile/santa324" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">santa324</span></a> написал
+                <a href="/post/27#comment-1116" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:16:
+
+                <a href="/profile/4way" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">4way</span></a> написал
+                <a href="/post/27#comment-1115" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:15:
+
+                <a href="/profile/tehnar" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">tehnar</span></a> написал
+                <a href="/post/27#comment-1114" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:15:
+
+                <a href="/profile/vovanz123" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">vovanz123</span></a> написал
+                <a href="/post/27#comment-1113" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:15:
+
+                <a href="/profile/TongoHiti" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">TongoHiti</span></a> написал
+                <a href="/post/27#comment-1112" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:15:
+
+                <a href="/profile/Diversus" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Diversus</span></a> написал
+                <a href="/post/27#comment-1111" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:14:
+
+                <a href="/profile/Gassa" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Gassa</span></a> написал
+                <a href="/post/27#comment-1110" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:13:
+
+                <a href="/profile/vovanz123" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">vovanz123</span></a> написал
+                <a href="/post/27#comment-1109" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:13:
+
+                <a href="/profile/moden" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">moden</span></a> написал
+                <a href="/post/27#comment-1108" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            28
+                ноября
+            00:13:
+
+                <a href="/profile/TongoHiti" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">TongoHiti</span></a> написал
+                <a href="/post/27#comment-1107" style="text-decoration: none !important;">комментарий</a>
+                в посте
+                <a href="/post/27" style="text-decoration: none !important;">READY, STEADY, <s>cook?</s> RACE!</a>
+            </div>
+    </div>
+    <div class="game-comments-block comments-block">
+            <div class="smaller" style="margin-bottom: 15px;">
+            27
+                ноября
+            19:25:
+
+                <a href="/profile/dimir" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">dimir</span></a> написал
+                <a href="/game/view/181998#comment-1093" style="text-decoration: none !important;">комментарий</a>
+                к игре
+                <a href="/game/view/181998" style="text-decoration: none !important;">№181998</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            27
+                ноября
+            17:55:
+
+                <a href="/profile/Wierus" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Wierus</span></a> написал
+                <a href="/game/view/181998#comment-1092" style="text-decoration: none !important;">комментарий</a>
+                к игре
+                <a href="/game/view/181998" style="text-decoration: none !important;">№181998</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            27
+                ноября
+            17:16:
+
+                <a href="/profile/tairesh" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">tairesh</span></a> написал
+                <a href="/game/view/181777#comment-1091" style="text-decoration: none !important;">комментарий</a>
+                к игре
+                <a href="/game/view/181777" style="text-decoration: none !important;">№181777</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            27
+                ноября
+            16:27:
+
+                <a href="/profile/snow_shadaw" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">snow_shadaw</span></a> написал
+                <a href="/game/view/181131#comment-1090" style="text-decoration: none !important;">комментарий</a>
+                к игре
+                <a href="/game/view/181131" style="text-decoration: none !important;">№181131</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            27
+                ноября
+            16:06:
+
+                <a href="/profile/EvgeniyZh" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">EvgeniyZh</span></a> написал
+                <a href="/game/view/181137#comment-1089" style="text-decoration: none !important;">комментарий</a>
+                к игре
+                <a href="/game/view/181137" style="text-decoration: none !important;">№181137</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            27
+                ноября
+            15:22:
+
+                <a href="/profile/fobbos08" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">fobbos08</span></a> написал
+                <a href="/game/view/180680#comment-1088" style="text-decoration: none !important;">комментарий</a>
+                к игре
+                <a href="/game/view/180680" style="text-decoration: none !important;">№180680</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            27
+                ноября
+            13:54:
+
+                <a href="/profile/FDoKE" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">FDoKE</span></a> написал
+                <a href="/game/view/179621#comment-1084" style="text-decoration: none !important;">комментарий</a>
+                к игре
+                <a href="/game/view/179621" style="text-decoration: none !important;">№179621</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            27
+                ноября
+            13:53:
+
+                <a href="/profile/Kotenko" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">Kotenko</span></a> написал
+                <a href="/game/view/72125#comment-1083" style="text-decoration: none !important;">комментарий</a>
+                к игре
+                <a href="/game/view/72125" style="text-decoration: none !important;">№72125</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            27
+                ноября
+            13:50:
+
+                <a href="/profile/Gladiator_Y" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Gladiator_Y</span></a> написал
+                <a href="/game/view/179346#comment-1082" style="text-decoration: none !important;">комментарий</a>
+                к игре
+                <a href="/game/view/179346" style="text-decoration: none !important;">№179346</a>
+            </div>
+            <div class="smaller" style="margin-bottom: 15px;">
+            27
+                ноября
+            13:35:
+
+                <a href="/profile/SKolotienko" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">SKolotienko</span></a> написал
+                <a href="/game/view/179621#comment-1081" style="text-decoration: none !important;">комментарий</a>
+                к игре
+                <a href="/game/view/179621" style="text-decoration: none !important;">№179621</a>
+            </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $(".all-comments-link").click(function () {
+                $(".comments-link").removeClass("label-info");
+                $(".all-comments-link").addClass("label-info");
+                $(".comments-block").hide();
+                $(".all-comments-block").show();
+                $.post("/data/userSetting", {
+                    action: "set", settingName: "recentCommentsViewMode", settingValue: "ALL"
+                });
+                return false;
+            });
+
+            $(".post-comments-link").click(function () {
+                $(".comments-link").removeClass("label-info");
+                $(".post-comments-link").addClass("label-info");
+                $(".comments-block").hide();
+                $(".post-comments-block").show();
+                $.post("/data/userSetting", {
+                    action: "set", settingName: "recentCommentsViewMode", settingValue: "POST"
+                });
+                return false;
+            });
+
+            $(".game-comments-link").click(function () {
+                $(".comments-link").removeClass("label-info");
+                $(".game-comments-link").addClass("label-info");
+                $(".comments-block").hide();
+                $(".game-comments-block").show();
+                $.post("/data/userSetting", {
+                    action: "set", settingName: "recentCommentsViewMode", settingValue: "GAME"
+                });
+                return false;
+            });
+        });
+    </script>
+</div>
+
+<div class="section">
+    <h2 class="withBord" style="text-align: center">Группа ВКонтакте</h2>
+    <div style="text-align: center">
+        <a href="https://vk.com/cupmrg" target="_blank"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/vk_group_link.png"></a>
+    </div>
+</div>                    </div>
+
+                <div class="span10">
+                    <div class="span10 mpReset">
+    <div class="section">
+        <h2 class="withBord">Результаты</h2>
+
+        <p>
+            В Раунд 1 проходят лучшие 900 участников по рейтингу в Песочнице на момент его начала. Также через неделю после окончания Финала 6 лучших участников Песочницы (за исключением победителей Финала) награждаются ценными призами.
+        </p>
+    </div>
+
+                    </div>
+
+                        <div style="clear: both;"></div>
+                        <div class="commonBottom">
+                            
+<div style="margin-left: 0 !important; margin-bottom: 7px;">
+    <span class="standingsTableCaption">Песочница</span>
+
+</div>
+
+<table class="table table-bordered table-max margBottom table-striped">
+    <colgroup>
+        <col class="colWidth1"/>
+        <col class=""/>
+        <col class=""/>
+        <col class=""/>
+        <col class=""/>
+        <col class="colWidth1"/>
+        <col class="colWidth1"/>
+    </colgroup>
+    <thead>
+        <tr>
+            <td>№</td>
+            <td>Участник</td>
+            <td>Язык</td>
+            <td>Игры</td>
+            <td>Побед</td>
+            <td>Рейтинг</td>
+            <td style="text-align: center;">Δ</td>
+        </tr>
+    </thead>
+    <tbody>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">1</td>
+                    <td style="vertical-align: middle;"><a href="/profile/SKolotienko"><img src="http://russianaicup.ru/thumbnails/SKolotienko/7onEFu1JmLw3yoaf.png" class="userImage tinyUserImage" title="SKolotienko" alt="SKolotienko"/></a>
+<a href="/profile/SKolotienko" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">SKolotienko</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">285</td>
+                    <td style="vertical-align: middle;">        44%
+</td>
+                    <td style="vertical-align: middle;">3677</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        11
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">2</td>
+                    <td style="vertical-align: middle;"><a href="/profile/tyamgin"><img src="http://russianaicup.ru/thumbnails/tyamgin/Xrl8l2tUnuVu0279.png" class="userImage tinyUserImage" title="tyamgin" alt="tyamgin"/></a>
+<a href="/profile/tyamgin" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">tyamgin</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">616</td>
+                    <td style="vertical-align: middle;">        39%
+</td>
+                    <td style="vertical-align: middle;">3630</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        2
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">3</td>
+                    <td style="vertical-align: middle;"><a href="/profile/ud1"><img src="http://russianaicup.ru/thumbnails/ud1/0zxwHE3Dr1nByCnF.png" class="userImage tinyUserImage" title="ud1" alt="ud1"/></a>
+<a href="/profile/ud1" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">ud1</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">430</td>
+                    <td style="vertical-align: middle;">        31%
+</td>
+                    <td style="vertical-align: middle;">3574</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        4
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">4</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Mr.Smile"><img src="http://russianaicup.ru/thumbnails/Mr.Smile/gqwcWbbvEESOIxNK.png" class="userImage tinyUserImage" title="Mr.Smile" alt="Mr.Smile"/></a>
+<a href="/profile/Mr.Smile" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Mr.Smile</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">453</td>
+                    <td style="vertical-align: middle;">        36%
+</td>
+                    <td style="vertical-align: middle;">3570</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -4
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">5</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Antmsu"><img src="http://russianaicup.ru/thumbnails/Antmsu/k2fKvLBdrTRwcZvW.png" class="userImage tinyUserImage" title="Antmsu" alt="Antmsu"/></a>
+<a href="/profile/Antmsu" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Antmsu</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-2"></span></span></td>
+                    <td style="vertical-align: middle;">652</td>
+                    <td style="vertical-align: middle;">        38%
+</td>
+                    <td style="vertical-align: middle;">3569</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        14
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">6</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Romka"><img src="http://russianaicup.ru/thumbnails/Romka/ALKTavHFedgbTGK8.png" class="userImage tinyUserImage" title="Romka" alt="Romka"/></a>
+<a href="/profile/Romka" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">Romka</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">186</td>
+                    <td style="vertical-align: middle;">        47%
+</td>
+                    <td style="vertical-align: middle;">3546</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -7
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">7</td>
+                    <td style="vertical-align: middle;"><a href="/profile/FDoKE"><img src="http://russianaicup.ru/thumbnails/FDoKE/J4choqPSU0FFfPu8.png" class="userImage tinyUserImage" title="FDoKE" alt="FDoKE"/></a>
+<a href="/profile/FDoKE" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">FDoKE</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">624</td>
+                    <td style="vertical-align: middle;">        40%
+</td>
+                    <td style="vertical-align: middle;">3542</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -2
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">8</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Spumote"><img src="http://russianaicup.ru/thumbnails/Spumote/0piWWnnBVNX8g4LC.png" class="userImage tinyUserImage" title="Spumote" alt="Spumote"/></a>
+<a href="/profile/Spumote" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">Spumote</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-2"></span></span></td>
+                    <td style="vertical-align: middle;">495</td>
+                    <td style="vertical-align: middle;">        37%
+</td>
+                    <td style="vertical-align: middle;">3512</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">9</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Karkun"><img src="http://russianaicup.ru/thumbnails/Karkun/sLmyvg5QGC6foFM4.png" class="userImage tinyUserImage" title="Karkun" alt="Karkun"/></a>
+<a href="/profile/Karkun" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Karkun</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">81</td>
+                    <td style="vertical-align: middle;">        51%
+</td>
+                    <td style="vertical-align: middle;">3508</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        12
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">10</td>
+                    <td style="vertical-align: middle;"><a href="/profile/serlis"><img src="http://russianaicup.ru/thumbnails/serlis/uAoN3s1k4VZrhL5X.png" class="userImage tinyUserImage" title="serlis" alt="serlis"/></a>
+<a href="/profile/serlis" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">serlis</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">667</td>
+                    <td style="vertical-align: middle;">        30%
+</td>
+                    <td style="vertical-align: middle;">3498</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -7
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">11</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Eleonora"><img src="http://russianaicup.ru/thumbnails/Eleonora/UyO2trRaQgjCMdUT.png" class="userImage tinyUserImage" title="Eleonora" alt="Eleonora"/></a>
+<a href="/profile/Eleonora" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Eleonora</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">254</td>
+                    <td style="vertical-align: middle;">        37%
+</td>
+                    <td style="vertical-align: middle;">3450</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        1
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">12</td>
+                    <td style="vertical-align: middle;"><a href="/profile/lama"><img src="http://russianaicup.ru/thumbnails/lama/5NOSjjI3g4NdrOya.png" class="userImage tinyUserImage" title="lama" alt="lama"/></a>
+<a href="/profile/lama" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">lama</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">445</td>
+                    <td style="vertical-align: middle;">        32%
+</td>
+                    <td style="vertical-align: middle;">3444</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -12
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">13</td>
+                    <td style="vertical-align: middle;"><a href="/profile/mixei4"><img src="http://russianaicup.ru/thumbnails/mixei4/zx8ZPOBtfRbTpQhh.png" class="userImage tinyUserImage" title="mixei4" alt="mixei4"/></a>
+<a href="/profile/mixei4" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">mixei4</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-11"></span></span></td>
+                    <td style="vertical-align: middle;">398</td>
+                    <td style="vertical-align: middle;">        30%
+</td>
+                    <td style="vertical-align: middle;">3437</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">14</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Oxidize"><img src="http://russianaicup.ru/thumbnails/Oxidize/sVmg73uZNPqqfsev.png" class="userImage tinyUserImage" title="Oxidize" alt="Oxidize"/></a>
+<a href="/profile/Oxidize" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Oxidize</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">605</td>
+                    <td style="vertical-align: middle;">        30%
+</td>
+                    <td style="vertical-align: middle;">3416</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        15
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">15</td>
+                    <td style="vertical-align: middle;"><a href="/profile/DVS"><img src="http://russianaicup.ru/thumbnails/DVS/x4VwMiqxobDD6IKd.png" class="userImage tinyUserImage" title="DVS" alt="DVS"/></a>
+<a href="/profile/DVS" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">DVS</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">188</td>
+                    <td style="vertical-align: middle;">        49%
+</td>
+                    <td style="vertical-align: middle;">3412</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">16</td>
+                    <td style="vertical-align: middle;"><a href="/profile/pr1k0l"><img src="http://russianaicup.ru/thumbnails/pr1k0l/d74Bja6eOat1YsJH.png" class="userImage tinyUserImage" title="pr1k0l" alt="pr1k0l"/></a>
+<a href="/profile/pr1k0l" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">pr1k0l</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">450</td>
+                    <td style="vertical-align: middle;">        30%
+</td>
+                    <td style="vertical-align: middle;">3409</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        9
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">17</td>
+                    <td style="vertical-align: middle;"><a href="/profile/OrickBy"><img src="http://russianaicup.ru/thumbnails/OrickBy/IFfDWAvLxrz0bVwb.png" class="userImage tinyUserImage" title="OrickBy" alt="OrickBy"/></a>
+<a href="/profile/OrickBy" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">OrickBy</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">412</td>
+                    <td style="vertical-align: middle;">        36%
+</td>
+                    <td style="vertical-align: middle;">3408</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -3
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">18</td>
+                    <td style="vertical-align: middle;"><a href="/profile/reat"><img src="http://russianaicup.ru/thumbnails/reat/wdoKqIOVKYKWRJue.png" class="userImage tinyUserImage" title="reat" alt="reat"/></a>
+<a href="/profile/reat" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">reat</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">468</td>
+                    <td style="vertical-align: middle;">        30%
+</td>
+                    <td style="vertical-align: middle;">3401</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">19</td>
+                    <td style="vertical-align: middle;"><a href="/profile/MagAlex"><img src="http://russianaicup.ru/thumbnails/MagAlex/UG7Amlbo5pspx3hY.png" class="userImage tinyUserImage" title="MagAlex" alt="MagAlex"/></a>
+<a href="/profile/MagAlex" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">MagAlex</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">586</td>
+                    <td style="vertical-align: middle;">        25%
+</td>
+                    <td style="vertical-align: middle;">3385</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -2
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">20</td>
+                    <td style="vertical-align: middle;"><a href="/profile/GreenTea"><img src="http://russianaicup.ru/thumbnails/GreenTea/U72v4HFEp6bvAVX5.png" class="userImage tinyUserImage" title="GreenTea" alt="GreenTea"/></a>
+<a href="/profile/GreenTea" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">GreenTea</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">192</td>
+                    <td style="vertical-align: middle;">        41%
+</td>
+                    <td style="vertical-align: middle;">3382</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">21</td>
+                    <td style="vertical-align: middle;"><a href="/profile/alex_sh"><img src="http://russianaicup.ru/thumbnails/alex_sh/OymLJ2S1vXeE99R4.png" class="userImage tinyUserImage" title="alex_sh" alt="alex_sh"/></a>
+<a href="/profile/alex_sh" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">alex_sh</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">297</td>
+                    <td style="vertical-align: middle;">        41%
+</td>
+                    <td style="vertical-align: middle;">3377</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -8
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">22</td>
+                    <td style="vertical-align: middle;"><a href="/profile/zoldatoff"><img src="http://russianaicup.ru/thumbnails/zoldatoff/cZoSxwCRXhs6gilW.png" class="userImage tinyUserImage" title="zoldatoff" alt="zoldatoff"/></a>
+<a href="/profile/zoldatoff" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">zoldatoff</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-9"></span></span></td>
+                    <td style="vertical-align: middle;">454</td>
+                    <td style="vertical-align: middle;">        28%
+</td>
+                    <td style="vertical-align: middle;">3377</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        2
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">23</td>
+                    <td style="vertical-align: middle;"><a href="/profile/kudinov.mikhail"><img src="http://russianaicup.ru/thumbnails/kudinov.mikhail/0EQY1M4MtWbfJFR9.png" class="userImage tinyUserImage" title="kudinov.mikhail" alt="kudinov.mikhail"/></a>
+<a href="/profile/kudinov.mikhail" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">kudinov.mikhail</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">423</td>
+                    <td style="vertical-align: middle;">        32%
+</td>
+                    <td style="vertical-align: middle;">3377</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        8
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">24</td>
+                    <td style="vertical-align: middle;"><a href="/profile/tehnar"><img src="http://russianaicup.ru/thumbnails/tehnar/0CB7tcWqH768KgNB.png" class="userImage tinyUserImage" title="tehnar" alt="tehnar"/></a>
+<a href="/profile/tehnar" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">tehnar</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">421</td>
+                    <td style="vertical-align: middle;">        38%
+</td>
+                    <td style="vertical-align: middle;">3366</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -6
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">25</td>
+                    <td style="vertical-align: middle;"><a href="/profile/jetblack"><img src="http://russianaicup.ru/thumbnails/jetblack/qV3iNRu5wn7cnYgk.png" class="userImage tinyUserImage" title="jetblack" alt="jetblack"/></a>
+<a href="/profile/jetblack" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">jetblack</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">341</td>
+                    <td style="vertical-align: middle;">        44%
+</td>
+                    <td style="vertical-align: middle;">3358</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        5
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">26</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Leos"><img src="http://russianaicup.ru/thumbnails/Leos/CGtgKRyqAEmAsFQP.png" class="userImage tinyUserImage" title="Leos" alt="Leos"/></a>
+<a href="/profile/Leos" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Leos</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-2"></span></span></td>
+                    <td style="vertical-align: middle;">335</td>
+                    <td style="vertical-align: middle;">        38%
+</td>
+                    <td style="vertical-align: middle;">3357</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -12
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">27</td>
+                    <td style="vertical-align: middle;"><a href="/profile/ipris"><img src="http://russianaicup.ru/thumbnails/ipris/lraIrZTmLPt5KSNg.png" class="userImage tinyUserImage" title="ipris" alt="ipris"/></a>
+<a href="/profile/ipris" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">ipris</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">421</td>
+                    <td style="vertical-align: middle;">        26%
+</td>
+                    <td style="vertical-align: middle;">3349</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -12
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">28</td>
+                    <td style="vertical-align: middle;"><a href="/profile/alberist"><img src="http://russianaicup.ru/thumbnails/alberist/xXKR6K9VqBIbsslM.png" class="userImage tinyUserImage" title="alberist" alt="alberist"/></a>
+<a href="/profile/alberist" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">alberist</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-9"></span></span></td>
+                    <td style="vertical-align: middle;">513</td>
+                    <td style="vertical-align: middle;">        32%
+</td>
+                    <td style="vertical-align: middle;">3346</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        6
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">29</td>
+                    <td style="vertical-align: middle;"><a href="/profile/white2302"><img src="http://russianaicup.ru/thumbnails/white2302/0whpUdaBVQhe9oP6.png" class="userImage tinyUserImage" title="white2302" alt="white2302"/></a>
+<a href="/profile/white2302" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">white2302</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">663</td>
+                    <td style="vertical-align: middle;">        33%
+</td>
+                    <td style="vertical-align: middle;">3343</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -4
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">30</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Igorjan94"><img src="http://russianaicup.ru/thumbnails/Igorjan94/WvKOouCzNciGqqt5.png" class="userImage tinyUserImage" title="Igorjan94" alt="Igorjan94"/></a>
+<a href="/profile/Igorjan94" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">Igorjan94</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">658</td>
+                    <td style="vertical-align: middle;">        30%
+</td>
+                    <td style="vertical-align: middle;">3336</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -1
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">31</td>
+                    <td style="vertical-align: middle;"><a href="/profile/longloaf"><img src="http://russianaicup.ru/thumbnails/longloaf/uHvqdwvjHoO8i4b3.png" class="userImage tinyUserImage" title="longloaf" alt="longloaf"/></a>
+<a href="/profile/longloaf" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">longloaf</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">549</td>
+                    <td style="vertical-align: middle;">        26%
+</td>
+                    <td style="vertical-align: middle;">3334</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -4
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">32</td>
+                    <td style="vertical-align: middle;"><a href="/profile/azt-yur"><img src="http://russianaicup.ru/thumbnails/azt-yur/nRtVPe6twgw6oLop.png" class="userImage tinyUserImage" title="azt-yur" alt="azt-yur"/></a>
+<a href="/profile/azt-yur" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">azt-yur</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">464</td>
+                    <td style="vertical-align: middle;">        27%
+</td>
+                    <td style="vertical-align: middle;">3331</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">33</td>
+                    <td style="vertical-align: middle;"><a href="/profile/MakArt"><img src="http://russianaicup.ru/thumbnails/MakArt/VbD3erWB860BMslP.png" class="userImage tinyUserImage" title="MakArt" alt="MakArt"/></a>
+<a href="/profile/MakArt" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">MakArt</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">549</td>
+                    <td style="vertical-align: middle;">        34%
+</td>
+                    <td style="vertical-align: middle;">3325</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        7
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">34</td>
+                    <td style="vertical-align: middle;"><a href="/profile/advokat"><img src="http://russianaicup.ru/thumbnails/advokat/VsfTIlw7BZhBeU5Q.png" class="userImage tinyUserImage" title="advokat" alt="advokat"/></a>
+<a href="/profile/advokat" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">advokat</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">141</td>
+                    <td style="vertical-align: middle;">        38%
+</td>
+                    <td style="vertical-align: middle;">3321</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">35</td>
+                    <td style="vertical-align: middle;"><a href="/profile/AntonT"><img src="http://russianaicup.ru/thumbnails/AntonT/YQY8EGyh5xaoQQ3c.png" class="userImage tinyUserImage" title="AntonT" alt="AntonT"/></a>
+<a href="/profile/AntonT" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">AntonT</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">615</td>
+                    <td style="vertical-align: middle;">        26%
+</td>
+                    <td style="vertical-align: middle;">3314</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -2
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">36</td>
+                    <td style="vertical-align: middle;"><a href="/profile/tvv766"><img src="http://russianaicup.ru/thumbnails/tvv766/fbv2wv0oPizMnY70.png" class="userImage tinyUserImage" title="tvv766" alt="tvv766"/></a>
+<a href="/profile/tvv766" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">tvv766</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">545</td>
+                    <td style="vertical-align: middle;">        26%
+</td>
+                    <td style="vertical-align: middle;">3310</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -16
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">37</td>
+                    <td style="vertical-align: middle;"><a href="/profile/GeneralHaos"><img src="http://russianaicup.ru/thumbnails/GeneralHaos/VD5VHxNcFlkEdVG8.png" class="userImage tinyUserImage" title="GeneralHaos" alt="GeneralHaos"/></a>
+<a href="/profile/GeneralHaos" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">GeneralHaos</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-2"></span></span></td>
+                    <td style="vertical-align: middle;">187</td>
+                    <td style="vertical-align: middle;">        41%
+</td>
+                    <td style="vertical-align: middle;">3310</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -14
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">38</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Firen95"><img src="http://russianaicup.ru/thumbnails/Firen95/BqcBU6GKS2w1SYWB.png" class="userImage tinyUserImage" title="Firen95" alt="Firen95"/></a>
+<a href="/profile/Firen95" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Firen95</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-2"></span></span></td>
+                    <td style="vertical-align: middle;">574</td>
+                    <td style="vertical-align: middle;">        31%
+</td>
+                    <td style="vertical-align: middle;">3309</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        12
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">39</td>
+                    <td style="vertical-align: middle;"><a href="/profile/cha0ss"><img src="http://russianaicup.ru/thumbnails/cha0ss/mnKVfqsrsyBLczYr.png" class="userImage tinyUserImage" title="cha0ss" alt="cha0ss"/></a>
+<a href="/profile/cha0ss" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">cha0ss</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">461</td>
+                    <td style="vertical-align: middle;">        29%
+</td>
+                    <td style="vertical-align: middle;">3308</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">40</td>
+                    <td style="vertical-align: middle;"><a href="/profile/ruspartisan"><img src="http://russianaicup.ru/thumbnails/ruspartisan/KZPAaf0HB0VvYJal.png" class="userImage tinyUserImage" title="ruspartisan" alt="ruspartisan"/></a>
+<a href="/profile/ruspartisan" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">ruspartisan</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-2"></span></span></td>
+                    <td style="vertical-align: middle;">532</td>
+                    <td style="vertical-align: middle;">        26%
+</td>
+                    <td style="vertical-align: middle;">3292</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        4
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">41</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Alick"><img src="http://russianaicup.ru/thumbnails/Alick/oJT5TxofTwVOehGV.png" class="userImage tinyUserImage" title="Alick" alt="Alick"/></a>
+<a href="/profile/Alick" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Alick</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-7"></span></span></td>
+                    <td style="vertical-align: middle;">448</td>
+                    <td style="vertical-align: middle;">        33%
+</td>
+                    <td style="vertical-align: middle;">3288</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -4
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">42</td>
+                    <td style="vertical-align: middle;"><a href="/profile/bear"><img src="http://russianaicup.ru/thumbnails/bear/l5gKuZ3CHj6PxjqA.png" class="userImage tinyUserImage" title="bear" alt="bear"/></a>
+<a href="/profile/bear" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">bear</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">459</td>
+                    <td style="vertical-align: middle;">        31%
+</td>
+                    <td style="vertical-align: middle;">3287</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -12
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">43</td>
+                    <td style="vertical-align: middle;"><a href="/profile/chis"><img src="http://russianaicup.ru/thumbnails/chis/Mbbu3eLw2Pr7k1Nj.png" class="userImage tinyUserImage" title="chis" alt="chis"/></a>
+<a href="/profile/chis" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">chis</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-7"></span></span></td>
+                    <td style="vertical-align: middle;">555</td>
+                    <td style="vertical-align: middle;">        28%
+</td>
+                    <td style="vertical-align: middle;">3282</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        2
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">44</td>
+                    <td style="vertical-align: middle;"><a href="/profile/gepard21"><img src="http://russianaicup.ru/thumbnails/gepard21/0Yx9zoO6F1zKSbCn.png" class="userImage tinyUserImage" title="gepard21" alt="gepard21"/></a>
+<a href="/profile/gepard21" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">gepard21</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-2"></span></span></td>
+                    <td style="vertical-align: middle;">504</td>
+                    <td style="vertical-align: middle;">        31%
+</td>
+                    <td style="vertical-align: middle;">3276</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        3
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">45</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Sirius"><img src="http://russianaicup.ru/thumbnails/Sirius/MbFQiTG63NTuU66G.png" class="userImage tinyUserImage" title="Sirius" alt="Sirius"/></a>
+<a href="/profile/Sirius" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">Sirius</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-9"></span></span></td>
+                    <td style="vertical-align: middle;">366</td>
+                    <td style="vertical-align: middle;">        35%
+</td>
+                    <td style="vertical-align: middle;">3275</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -7
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">46</td>
+                    <td style="vertical-align: middle;"><a href="/profile/planB"><img src="http://russianaicup.ru/thumbnails/planB/LYgFneEOMR5nDGD0.png" class="userImage tinyUserImage" title="planB" alt="planB"/></a>
+<a href="/profile/planB" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">planB</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">257</td>
+                    <td style="vertical-align: middle;">        40%
+</td>
+                    <td style="vertical-align: middle;">3274</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -3
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">47</td>
+                    <td style="vertical-align: middle;"><a href="/profile/temak"><img src="http://russianaicup.ru/thumbnails/temak/M56hlouZiIdIuIbg.png" class="userImage tinyUserImage" title="temak" alt="temak"/></a>
+<a href="/profile/temak" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">temak</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-7"></span></span></td>
+                    <td style="vertical-align: middle;">454</td>
+                    <td style="vertical-align: middle;">        32%
+</td>
+                    <td style="vertical-align: middle;">3263</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        14
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">48</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Ixanezis"><img src="http://russianaicup.ru/thumbnails/Ixanezis/GM2eWH7HfSrqMqsu.png" class="userImage tinyUserImage" title="Ixanezis" alt="Ixanezis"/></a>
+<a href="/profile/Ixanezis" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Ixanezis</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">276</td>
+                    <td style="vertical-align: middle;">        45%
+</td>
+                    <td style="vertical-align: middle;">3261</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -3
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">49</td>
+                    <td style="vertical-align: middle;"><a href="/profile/alevlaber"><img src="http://russianaicup.ru/thumbnails/alevlaber/Ca3Iw5dwimecSfNf.png" class="userImage tinyUserImage" title="alevlaber" alt="alevlaber"/></a>
+<a href="/profile/alevlaber" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">alevlaber</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-11"></span></span></td>
+                    <td style="vertical-align: middle;">473</td>
+                    <td style="vertical-align: middle;">        34%
+</td>
+                    <td style="vertical-align: middle;">3259</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        7
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">50</td>
+                    <td style="vertical-align: middle;"><a href="/profile/vladster"><img src="http://russianaicup.ru/thumbnails/vladster/m1l8pwlWz8GnVDFA.png" class="userImage tinyUserImage" title="vladster" alt="vladster"/></a>
+<a href="/profile/vladster" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">vladster</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">330</td>
+                    <td style="vertical-align: middle;">        39%
+</td>
+                    <td style="vertical-align: middle;">3257</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">51</td>
+                    <td style="vertical-align: middle;"><a href="/profile/MrPingvi"><img src="http://russianaicup.ru/thumbnails/MrPingvi/XqPIxhyOvJfCbKAH.png" class="userImage tinyUserImage" title="MrPingvi" alt="MrPingvi"/></a>
+<a href="/profile/MrPingvi" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">MrPingvi</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">558</td>
+                    <td style="vertical-align: middle;">        25%
+</td>
+                    <td style="vertical-align: middle;">3254</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">52</td>
+                    <td style="vertical-align: middle;"><a href="/profile/bratva"><img src="http://russianaicup.ru/thumbnails/bratva/cglcL0quEmj61vov.png" class="userImage tinyUserImage" title="bratva" alt="bratva"/></a>
+<a href="/profile/bratva" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">bratva</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">492</td>
+                    <td style="vertical-align: middle;">        27%
+</td>
+                    <td style="vertical-align: middle;">3253</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        3
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">53</td>
+                    <td style="vertical-align: middle;"><a href="/profile/narutofan"><img src="http://russianaicup.ru/thumbnails/narutofan/D0RcNx9oYBZLqwgy.png" class="userImage tinyUserImage" title="narutofan" alt="narutofan"/></a>
+<a href="/profile/narutofan" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">narutofan</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">466</td>
+                    <td style="vertical-align: middle;">        31%
+</td>
+                    <td style="vertical-align: middle;">3248</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        6
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">54</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Anisimov"><img src="http://russianaicup.ru/thumbnails/Anisimov/7dIHA321wchwWXTp.png" class="userImage tinyUserImage" title="Anisimov" alt="Anisimov"/></a>
+<a href="/profile/Anisimov" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Anisimov</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-2"></span></span></td>
+                    <td style="vertical-align: middle;">420</td>
+                    <td style="vertical-align: middle;">        36%
+</td>
+                    <td style="vertical-align: middle;">3245</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">55</td>
+                    <td style="vertical-align: middle;"><a href="/profile/alladdin"><img src="http://russianaicup.ru/thumbnails/alladdin/lZ6nhwyGc0YE0knx.png" class="userImage tinyUserImage" title="alladdin" alt="alladdin"/></a>
+<a href="/profile/alladdin" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">alladdin</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">669</td>
+                    <td style="vertical-align: middle;">        27%
+</td>
+                    <td style="vertical-align: middle;">3240</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        6
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">56</td>
+                    <td style="vertical-align: middle;"><a href="/profile/ferc"><img src="http://russianaicup.ru/thumbnails/ferc/9v2bf69ulrqoVcHa.png" class="userImage tinyUserImage" title="ferc" alt="ferc"/></a>
+<a href="/profile/ferc" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">ferc</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-2"></span></span></td>
+                    <td style="vertical-align: middle;">567</td>
+                    <td style="vertical-align: middle;">        35%
+</td>
+                    <td style="vertical-align: middle;">3236</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        5
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">57</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Volandpro"><img src="http://russianaicup.ru/thumbnails/Volandpro/aNeBzLOoI7c1ivbd.png" class="userImage tinyUserImage" title="Volandpro" alt="Volandpro"/></a>
+<a href="/profile/Volandpro" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Volandpro</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">463</td>
+                    <td style="vertical-align: middle;">        27%
+</td>
+                    <td style="vertical-align: middle;">3236</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">58</td>
+                    <td style="vertical-align: middle;"><a href="/profile/eigenein"><img src="http://russianaicup.ru/thumbnails/eigenein/vmi4cEg5Na5o5Vwe.png" class="userImage tinyUserImage" title="eigenein" alt="eigenein"/></a>
+<a href="/profile/eigenein" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">eigenein</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-9"></span></span></td>
+                    <td style="vertical-align: middle;">367</td>
+                    <td style="vertical-align: middle;">        38%
+</td>
+                    <td style="vertical-align: middle;">3233</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -4
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">59</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Evgenykz"><img src="http://russianaicup.ru/thumbnails/Evgenykz/Df0qBZhzjXNgK6u2.png" class="userImage tinyUserImage" title="Evgenykz" alt="Evgenykz"/></a>
+<a href="/profile/Evgenykz" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Evgenykz</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">232</td>
+                    <td style="vertical-align: middle;">        35%
+</td>
+                    <td style="vertical-align: middle;">3231</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        16
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">60</td>
+                    <td style="vertical-align: middle;"><a href="/profile/santa324"><img src="http://russianaicup.ru/thumbnails/santa324/foHqWCtQEKKv9EL7.png" class="userImage tinyUserImage" title="santa324" alt="santa324"/></a>
+<a href="/profile/santa324" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">santa324</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">230</td>
+                    <td style="vertical-align: middle;">        44%
+</td>
+                    <td style="vertical-align: middle;">3230</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -5
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">61</td>
+                    <td style="vertical-align: middle;"><a href="/profile/BeamOfLight"><img src="http://russianaicup.ru/thumbnails/BeamOfLight/TAtHSxPhQuDDqJiQ.png" class="userImage tinyUserImage" title="BeamOfLight" alt="BeamOfLight"/></a>
+<a href="/profile/BeamOfLight" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">BeamOfLight</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-2"></span></span></td>
+                    <td style="vertical-align: middle;">570</td>
+                    <td style="vertical-align: middle;">        31%
+</td>
+                    <td style="vertical-align: middle;">3226</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -16
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">62</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Stef"><img src="http://russianaicup.ru/thumbnails/Stef/ZzuAAQP3ugWtbvYF.png" class="userImage tinyUserImage" title="Stef" alt="Stef"/></a>
+<a href="/profile/Stef" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Stef</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">453</td>
+                    <td style="vertical-align: middle;">        28%
+</td>
+                    <td style="vertical-align: middle;">3218</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">63</td>
+                    <td style="vertical-align: middle;"><a href="/profile/oreshnik"><img src="http://russianaicup.ru/thumbnails/oreshnik/Oczkzjj2PsREhdhW.png" class="userImage tinyUserImage" title="oreshnik" alt="oreshnik"/></a>
+<a href="/profile/oreshnik" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">oreshnik</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">415</td>
+                    <td style="vertical-align: middle;">        31%
+</td>
+                    <td style="vertical-align: middle;">3218</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        3
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">64</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Mashiro"><img src="http://russianaicup.ru/thumbnails/Mashiro/xGHiCZXZMgEq99QA.png" class="userImage tinyUserImage" title="Mashiro" alt="Mashiro"/></a>
+<a href="/profile/Mashiro" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Mashiro</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">672</td>
+                    <td style="vertical-align: middle;">        30%
+</td>
+                    <td style="vertical-align: middle;">3216</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -3
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">65</td>
+                    <td style="vertical-align: middle;"><a href="/profile/271828182845904"><img src="http://russianaicup.ru/thumbnails/271828182845904/OAn1OxJNjummhsCp.png" class="userImage tinyUserImage" title="271828182845904" alt="271828182845904"/></a>
+<a href="/profile/271828182845904" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">271828182845904</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">337</td>
+                    <td style="vertical-align: middle;">        33%
+</td>
+                    <td style="vertical-align: middle;">3214</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -4
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">66</td>
+                    <td style="vertical-align: middle;"><a href="/profile/wertrix"><img src="http://russianaicup.ru/thumbnails/wertrix/EZHzkQH8m2f13D2p.png" class="userImage tinyUserImage" title="wertrix" alt="wertrix"/></a>
+<a href="/profile/wertrix" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">wertrix</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">637</td>
+                    <td style="vertical-align: middle;">        23%
+</td>
+                    <td style="vertical-align: middle;">3210</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        2
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">67</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Eugene713"><img src="http://russianaicup.ru/thumbnails/Eugene713/seQLtg3ZgVAVzPin.png" class="userImage tinyUserImage" title="Eugene713" alt="Eugene713"/></a>
+<a href="/profile/Eugene713" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Eugene713</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-7"></span></span></td>
+                    <td style="vertical-align: middle;">613</td>
+                    <td style="vertical-align: middle;">        28%
+</td>
+                    <td style="vertical-align: middle;">3210</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        4
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">68</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Alkev"><img src="http://russianaicup.ru/thumbnails/Alkev/GDlVOX2XsAhkAW0v.png" class="userImage tinyUserImage" title="Alkev" alt="Alkev"/></a>
+<a href="/profile/Alkev" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Alkev</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-7"></span></span></td>
+                    <td style="vertical-align: middle;">157</td>
+                    <td style="vertical-align: middle;">        39%
+</td>
+                    <td style="vertical-align: middle;">3208</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -7
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">69</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Adler"><img src="http://russianaicup.ru/thumbnails/Adler/4lItfgPT6ImRhAJU.png" class="userImage tinyUserImage" title="Adler" alt="Adler"/></a>
+<a href="/profile/Adler" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Adler</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">666</td>
+                    <td style="vertical-align: middle;">        28%
+</td>
+                    <td style="vertical-align: middle;">3208</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        12
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">70</td>
+                    <td style="vertical-align: middle;"><a href="/profile/and0"><img src="http://russianaicup.ru/thumbnails/and0/DOSug3JEivvLNRML.png" class="userImage tinyUserImage" title="and0" alt="and0"/></a>
+<a href="/profile/and0" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">and0</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">430</td>
+                    <td style="vertical-align: middle;">        21%
+</td>
+                    <td style="vertical-align: middle;">3202</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -2
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">71</td>
+                    <td style="vertical-align: middle;"><a href="/profile/DeeCo"><img src="http://russianaicup.ru/thumbnails/DeeCo/3em5FxaxOj57huwd.png" class="userImage tinyUserImage" title="DeeCo" alt="DeeCo"/></a>
+<a href="/profile/DeeCo" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">DeeCo</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-9"></span></span></td>
+                    <td style="vertical-align: middle;">263</td>
+                    <td style="vertical-align: middle;">        31%
+</td>
+                    <td style="vertical-align: middle;">3188</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        8
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">72</td>
+                    <td style="vertical-align: middle;"><a href="/profile/alkozel"><img src="http://russianaicup.ru/thumbnails/alkozel/aogKuu0oGSgUwhMm.png" class="userImage tinyUserImage" title="alkozel" alt="alkozel"/></a>
+<a href="/profile/alkozel" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">alkozel</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">467</td>
+                    <td style="vertical-align: middle;">        25%
+</td>
+                    <td style="vertical-align: middle;">3187</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        2
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">73</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Valdemar"><img src="http://russianaicup.ru/thumbnails/Valdemar/p5imJEZOClh4dPf2.png" class="userImage tinyUserImage" title="Valdemar" alt="Valdemar"/></a>
+<a href="/profile/Valdemar" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Valdemar</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">420</td>
+                    <td style="vertical-align: middle;">        28%
+</td>
+                    <td style="vertical-align: middle;">3183</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">74</td>
+                    <td style="vertical-align: middle;"><a href="/profile/RigFox"><img src="http://russianaicup.ru/thumbnails/RigFox/6kKG8mVVxooqS6CB.png" class="userImage tinyUserImage" title="RigFox" alt="RigFox"/></a>
+<a href="/profile/RigFox" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">RigFox</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">303</td>
+                    <td style="vertical-align: middle;">        32%
+</td>
+                    <td style="vertical-align: middle;">3182</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        1
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">75</td>
+                    <td style="vertical-align: middle;"><a href="/profile/andregc"><img src="http://russianaicup.ru/thumbnails/andregc/SsZ6UILSKxT2yuMj.png" class="userImage tinyUserImage" title="andregc" alt="andregc"/></a>
+<a href="/profile/andregc" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">andregc</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">182</td>
+                    <td style="vertical-align: middle;">        45%
+</td>
+                    <td style="vertical-align: middle;">3179</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">76</td>
+                    <td style="vertical-align: middle;"><a href="/profile/komendart"><img src="http://russianaicup.ru/thumbnails/komendart/cDAuLKsJ9EzFbzS6.png" class="userImage tinyUserImage" title="komendart" alt="komendart"/></a>
+<a href="/profile/komendart" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">komendart</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-9"></span></span></td>
+                    <td style="vertical-align: middle;">666</td>
+                    <td style="vertical-align: middle;">        27%
+</td>
+                    <td style="vertical-align: middle;">3178</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -2
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">77</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Olegnv"><img src="http://russianaicup.ru/thumbnails/Olegnv/LdnA86Ws5MAu3JdY.png" class="userImage tinyUserImage" title="Olegnv" alt="Olegnv"/></a>
+<a href="/profile/Olegnv" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Olegnv</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-9"></span></span></td>
+                    <td style="vertical-align: middle;">268</td>
+                    <td style="vertical-align: middle;">        35%
+</td>
+                    <td style="vertical-align: middle;">3178</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -7
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">78</td>
+                    <td style="vertical-align: middle;"><a href="/profile/olsh"><img src="http://russianaicup.ru/thumbnails/olsh/5RRwO7tHqwjDddjk.png" class="userImage tinyUserImage" title="olsh" alt="olsh"/></a>
+<a href="/profile/olsh" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">olsh</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">635</td>
+                    <td style="vertical-align: middle;">        25%
+</td>
+                    <td style="vertical-align: middle;">3173</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        6
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">79</td>
+                    <td style="vertical-align: middle;"><a href="/profile/AndreySiunov"><img src="http://russianaicup.ru/thumbnails/AndreySiunov/lz0zLWC8RwlEZfVJ.png" class="userImage tinyUserImage" title="AndreySiunov" alt="AndreySiunov"/></a>
+<a href="/profile/AndreySiunov" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">AndreySiunov</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">191</td>
+                    <td style="vertical-align: middle;">        31%
+</td>
+                    <td style="vertical-align: middle;">3169</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -14
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">80</td>
+                    <td style="vertical-align: middle;"><a href="/profile/kvld"><img src="http://russianaicup.ru/thumbnails/kvld/ibh4RSpHIuIerPhF.png" class="userImage tinyUserImage" title="kvld" alt="kvld"/></a>
+<a href="/profile/kvld" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">kvld</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-9"></span></span></td>
+                    <td style="vertical-align: middle;">629</td>
+                    <td style="vertical-align: middle;">        31%
+</td>
+                    <td style="vertical-align: middle;">3166</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        16
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">81</td>
+                    <td style="vertical-align: middle;"><a href="/profile/RegressCheck"><img src="http://russianaicup.ru/thumbnails/RegressCheck/JUPVPuwIwM9JgE7V.png" class="userImage tinyUserImage" title="RegressCheck" alt="RegressCheck"/></a>
+<a href="/profile/RegressCheck" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">RegressCheck</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-7"></span></span></td>
+                    <td style="vertical-align: middle;">598</td>
+                    <td style="vertical-align: middle;">        29%
+</td>
+                    <td style="vertical-align: middle;">3160</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -6
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">82</td>
+                    <td style="vertical-align: middle;"><a href="/profile/P_YegreS_P"><img src="http://russianaicup.ru/thumbnails/P_YegreS_P/3eZee1thksMljEFY.png" class="userImage tinyUserImage" title="P_YegreS_P" alt="P_YegreS_P"/></a>
+<a href="/profile/P_YegreS_P" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">P_YegreS_P</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">289</td>
+                    <td style="vertical-align: middle;">        37%
+</td>
+                    <td style="vertical-align: middle;">3159</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        15
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">83</td>
+                    <td style="vertical-align: middle;"><a href="/profile/jimor"><img src="http://russianaicup.ru/thumbnails/jimor/dIf9vOI0z2QpzXnT.png" class="userImage tinyUserImage" title="jimor" alt="jimor"/></a>
+<a href="/profile/jimor" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">jimor</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">640</td>
+                    <td style="vertical-align: middle;">        25%
+</td>
+                    <td style="vertical-align: middle;">3159</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -16
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">84</td>
+                    <td style="vertical-align: middle;"><a href="/profile/dobord"><img src="http://russianaicup.ru/thumbnails/dobord/S8IBo30btmrmfcLE.png" class="userImage tinyUserImage" title="dobord" alt="dobord"/></a>
+<a href="/profile/dobord" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">dobord</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">640</td>
+                    <td style="vertical-align: middle;">        27%
+</td>
+                    <td style="vertical-align: middle;">3157</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        9
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">85</td>
+                    <td style="vertical-align: middle;"><a href="/profile/stem"><img src="http://russianaicup.ru/thumbnails/stem/RDpV9r9TucrXbBeo.png" class="userImage tinyUserImage" title="stem" alt="stem"/></a>
+<a href="/profile/stem" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">stem</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">259</td>
+                    <td style="vertical-align: middle;">        41%
+</td>
+                    <td style="vertical-align: middle;">3148</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -3
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">86</td>
+                    <td style="vertical-align: middle;"><a href="/profile/latikov"><img src="http://russianaicup.ru/thumbnails/latikov/tOWAIcoveSIDf5I3.png" class="userImage tinyUserImage" title="latikov" alt="latikov"/></a>
+<a href="/profile/latikov" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">latikov</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-9"></span></span></td>
+                    <td style="vertical-align: middle;">378</td>
+                    <td style="vertical-align: middle;">        31%
+</td>
+                    <td style="vertical-align: middle;">3147</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">87</td>
+                    <td style="vertical-align: middle;"><a href="/profile/turbotankist"><img src="http://russianaicup.ru/thumbnails/turbotankist/alQu3w2NiR1KUHxI.png" class="userImage tinyUserImage" title="turbotankist" alt="turbotankist"/></a>
+<a href="/profile/turbotankist" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">turbotankist</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-9"></span></span></td>
+                    <td style="vertical-align: middle;">505</td>
+                    <td style="vertical-align: middle;">        33%
+</td>
+                    <td style="vertical-align: middle;">3146</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        5
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">88</td>
+                    <td style="vertical-align: middle;"><a href="/profile/sergeif"><img src="http://russianaicup.ru/thumbnails/sergeif/G5CU38kz2BlHoh3N.png" class="userImage tinyUserImage" title="sergeif" alt="sergeif"/></a>
+<a href="/profile/sergeif" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">sergeif</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">643</td>
+                    <td style="vertical-align: middle;">        24%
+</td>
+                    <td style="vertical-align: middle;">3140</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        4
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">89</td>
+                    <td style="vertical-align: middle;"><a href="/profile/alex.tsitsura"><img src="http://russianaicup.ru/thumbnails/alex.tsitsura/73tyDqvxhBbtwOhG.png" class="userImage tinyUserImage" title="alex.tsitsura" alt="alex.tsitsura"/></a>
+<a href="/profile/alex.tsitsura" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">alex.tsitsura</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">500</td>
+                    <td style="vertical-align: middle;">        25%
+</td>
+                    <td style="vertical-align: middle;">3140</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        13
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">90</td>
+                    <td style="vertical-align: middle;"><a href="/profile/sildc"><img src="http://russianaicup.ru/thumbnails/sildc/BY9sCrQezkE9AeGI.png" class="userImage tinyUserImage" title="sildc" alt="sildc"/></a>
+<a href="/profile/sildc" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">sildc</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">317</td>
+                    <td style="vertical-align: middle;">        36%
+</td>
+                    <td style="vertical-align: middle;">3138</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        15
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">91</td>
+                    <td style="vertical-align: middle;"><a href="/profile/ignorer"><img src="http://russianaicup.ru/thumbnails/ignorer/GJVrb9XUCxlhdN38.png" class="userImage tinyUserImage" title="ignorer" alt="ignorer"/></a>
+<a href="/profile/ignorer" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">ignorer</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">191</td>
+                    <td style="vertical-align: middle;">        43%
+</td>
+                    <td style="vertical-align: middle;">3136</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -15
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">92</td>
+                    <td style="vertical-align: middle;"><a href="/profile/jylilov"><img src="http://russianaicup.ru/thumbnails/jylilov/HUUEobiF2FGFErQ5.png" class="userImage tinyUserImage" title="jylilov" alt="jylilov"/></a>
+<a href="/profile/jylilov" title="" style="text-decoration: none !important;"><span class="highlightUserWithOldSubmissions">jylilov</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">186</td>
+                    <td style="vertical-align: middle;">        34%
+</td>
+                    <td style="vertical-align: middle;">3135</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -7
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">93</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Psirex"><img src="http://russianaicup.ru/thumbnails/Psirex/C3tlDrPu44eVFSwQ.png" class="userImage tinyUserImage" title="Psirex" alt="Psirex"/></a>
+<a href="/profile/Psirex" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Psirex</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">663</td>
+                    <td style="vertical-align: middle;">        28%
+</td>
+                    <td style="vertical-align: middle;">3131</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -3
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">94</td>
+                    <td style="vertical-align: middle;"><a href="/profile/FirstStorm"><img src="http://russianaicup.ru/thumbnails/FirstStorm/uhiH29fJTQ99c7Cr.png" class="userImage tinyUserImage" title="FirstStorm" alt="FirstStorm"/></a>
+<a href="/profile/FirstStorm" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">FirstStorm</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">358</td>
+                    <td style="vertical-align: middle;">        36%
+</td>
+                    <td style="vertical-align: middle;">3130</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -14
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">95</td>
+                    <td style="vertical-align: middle;"><a href="/profile/griboedov"><img src="http://russianaicup.ru/thumbnails/griboedov/UUloXQLS6LaIVn2L.png" class="userImage tinyUserImage" title="griboedov" alt="griboedov"/></a>
+<a href="/profile/griboedov" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">griboedov</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-7"></span></span></td>
+                    <td style="vertical-align: middle;">504</td>
+                    <td style="vertical-align: middle;">        25%
+</td>
+                    <td style="vertical-align: middle;">3127</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        5
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">96</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Lev"><img src="http://russianaicup.ru/thumbnails/Lev/8GgdDSNEJ4O9EXbg.png" class="userImage tinyUserImage" title="Lev" alt="Lev"/></a>
+<a href="/profile/Lev" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Lev</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">55</td>
+                    <td style="vertical-align: middle;">        56%
+</td>
+                    <td style="vertical-align: middle;">3127</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -6
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">97</td>
+                    <td style="vertical-align: middle;"><a href="/profile/dbf"><img src="http://russianaicup.ru/thumbnails/dbf/HKIn1FVzO6oiJJOj.png" class="userImage tinyUserImage" title="dbf" alt="dbf"/></a>
+<a href="/profile/dbf" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">dbf</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">481</td>
+                    <td style="vertical-align: middle;">        26%
+</td>
+                    <td style="vertical-align: middle;">3126</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -6
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">98</td>
+                    <td style="vertical-align: middle;"><a href="/profile/Hohol"><img src="http://russianaicup.ru/thumbnails/Hohol/ESY7itArwMkqF7cu.png" class="userImage tinyUserImage" title="Hohol" alt="Hohol"/></a>
+<a href="/profile/Hohol" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">Hohol</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-1"></span></span></td>
+                    <td style="vertical-align: middle;">624</td>
+                    <td style="vertical-align: middle;">        34%
+</td>
+                    <td style="vertical-align: middle;">3126</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        -11
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/red-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">99</td>
+                    <td style="vertical-align: middle;"><a href="/profile/zloy."><img src="http://russianaicup.ru/thumbnails/zloy./9secSuQVLsEIRhCk.png" class="userImage tinyUserImage" title="zloy." alt="zloy."/></a>
+<a href="/profile/zloy." title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">zloy.</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-13"></span></span></td>
+                    <td style="vertical-align: middle;">460</td>
+                    <td style="vertical-align: middle;">        28%
+</td>
+                    <td style="vertical-align: middle;">3126</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        15
+                            <img src="http://russianaicup.ru/s/1448658350412/assets/application/deprecated/green-triangle.png" align="right" style="margin-top: 4px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">100</td>
+                    <td style="vertical-align: middle;"><a href="/profile/morozec"><img src="http://russianaicup.ru/thumbnails/morozec/Jh30cKZT1hSUV6dE.png" class="userImage tinyUserImage" title="morozec" alt="morozec"/></a>
+<a href="/profile/morozec" title="" style="text-decoration: none !important;"><span class="highlightUserWithRecentSubmissions">morozec</span></a></td>
+                    <td style="vertical-align: middle;"><span class="icCont" style="width: 25px !important;"><span class="lc LangIc-5"></span></span></td>
+                    <td style="vertical-align: middle;">400</td>
+                    <td style="vertical-align: middle;">        34%
+</td>
+                    <td style="vertical-align: middle;">3125</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        0
+                    </td>
+                </tr>
+    </tbody>
+</table>
+
+
+<style type="text/css">
+    .pagination .arrow {
+        font-size: 2em;
+        color: black;
+        text-decoration: none !important;
+    }
+    a.not-decorated {
+        text-decoration: none !important;
+        cursor: default;
+    }
+</style>
+
+<div class="pagination">
+    <ul>
+        <li>
+                <a class="arrow not-decorated">&larr;</a>
+        </li>
+            <li>
+                <span class="page-index active" pageIndex="1">
+                        <a href="/contest/1/standings/page/1">1</a>
+                </span>
+            </li>
+            <li>
+                <span class="page-index" pageIndex="2">
+                        <a href="/contest/1/standings/page/2">2</a>
+                </span>
+            </li>
+            <li>
+                <span class="page-index" pageIndex="3">
+                        <a href="/contest/1/standings/page/3">3</a>
+                </span>
+            </li>
+            <li>
+                <span class="page-index" pageIndex="...">
+                        <a class="not-decorated">...</a>
+                </span>
+            </li>
+            <li>
+                <span class="page-index" pageIndex="16">
+                        <a href="/contest/1/standings/page/16">16</a>
+                </span>
+            </li>
+            <li>
+                <span class="page-index" pageIndex="17">
+                        <a href="/contest/1/standings/page/17">17</a>
+                </span>
+            </li>
+        <li>
+                <a href="/contest/1/standings/page/2" class="arrow">&rarr;</a>
+        </li>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        function handlePaginationKeyboardEvent(right) {
+            var pageIndex = parseInt($(".pagination").find("span.active").attr("pageIndex"));
+            if (right) {
+                pageIndex++;
+            } else {
+                pageIndex--;
+            }
+            $(".pagination").find("span[pageIndex=" + pageIndex + "]").each(function() {
+                window.location = $(this).find("a").attr("href");
+            });
+        }
+        $(document).keydown(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (e.ctrlKey) {
+                if (code == 37 || code == 39) {
+                    handlePaginationKeyboardEvent(code == 39);
+                }
+            }
+        });
+    })
+</script>
+
+                        </div>
+                </div>
+            </div>
+                <hr>
+                <footer>
+
+
+<div class="fluid-grid">
+    <div class="row newPerson">
+        <div class="span2">
+            <h2>Новые участники</h2>
+        </div>
+        <div class="span10">
+                <a href="/profile/Kokosso"><img src="http://russianaicup.ru/thumbnails/Kokosso/g2jMwxuykdutog5x.png" alt="Kokosso" title="Kokosso" width="50"/></a>
+                <a href="/profile/fugren"><img src="http://russianaicup.ru/thumbnails/fugren/b3f6RaoFsqrHXp9i.png" alt="fugren" title="fugren" width="50"/></a>
+                <a href="/profile/Myodes"><img src="http://russianaicup.ru/thumbnails/Myodes/zivrpBtIfTYrhJm5.png" alt="Myodes" title="Myodes" width="50"/></a>
+                <a href="/profile/mr_Y"><img src="http://russianaicup.ru/thumbnails/mr_Y/Hzmynpo3WSQYzguB.png" alt="mr_Y" title="mr_Y" width="50"/></a>
+                <a href="/profile/k.stanislau"><img src="http://russianaicup.ru/thumbnails/k.stanislau/fPIaAaBGcoXP4CE7.png" alt="k.stanislau" title="k.stanislau" width="50"/></a>
+                <a href="/profile/serebrserg"><img src="http://russianaicup.ru/thumbnails/serebrserg/5HgQp76np1EGsMzW.png" alt="serebrserg" title="serebrserg" width="50"/></a>
+                <a href="/profile/mix"><img src="http://russianaicup.ru/thumbnails/mix/ROK3K7KiHmf7hUeD.png" alt="mix" title="mix" width="50"/></a>
+                <a href="/profile/L34T"><img src="http://russianaicup.ru/thumbnails/L34T/50elLa3Ay6xTzBVh.png" alt="L34T" title="L34T" width="50"/></a>
+                <a href="/profile/kano_vas"><img src="http://russianaicup.ru/thumbnails/kano_vas/RaVYZyTuJ65MIFGs.png" alt="kano_vas" title="kano_vas" width="50"/></a>
+                <a href="/profile/Dilandau"><img src="http://russianaicup.ru/thumbnails/Dilandau/soTVzmxn8eAdmGDZ.png" alt="Dilandau" title="Dilandau" width="50"/></a>
+                <a href="/profile/pgc"><img src="http://russianaicup.ru/thumbnails/pgc/dVdjKyUg3lu1aVRA.png" alt="pgc" title="pgc" width="50"/></a>
+                <a href="/profile/Attack_Attack"><img src="http://russianaicup.ru/thumbnails/Attack_Attack/5QHvKckCyGSt7yKK.png" alt="Attack_Attack" title="Attack_Attack" width="50"/></a>
+        </div>
+    </div>
+</div><hr/>
+
+<style type="text/css">
+    .small {
+        font-size: 12px !important;
+    }
+</style>
+
+<div class="fluid-grid">
+    <div class="row newSol">
+
+        <div class="span2">
+            <h2>Новые игры</h2>
+        </div>
+
+        <div class="span10">
+                <div class="batItm">
+                    <a href="/game/view/187953" class="btn-solution color-for-recent-games-1"><span title="Победитель" class="small">serlis</span><span title="Формат игры">4 &times; 1</span></a>
+                </div>
+                <div class="batItm">
+                    <a href="/game/view/187952" class="btn-solution color-for-recent-games-1"><span title="Победитель" class="small">Alexyz</span><span title="Формат игры">4 &times; 1</span></a>
+                </div>
+                <div class="batItm">
+                    <a href="/game/view/187951" class="btn-solution color-for-recent-games-1"><span title="Победитель" class="small">MakArt</span><span title="Формат игры">4 &times; 1</span></a>
+                </div>
+                <div class="batItm">
+                    <a href="/game/view/187950" class="btn-solution color-for-recent-games-1"><span title="Победитель" class="small">HeyKappaKappa</span><span title="Формат игры">4 &times; 1</span></a>
+                </div>
+                <div class="batItm">
+                    <a href="/game/view/187949" class="btn-solution color-for-recent-games-1"><span title="Победитель" class="small">sildc</span><span title="Формат игры">4 &times; 1</span></a>
+                </div>
+                <div class="batItm">
+                    <a href="/game/view/187948" class="btn-solution color-for-recent-games-1"><span title="Победитель" class="small">Romka</span><span title="Формат игры">4 &times; 1</span></a>
+                </div>
+        </div>
+
+    </div>
+</div>
+<hr/>
+
+<style type="text/css">
+    .small {
+        font-size: 12px !important;
+    }
+</style>
+
+<div class="fluid-grid">
+    <div class="row newSol">
+        <div class="span2">
+            <h2>Новые стратегии</h2>
+        </div>
+        <div class="span10">
+                <div class="batItm">
+                    <a href="/profile/GeoGraf/strategies#strategy-40650"
+                       class="btn-solution color5"
+                            title="Версия стратегии 56&#13;&#10;Создана 27.11.2015 в 23:59:41"><span class="small">GeoGraf</span><span class="lg" style="text-align: center;">C#, 27.3 kB</span></a>
+                </div>
+                <div class="batItm">
+                    <a href="/profile/Poma/strategies#strategy-40647"
+                       class="btn-solution color5"
+                            title="Версия стратегии 23&#13;&#10;Создана 27.11.2015 в 23:59:21"><span class="small">Poma</span><span class="lg" style="text-align: center;">C#, 18.4 kB</span></a>
+                </div>
+                <div class="batItm">
+                    <a href="/profile/vovanz123/strategies#strategy-40646"
+                       class="btn-solution color9"
+                            title="Версия стратегии 7&#13;&#10;Создана 27.11.2015 в 23:59:19"><span class="small">vovanz123</span><span class="lg" style="text-align: center;">Python 3, 13.7 kB</span></a>
+                </div>
+                <div class="batItm">
+                    <a href="/profile/kvoronov/strategies#strategy-40645"
+                       class="btn-solution color9"
+                            title="Версия стратегии 6&#13;&#10;Создана 27.11.2015 в 23:59:15"><span class="small">kvoronov</span><span class="lg" style="text-align: center;">Python 3, 15.8 kB</span></a>
+                </div>
+                <div class="batItm">
+                    <a href="/profile/Wsl_F/strategies#strategy-40644"
+                       class="btn-solution color1"
+                            title="Версия стратегии 19&#13;&#10;Создана 27.11.2015 в 23:59:12"><span class="small">Wsl_F</span><span class="lg" style="text-align: center;">Java, 27.2 kB</span></a>
+                </div>
+                <div class="batItm">
+                    <a href="/profile/DmitrySamoyenko/strategies#strategy-40642"
+                       class="btn-solution color1"
+                            title="Версия стратегии 41&#13;&#10;Создана 27.11.2015 в 23:58:52"><span class="small">DmitrySamoyenko</span><span class="lg" style="text-align: center;">Java, 58.1 kB</span></a>
+                </div>
+        </div>
+    </div>
+</div>
+
+<hr style="margin-bottom: 100px;"/>
+
+<div style="text-align: center; margin: 50px 0 100px 0;">
+    <a style="margin: 0 2em;" href="http://corp.mail.ru/"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/mail-ru-group-logo.png" alt="Mail.Ru Group" title="Mail.Ru Group"/></a>
+    <a style="margin: 0 2em;" href="http://sgu.ru/"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/saratov-su-logo-120x110.png" alt="Саратовский Государственный Университет" title="Саратовский Государственный Университет"/></a>
+</div>
+
+<div style="text-align: center;">
+    <h2>Партнеры</h2>
+</div>
+
+<div style="text-align: center; margin: 10px 0 50px 0">
+    <a style="margin: 0 2em;" href="http://apps4all.ru/" target="_blank"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/partners/logo_apps4all.png" alt="Apps4All" title="Apps4All"/></a>
+    <a style="margin: 0 2em;" href="http://it-sobytie.ru/" target="_blank"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/partners/logo_itsob.png" alt="Айти-событие" title="Айти-событие"/></a>
+    <a style="margin: 0 2em;" href="http://hi-tech.mail.ru/" target="_blank"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/partners/logo_hi-tech.png" alt="Hi-Tech Mail.Ru" title="Hi-Tech Mail.Ru"/></a>
+    <br/>
+    <a style="margin: 0 2em;" href="http://codeforces.com/" target="_blank"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/partners/logo_codeforces.png" alt="Codeforces" title="Codeforces"/></a>
+    <a style="margin: 0 2em;" href="http://inc.hse.ru/" target="_blank"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/partners/logo_hseinc.png" alt="Бизнес-инкубатор НИУ ВШЭ" title="Бизнес-инкубатор НИУ ВШЭ"/></a>
+    <a style="margin: 0 2em;" href="http://apptractor.ru/" target="_blank"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/partners/logo_apptractor.png" alt="AppTractor" title="AppTractor"/></a>
+    <br/>
+    <a style="margin: 0 2em;" href="http://www.osp.ru/pcworld/" target="_blank"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/partners/logo-mpk.png" alt="Мир ПК" title="Мир ПК"/></a>
+    <a style="margin: 0 2em;" href="http://www.dgl.ru/" target="_blank"><img src="http://russianaicup.ru/s/1448658350412/assets/application/img/partners/logo-dgl.png" alt="DGL.ru" title="DGL.ru"/></a>
+    <a style="margin: 0 2em;" href="http://www.kingston.com/ru/" target="_blank"><img style="width: 230px;" src="http://russianaicup.ru/s/1448658350412/assets/application/img/partners/logo_kingston.png" alt="Kingston Technology" title="Kingston Technology"/></a>
+    <a style="margin: 0 2em;" href="http://www.wdc.com/ru/" target="_blank"><img style="width: 130px;" src="http://russianaicup.ru/s/1448658350412/assets/application/img/partners/logo_wd.png" alt="WD" title="WD"/></a>
+</div>
+
+                </footer>
+
+        </div>
+    </div>
+
+    <script src="http://russianaicup.ru/s/1448658350412/assets/bootstrap/js/bootstrap-transition.js"></script>
+    <script src="http://russianaicup.ru/s/1448658350412/assets/bootstrap/js/bootstrap-dropdown.js"></script>
+    <script src="http://russianaicup.ru/s/1448658350412/assets/bootstrap/js/bootstrap-modal.js"></script>
+    <script src="http://russianaicup.ru/s/1448658350412/assets/bootstrap/js/bootstrap-tab.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.ajaxSetup({ scriptCharset: "utf-8" ,contentType: "application/x-www-form-urlencoded; charset=UTF-8" });
+
+            window.closeGamePlayers = function() {
+                var players = $("iframe.gameplayer");
+                var size = players.length;
+                players.remove();
+                return size;
+            };
+
+            $(document).keydown(function(e) {
+                if (e.keyCode == 27) {
+                    closeGamePlayers();
+                }
+            });
+
+            $(document).click(function() {
+                return closeGamePlayers() == 0;
+            });
+
+            $(".run-player").css("cursor", "pointer");
+            $(".run-player").click(function () {
+                var gameId = $(this).attr("data-gameId");
+                var token = $(this).attr("data-token");
+                var id = token + new Date().getTime();
+                closeGamePlayers();
+                $("body").append("<iframe class='gameplayer' id='" + id + "' style='border:0;position:absolute;left:1px;top:1px;width:1px;height:1px;' src='http://russianaicup.ru/s/1448658350412/assets/jsrenderer/gameplayer.html?token=" + token + "&windowId=" + id + "&gameId=" + gameId + "'/>");
+                $(".gameplayer").focus();
+                return false;
+            });
+
+            if ($(window).width() < 1600) {
+                $('.button-up').css('width', '30px').css('line-height', '30px').css('font-size', '20px');
+            }
+
+            if ($(window).width() >= 1200) {
+                $ (window).scroll (function () {
+                    if ($ (this).scrollTop () > 100) {
+                        $ ('.button-up').fadeIn();
+                    } else {
+                        $ ('.button-up').fadeOut();
+                    }
+                });
+
+                $('.button-up').click(function () {
+                    $('body,html').animate({
+                        scrollTop: 0
+                    }, 500);
+                    return false;
+                });
+
+                $('.button-up').hover(function () {
+                    $(this).animate({
+                        'opacity':'1'
+                    }).css({'background-color':'#e7ebf0','color':'#6a86a4'});
+                }, function () {
+                    $(this).animate({
+                        'opacity':'0.7'
+                    }).css({'background':'none','color':'#d3dbe4'});;
+                });
+            }
+            
+            prettyPrint();
+        });
+    </script>
+</body>
+</html>

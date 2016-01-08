@@ -54,14 +54,72 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
+bool check(string& s, string& t)
+{
+    int count = 0;
+    fori(s.size())
+        count += s[i] == t[i];
+    return count == s.size() / 2;
+}
 
 void run()
 {
     ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    int x = 1;
+    fori(n)
+        x *= 2;
+    vector<string> s(1, "+");
+    fori(n)
+    {
+        vector<string> t;
+        int w = s.size();
+        forj(w)
+        {
+            string q = "";
+            forn(k, w)
+                q.append(s[j][k] == '+' ? "++" : "**");
+            t.pb(q);
+            q = "";
+            forn(k, w)
+                q.append(s[j][k] == '+' ? "*+" : "+*");
+            t.pb(q);
+        }
+        s = t;
+    }
+    writeln(s);
+    //switch (n) {
+        //case 0:
+            //writeln("+");
+            //return;
+        //case 1:
+            //writeln("+*");
+            //writeln("*+");
+            //return;
+        //default:
+
+            //vector<string> s(x);
+
+            //int deg = 1;
+            //fori(x)
+                //deg *= 2;
+            //fori1(x)
+            //{
+                //for (int q = 0; q < deg; ++q)
+                //{
+                    //string w = "";
+                    //forn(e, x)
+                        //w.pb(q & (1 << e) ? '-' : '+');
+                    //bool ok = true;
+                    //FOR(j, 0, i)
+                        //ok &= check(w, s[j]);
+                    //if (ok)
+                    //{
+                        //s[i] = w;
+                        //break;
+                    //}
+                //}
+            //}
+            //writeln(s);
 }
 
 int main()

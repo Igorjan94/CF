@@ -58,10 +58,18 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 void run()
 {
     ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    if (n & 1)
+    {
+        writeln(0);
+        return;
+    }
+    int ans = 0;
+    fori1(n)
+        if (2 * i < n - 2 * i)
+            ans++;
+        else
+            break;
+    writeln(ans);
 }
 
 int main()
