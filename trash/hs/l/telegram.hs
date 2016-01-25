@@ -12,8 +12,9 @@ import Control.Lens
 
 import Data.Maybe
 
-import Data.Vector (mapM, Vector)
+import Data.Vector (mapM, Vector, filter, map, fromList)
 import Data.Text (Text, pack)
+import Data.Char (toUpper)
 import Text.Printf
 
 import Network
@@ -54,14 +55,14 @@ getWithUsd conversion value = conversion ^? key (pack value) . _Double
 
 getExchange :: Value -> [String] -> IO (Maybe String)
 getExchange conversion (q : src : _ : dest : _) = do
-    let x = getWithUsd conversion src
-    let y = getWithUsd conversion dest
+    let x = getWithUsd conversion (Prelude.map toUpper src)
+    let y = getWithUsd conversion (Prelude.map toUpper dest)
     let quantity = read q :: Double
     case x of 
         Nothing -> return Nothing
         Just base -> case y of
             Nothing -> return Nothing
-            Just value -> return $ Just (q ++ " " ++ src ++ " equals dest " ++ printf "%.2f" (quantity * value / base) ++ " " ++ dest)
+            Just value -> return $ Just (q ++ " " ++ src ++ " equals to " ++ printf "%.2f" (quantity * value / base) ++ " " ++ dest)
 
 
 convert :: MVar Value -> [String] -> IO (Maybe String)
@@ -73,34 +74,44 @@ convert :: MVar Value -> [String] -> IO (Maybe String)
         {-Nothing -> return Nothing-}
         {-Just conversion -> getExchange conversion list-}
 convert rates list@(q : src : _ : dest : _) = do
+    print "converting"
     print list
     conversion <- readMVar rates
-    answer <- getExchange conversion list
-    return answer
+    getExchange conversion list
 convert _ _ = return Nothing
 
 
-markAsRead :: (Integer, Bool) -> IO ()
-markAsRead (updateId, True) = print $ "markedAsRead " ++ show updateId
-markAsRead (updateId, False) = print $ "message is not delivered: " ++ show updateId
+markAsRead :: (Integer, Bool) -> IO (Maybe Integer)
+markAsRead (updateId, True) = return $ Just updateId
+    {-print $ "markedAsRead " ++ show updateId-}
+markAsRead (updateId, False) = return Nothing
+    {-print $ "message is not delivered: " ++ show updateId-}
 
 
-proceedMessage :: MVar Value -> Value -> IO (Integer, Bool)
-proceedMessage rates update = do
+proceedMessage :: MVar Value -> Value -> Vector Integer-> IO (Integer, Bool)
+proceedMessage rates update ids = do
     let Just updateId = update ^? key "update_id" . _Integer
-    let Just message = update ^? key "message"
-    let Just chatId = message ^? key "chat" . key "id" . _Integer
-    let Just text = message ^? key "text" . _String
-    let strings = words $ kostyl text
-    answer <- convert rates strings
-    response <- sendMessage chatId answer
-    return (updateId, response)
+    print $ "proceeding message with id " ++ show updateId
+    if updateId `elem` ids
+        then return (updateId, False)
+        else do
+            let Just message = update ^? key "message"
+            let Just chatId = message ^? key "chat" . key "id" . _Integer
+            let Just text = message ^? key "text" . _String
+            let strings = words $ kostyl text
+            answer <- convert rates strings
+            response <- sendMessage chatId answer
+            return (updateId, response)
 
 
 telegram :: MVar Value -> Int -> IO()
 telegram rates delay = forever $ do
     updates <- getUpdates
-    proceededMessages <- Data.Vector.mapM (\x -> proceedMessage rates x) updates
-    _ <- Data.Vector.mapM markAsRead proceededMessages
-    print proceededMessages
+    let ids = Data.Vector.fromList []
+    proceededMessages <- Data.Vector.mapM (\x -> proceedMessage rates x ids) updates
+    new <- Data.Vector.mapM markAsRead proceededMessages
+    let new2 = Data.Vector.filter isJust new 
+    let new3 = Data.Vector.map fromJust new2
+    print new3
+    print "============================================================"
     threadDelay delay

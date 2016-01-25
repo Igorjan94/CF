@@ -32,10 +32,13 @@ getConversion :: MVar Value -> IO Value
 getConversion rates = do
     response <- jsonByURL "http://api.fixer.io/latest?base=USD"
     let Just conversion = response ^? key "rates"
+    print conversion
     tryPutMVar rates conversion
     return conversion
 
 exchange :: MVar Value -> Int -> IO()
 exchange rates delay = forever $ do
+    print "conversion1"
     getConversion rates
+    print "conversion2"
     threadDelay delay
