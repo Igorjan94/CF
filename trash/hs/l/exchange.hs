@@ -10,4 +10,4 @@ import Network
 exchange :: IO()
 exchange = forever $ do
     print "exchange"
-    threadDelay 2000000 
+    threadDelay 200000000
