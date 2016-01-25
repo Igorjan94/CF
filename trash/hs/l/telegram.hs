@@ -5,7 +5,6 @@ module Telegram where
 import Control.Monad
 import Control.Monad.State.Strict
 import Control.Concurrent
-import Control.Concurrent.MVar 
 
 import Data.Aeson
 import Data.Aeson.Lens
@@ -19,7 +18,6 @@ import Data.Char (toUpper)
 import Text.Printf
 
 import Network
-import Exchange
 
 token :: String
 token = "130250270:AAFeKP-ZbsdRxc4g5QtkbFYmrF5POgOaurw"
@@ -67,26 +65,22 @@ getExchange conversion (q : src : _ : dest : _) = do
 
 
 convert :: MVar Value -> [String] -> IO (Maybe String)
-{-convert rates list@(q : src : _ : dest : date : _) = do-}
-    {-print "withDate"-}
-    {-print list-}
-    {-c <- getConversionByDate date-}
-    {-case c of-}
-        {-Nothing -> return Nothing-}
-        {-Just conversion -> getExchange conversion list-}
-convert rates list@(q : src : _ : dest : _) = do
-    print "converting"
-    print list
+convert rates list@(_ : _ : _ : _ : _) = do
     conversion <- readMVar rates
     getExchange conversion list
 convert _ _ = return Nothing
+{-convert rates list@(q : src : _ : dest : date : _) = do-}
+{-print "withDate"-}
+{-print list-}
+{-c <- getConversionByDate date-}
+{-case c of-}
+{-Nothing -> return Nothing-}
+{-Just conversion -> getExchange conversion list-}
 
 
 markAsRead :: (Integer, Bool) -> IO (Maybe Integer)
 markAsRead (updateId, True) = return $ Just updateId
-    {-print $ "markedAsRead " ++ show updateId-}
-markAsRead (updateId, False) = return Nothing
-    {-print $ "message is not delivered: " ++ show updateId-}
+markAsRead (_, False) = return Nothing
 
 
 proceedMessage :: MVar Value -> Value -> Vector Integer-> IO (Integer, Bool)
@@ -104,16 +98,15 @@ proceedMessage rates update ids = do
             response <- sendMessage chatId answer
             return (updateId, response)
 
-
+{-telegram :: forall a . MVar Value -> Int -> IO (a, [Integer])-}
 telegram rates delay = runStateT (forever go) []
     where go = do 
                 updates <- lift getUpdates
-                state <- get
-                let ids = Data.Vector.fromList state
+                prev <- get
+                let ids = Data.Vector.fromList prev
                 proceededMessages <- lift $ Data.Vector.mapM (\x -> proceedMessage rates x ids) updates
                 new <- lift $ Data.Vector.mapM markAsRead proceededMessages
                 let new2 = Data.Vector.filter isJust new 
                 let new3 = Data.Vector.map fromJust new2
-                lift (print state)
-                modify (const $ state ++ (toList new3))
+                modify (const $ prev ++ (toList new3))
                 lift (threadDelay delay)
