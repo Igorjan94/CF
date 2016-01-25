@@ -3,6 +3,7 @@
 module Telegram where
 
 import Control.Monad
+import Control.Monad.State.Strict
 import Control.Concurrent
 import Control.Concurrent.MVar 
 
@@ -12,7 +13,7 @@ import Control.Lens
 
 import Data.Maybe
 
-import Data.Vector (mapM, Vector, filter, map, fromList)
+import Data.Vector (mapM, Vector, filter, map, fromList, toList)
 import Data.Text (Text, pack)
 import Data.Char (toUpper)
 import Text.Printf
@@ -104,14 +105,15 @@ proceedMessage rates update ids = do
             return (updateId, response)
 
 
-telegram :: MVar Value -> Int -> IO()
-telegram rates delay = forever $ do
-    updates <- getUpdates
-    let ids = Data.Vector.fromList []
-    proceededMessages <- Data.Vector.mapM (\x -> proceedMessage rates x ids) updates
-    new <- Data.Vector.mapM markAsRead proceededMessages
-    let new2 = Data.Vector.filter isJust new 
-    let new3 = Data.Vector.map fromJust new2
-    print new3
-    print "============================================================"
-    threadDelay delay
+telegram rates delay = runStateT (forever go) []
+    where go = do 
+                updates <- lift getUpdates
+                state <- get
+                let ids = Data.Vector.fromList state
+                proceededMessages <- lift $ Data.Vector.mapM (\x -> proceedMessage rates x ids) updates
+                new <- lift $ Data.Vector.mapM markAsRead proceededMessages
+                let new2 = Data.Vector.filter isJust new 
+                let new3 = Data.Vector.map fromJust new2
+                lift (print state)
+                modify (const $ state ++ (toList new3))
+                lift (threadDelay delay)
