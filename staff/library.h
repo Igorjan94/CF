@@ -389,5 +389,31 @@ vector<int> multiply(const vector<int>& a, const vector<int>& b)
     return move(res);
 }
 
+//IgorjanCg
+#define pointtt template<typename T>
+//sorts only if z is corner point;
+#define sortByPolarAngle(v, z, T) sort(v.begin(), v.end(), [&z](point<T>& a, point<T>& b) {\
+    int q = orientation(z, a, b); return q == 0 ? dist(z, a) < dist(z, b) : q == -1;\
+});
+
+pointtt struct point
+{
+    T x, y;
+    point(T _x, T _y) : x(_x), y(_y) {}
+    point(){}
+    point operator+(point b) { return point(x + b.x, y + b.y); }
+    point operator-() { return point(-x, -y); }
+    T operator*(point b) { return x * b.x + y * b.y; }
+    T operator^(point b) { return x * b.y - y * b.x; }
+    T operator!() { return x * x + y * y; }
+    bool operator<(point b) { return x == b.x ? y < b.y : x < b.x; }
+};
+pointtt istream&operator>>(istream&is,point<T>&a){return is>>a.x>>a.y;}
+pointtt ostream&operator<<(ostream&os,point<T>&a){return os<<a.x<<" "<<a.y;}
+pointtt T dist(point<T>&a,point<T>&b){return!point<T>(a+-b);}
+//dist from point C to line AB equals to answer.first / sqrt(answer.second);
+pointtt pair<T,T> dist(point<T>&a,point<T>&b,point<T>&c){return{abs((a+-b)*c)+(a^b),dist(a,b)};}
+pointtt int orientation(point<T>&a,point<T>&b,point<T>&c){T q=a.x*b.y-a.y*b.x-a.x*c.y+a.y*c.x+b.x*c.y-b.y*c.x;return q>0?1:q<0?-1:0;}
+
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
