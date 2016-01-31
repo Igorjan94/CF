@@ -389,7 +389,7 @@ vector<int> multiply(const vector<int>& a, const vector<int>& b)
     return move(res);
 }
 
-//IgorjanCg
+//Igorjanpoint
 #define pointtt template<typename T>
 //sorts only if z is corner point;
 #define sortByPolarAngle(v, z, T) sort(v.begin(), v.end(), [&z](point<T>& a, point<T>& b) {\
@@ -414,6 +414,9 @@ pointtt T dist(point<T>&a,point<T>&b){return!point<T>(a+-b);}
 //dist from point C to line AB equals to answer.first / sqrt(answer.second);
 pointtt pair<T,T> dist(point<T>&a,point<T>&b,point<T>&c){return{abs((a+-b)*c)+(a^b),dist(a,b)};}
 pointtt int orientation(point<T>&a,point<T>&b,point<T>&c){T q=a.x*b.y-a.y*b.x-a.x*c.y+a.y*c.x+b.x*c.y-b.y*c.x;return q>0?1:q<0?-1:0;}
+
+//IgorjanconvexHull
+pointtt vector<point<T>>convexHull(vector<point<T>>a){sort(a.begin(),a.end());int n=a.size(),j=-1,k=0;ROF(i,n-2,0)a.push_back(a[i]);fori(a.size()){for(;j>k&&orientation(a[j-1],a[j],a[i])!=1;--j);a[++j]=a[i];if(!k&&i==n-1)k=j;}a.resize(j);return a;}
 
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
