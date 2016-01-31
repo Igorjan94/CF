@@ -19,6 +19,8 @@ import Data.Char (toUpper)
 import Text.Printf
 
 import Network
+import Database
+import Data.Acid
 
 token :: String
 token = "130250270:AAFeKP-ZbsdRxc4g5QtkbFYmrF5POgOaurw"
@@ -63,6 +65,7 @@ getExchange conversion (q : src : _ : dest : _) = do
         Just base -> case y of
             Nothing -> return Nothing
             Just value -> return $ Just (q ++ " " ++ src ++ " equals to " ++ printf "%.2f" (quantity * value / base) ++ " " ++ dest)
+getExchange _ _ = return Nothing 
 
 
 convert :: MVar Value -> [String] -> IO (Maybe String)
@@ -70,28 +73,23 @@ convert rates list@(_ : _ : _ : _ : _) = do
     conversion <- readMVar rates
     getExchange conversion list
 convert _ _ = return Nothing
-{-convert rates list@(q : src : _ : dest : date : _) = do-}
-{-print "withDate"-}
-{-print list-}
-{-c <- getConversionByDate date-}
-{-case c of-}
-{-Nothing -> return Nothing-}
-{-Just conversion -> getExchange conversion list-}
 
 
-markAsRead :: (Integer, Bool) -> IO (Maybe Integer)
-markAsRead (updateId, True) = return $ Just updateId
-markAsRead (_, False) = return Nothing
+markAsRead :: AcidState Database.KeyValue -> (Key, Bool) -> IO (Maybe Key)
+markAsRead acid (updateId, True) = do
+    update acid (InsertKey updateId)
+    return $ Just updateId
+markAsRead _ (_, False) = return Nothing
 
 
-proceedMessage :: MVar Value -> Value -> Vector Integer-> IO (Integer, Bool)
-proceedMessage rates update ids = do
-    let Just updateId = update ^? key "update_id" . _Integer
+proceedMessage :: MVar Value -> Value -> Vector Integer -> IO (Integer, Bool)
+proceedMessage rates updateOfMessage ids = do
+    let Just updateId = updateOfMessage ^? key "update_id" . _Integer
     print $ "proceeding message with id " ++ show updateId
     if updateId `elem` ids
         then return (updateId, False)
         else do
-            let Just message = update ^? key "message"
+            let Just message = updateOfMessage ^? key "message"
             let Just chatId = message ^? key "chat" . key "id" . _Integer
             let Just text = message ^? key "text" . _String
             let strings = words $ kostyl text
@@ -100,15 +98,15 @@ proceedMessage rates update ids = do
             return (updateId, response)
 
 
-telegram :: forall a . MVar Value -> Int -> IO (a, [Integer])
-telegram rates delay = runStateT (forever go) []
+telegram :: forall a. AcidState Database.KeyValue -> [Key] -> MVar Value -> Int -> IO (a, [Key])
+telegram acid start rates delay = runStateT (forever go) start
     where go = do 
                 updates <- lift getUpdates
                 prev <- get
                 let ids = Data.Vector.fromList prev
                 proceededMessages <- lift $ Data.Vector.mapM (\x -> proceedMessage rates x ids) updates
-                new <- lift $ Data.Vector.mapM markAsRead proceededMessages
-                let new2 = Data.Vector.filter isJust new 
-                let new3 = Data.Vector.map fromJust new2
-                modify (const $ prev ++ (toList new3))
+                messagesMarkAsRead <- lift $ Data.Vector.mapM (markAsRead acid) proceededMessages
+                let newProceededMessages = Data.Vector.map fromJust $ Data.Vector.filter isJust messagesMarkAsRead
+                modify (const $ prev ++ toList newProceededMessages)
                 lift (threadDelay delay)
+            
