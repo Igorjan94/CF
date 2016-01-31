@@ -5,7 +5,6 @@ module Network where
 import Data.Aeson
 import Control.Monad
 import Network.HTTP.Conduit (simpleHttp)
-import Data.Maybe
 
 jsonByURL :: String -> IO Value
 jsonByURL url = do
