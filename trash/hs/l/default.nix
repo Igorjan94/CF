@@ -11,7 +11,7 @@ let
       mkDerivation {
         pname = "telegramExchangeBot";
         version = "0.1.0.0";
-        src = /home/igorjan/206round/trash/hs/l;
+        src = ./.;
         isLibrary = false;
         isExecutable = true;
         executableHaskellDepends = [
