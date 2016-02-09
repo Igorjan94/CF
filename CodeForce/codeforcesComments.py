@@ -59,7 +59,7 @@ class CodeForcesBlogParser(HTMLParser):
                 # global users
                 name = self.user.rsplit('/', 2)[-1]
                 count = int(count)
-                if abs(count) > 50:
+                if abs(count) > 100:
                     comments[commentId] = (name, int(count), self.blogId)
                 if name in users:
                     users[name] += count
@@ -96,6 +96,7 @@ def recentActionsThread():
         i += 1
         global recentBlogs
         recentBlogs = recentBlogs.union(updateRecentActions())
+        # recentBlogs = set(map(str, range(1, 24000)))
         print("recentBlogs", recentBlogs)
         sleep(5)
 
@@ -118,7 +119,8 @@ def main():
 
     extr = []
     for name, count in users.items():
-        extr.append((name, count))
+        if abs(count) > 100:
+            extr.append((name, count))
     print(list(reversed(sorted(extr, key=lambda x: x[1]))))
 
 if __name__ == "__main__":
