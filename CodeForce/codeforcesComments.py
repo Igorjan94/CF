@@ -78,6 +78,11 @@ class CodeForcesBlogParser(HTMLParser):
 # }}}
 
 class CodeForcesServer(object):
+
+    @cherrypy.expose
+    def default(self, *args, **kwargs):
+        return open('index.html', 'r')
+
     @cherrypy.expose
     def comments(self, **kwargs):
         if not 'from' in kwargs:
@@ -89,12 +94,15 @@ class CodeForcesServer(object):
         else:
             toIndex = fromIndex + int(kwargs['count'])
         global commentsToServer
-        length = len(commentsToServer)
-        toIndex = min(toIndex, length)
         if 'reversed' in kwargs:
             commentsToServer2 = list(reversed(commentsToServer))
         else:
             commentsToServer2 = commentsToServer
+        if 'username' in kwargs:
+            commentsToServer2 = list(filter(lambda x: kwargs['username'] in x['username'], commentsToServer2))
+        length = len(commentsToServer2)
+        toIndex = min(toIndex, length)
+
         return json.dumps({'length': length, 'data': commentsToServer2[fromIndex:toIndex]})
 
     @cherrypy.expose
@@ -109,12 +117,14 @@ class CodeForcesServer(object):
             toIndex = fromIndex + int(kwargs['count'])
 
         global usersToServer
-        length = len(usersToServer)
-        toIndex = min(toIndex, length)
         if 'reversed' in kwargs:
             usersToServer2 = list(reversed(usersToServer))
         else:
             usersToServer2 = usersToServer
+        if 'username' in kwargs:
+            usersToServer2 = list(filter(lambda x: kwargs['username'] in x['username'], usersToServer2))
+        length = len(usersToServer2)
+        toIndex = min(toIndex, length)
         return json.dumps({'length': length, 'data': usersToServer2[fromIndex:toIndex]})
 
 def updateRecentActions():
@@ -175,29 +185,9 @@ def recentActionsThread():
         global recentBlogs
         recentBlogs = recentBlogs.union(updateRecentActions())
 
-def main():
-    global recentBlogs
-    global pool
-    global commentsToServer
-    pool = multiprocessing.Pool()
-
-    # recentBlogs = json.loads(open('comments.json', 'r').read())
-    recentBlogs = set()
-    try:
-        qwer = open('comments.json', 'r')
-        wert = qwer.readline()
-        commentsToServer = json.loads(wert)
-        for comment in commentsToServer:
-            comments[comment['commentId']] = (comment['username'], comment['count'], comment['postId'])
-        qwer.close()
-    except:
-        # recentBlogs = set(map(str, range(1, 24)))
-        recentBlogs = recentBlogs.union(updateRecentActions())
-    download1 = threading.Thread(target=updateBlogsFromRecentActions)
-    download2 = threading.Thread(target=recentActionsThread)
-    download1.start()
-    download2.start()
-
+def application(environ, start_response):
+    #download1.join()
+    #download2.join()
     conf = {
         '/': {
             'tools.sessions.on': True,
@@ -210,13 +200,33 @@ def main():
         },
     }
     cherrypy_cors.install()
-    webapp = CodeForcesServer()
     cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
-    cherrypy.config.update({'server.socket_port': 2929, 'server.socket_host': '192.168.2.6'})
-    cherrypy.quickstart(webapp, '/', conf)
-    download1.join()
-    download2.join()
+#    cherrypy.config.update({'server.socket_port': 2929, 'server.socket_host': '192.168.2.6'})
+    cherrypy.tree.mount(CodeForcesServer(), '/', conf)
+#    download1.join()
+#    download2.join()
+    return cherrypy.tree(environ, start_response)
 
+print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+pool = multiprocessing.Pool()
+recentBlogs = set()
+try:
+    qwer = open('comments.json', 'r')
+    wert = qwer.readline()
+    commentsToServer = json.loads(wert)
+    for comment in commentsToServer:
+        comments[comment['commentId']] = (comment['username'], comment['count'], comment['postId'])
+    qwer.close()
+except:
+    # recentBlogs = set(map(str, range(1, 24)))
+    recentBlogs = recentBlogs.union(updateRecentActions())
+print(recentBlogs)
+download1 = threading.Thread(target=updateBlogsFromRecentActions)
+download2 = threading.Thread(target=recentActionsThread)
+download1.daemon = True
+download2.daemon = True
+download1.start()
+download2.start()
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()
