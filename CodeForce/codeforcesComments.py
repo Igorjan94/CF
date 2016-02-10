@@ -4,13 +4,22 @@ from time import sleep
 from html.parser import HTMLParser
 import multiprocessing
 from multiprocessing import Manager
-
+import cherrypy_cors
+import cherrypy
+import json
+import sys
 
 manager = Manager()
 comments = manager.dict()
 users = manager.dict()
+usersToServer = manager.list()
+commentsToServer = manager.list()
+SLEEP_RECENT = 60 * 30
+SLEEP_BIG_UPDATE = 3600 * 40
+COUNT_COMMENTS_TO_WATCH = 100
+MIN_RATING_TO_WATCH = 1000
 
-
+# {{{
 class CodeForcesRecentActionsParser(HTMLParser):
 
     def __init__(self):
@@ -51,77 +60,163 @@ class CodeForcesBlogParser(HTMLParser):
         if tag == 'a' and self.avatar:
             (_, self.user) = attrs[0]
             self.avatar = False
-        if tag == 'span' and len(attrs) == 3:
+        if tag == 'span' and len(attrs) >= 3:
             x, commentId = attrs[0]
             if x == 'commentid':
-                _, count = attrs[1]
-                # global comments
-                # global users
-                name = self.user.rsplit('/', 2)[-1]
+                index = 1
+                if len(attrs) == 4:
+                    index += 1
+                _, count = attrs[index]
+                name = self.user.rsplit('/', index)[-1]
                 count = int(count)
-                if abs(count) > 100:
+                if abs(count) >= COUNT_COMMENTS_TO_WATCH: # HERE
                     comments[commentId] = (name, int(count), self.blogId)
                 if name in users:
                     users[name] += count
                 else:
                     users[name] = count
+# }}}
+
+class CodeForcesServer(object):
+    @cherrypy.expose
+    def comments(self, **kwargs):
+        if not 'from' in kwargs:
+            fromIndex = 0
+        else:
+            fromIndex = int(kwargs['from'])
+        if not 'count' in kwargs:
+            toIndex = fromIndex + 10
+        else:
+            toIndex = fromIndex + int(kwargs['count'])
+        global commentsToServer
+        length = len(commentsToServer)
+        toIndex = min(toIndex, length)
+        if 'reversed' in kwargs:
+            commentsToServer2 = list(reversed(commentsToServer))
+        else:
+            commentsToServer2 = commentsToServer
+        return json.dumps({'length': length, 'data': commentsToServer2[fromIndex:toIndex]})
+
+    @cherrypy.expose
+    def users(self, **kwargs):
+        if not 'from' in kwargs:
+            fromIndex = 0
+        else:
+            fromIndex = int(kwargs['from'])
+        if not 'count' in kwargs:
+            toIndex = fromIndex + 10
+        else:
+            toIndex = fromIndex + int(kwargs['count'])
+
+        global usersToServer
+        length = len(usersToServer)
+        toIndex = min(toIndex, length)
+        if 'reversed' in kwargs:
+            usersToServer2 = list(reversed(usersToServer))
+        else:
+            usersToServer2 = usersToServer
+        return json.dumps({'length': length, 'data': usersToServer2[fromIndex:toIndex]})
 
 def updateRecentActions():
+    print("updating recent actions")
     url = 'http://codeforces.com'
     parser = CodeForcesRecentActionsParser()
-    parser.feed(requests.get(url).text)
+    data = requests.get(url)
+    if data.status_code != 200:
+        print("пицоооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооооот")
+    else:
+        parser.feed(data.text)
+    print("updated recent actions")
     return parser.recent
 
 def parseBlog(blogId):
-    print("parsing", blogId)
+    print("parsing blog", blogId)
     url = 'http://codeforces.com/blog/entry/' + blogId
     parser = CodeForcesBlogParser(blogId)
     responce = requests.get(url)
     if responce.status_code == 200:
         parser.feed(responce.text)
+    else:
+        print(responce.status_code, " in ", blogId)
+    print("parsed blog", blogId)
 
 def updateBlogsFromRecentActions():
-    i = 0
-    while i < 2:
-        sleep(2)
-        i += 1
+    while True:
+        print("update blogs thread")
         global recentBlogs
         global pool
+        global commentsToServer
+        global usersToServer
         pool.map(parseBlog, recentBlogs)
         recentBlogs = set()
 
+        commentsToServer = []
+        for u, (x, y, z) in comments.items():
+            commentsToServer.append({'count': y, 'username': x, 'commentId': u, 'postId' : z})
+        commentsToServer = sorted(commentsToServer, key=lambda x: x["count"])
+
+        usersToServer = []
+        for name, count in users.items():
+            if abs(int(count)) > MIN_RATING_TO_WATCH: # HERE
+                usersToServer.append({'username': name, 'count': count})
+        usersToServer = sorted(usersToServer, key=lambda x: x["count"])
+        print("updated blogs thread")
+        qwer = open('comments.json', 'w')
+        qwer.write(json.dumps(commentsToServer))
+        qwer.close()
+        print("saved into comments.json blogs thread")
+        sleep(SLEEP_BIG_UPDATE)
+
+
 def recentActionsThread():
-    i = 0
-    while i < 1:
-        i += 1
+    while True:
+        print("recent blogs thread")
+        sleep(SLEEP_RECENT)
         global recentBlogs
         recentBlogs = recentBlogs.union(updateRecentActions())
-        # recentBlogs = set(map(str, range(1, 24000)))
-        print("recentBlogs", recentBlogs)
-        sleep(5)
 
 def main():
     global recentBlogs
     global pool
+    global commentsToServer
     pool = multiprocessing.Pool()
-    # parseBlog('15540')
+
+    # recentBlogs = json.loads(open('comments.json', 'r').read())
     recentBlogs = set()
+    try:
+        qwer = open('comments.json', 'r')
+        wert = qwer.readline()
+        commentsToServer = json.loads(wert)
+        for comment in commentsToServer:
+            comments[comment['commentId']] = (comment['username'], comment['count'], comment['postId'])
+        qwer.close()
+    except:
+        # recentBlogs = set(map(str, range(1, 24)))
+        recentBlogs = recentBlogs.union(updateRecentActions())
     download1 = threading.Thread(target=updateBlogsFromRecentActions)
     download2 = threading.Thread(target=recentActionsThread)
     download1.start()
     download2.start()
+
+    conf = {
+        '/': {
+            'tools.sessions.on': True,
+            'cors.expose.on': True,
+        },
+        '/generator': {
+            'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+            'tools.response_headers.on': True,
+            'tools.response_headers.headers': [('Content-Type', 'text/plain')],
+        },
+    }
+    cherrypy_cors.install()
+    webapp = CodeForcesServer()
+    cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
+    cherrypy.config.update({'server.socket_port': 2929, 'server.socket_host': '192.168.2.6'})
+    cherrypy.quickstart(webapp, '/', conf)
     download1.join()
     download2.join()
-    extr = []
-    for u, (x, y, z) in comments.items():
-        extr.append((y, x, u, z))
-    print(sorted(extr, key=lambda x: x[0]))
 
-    extr = []
-    for name, count in users.items():
-        if abs(count) > 100:
-            extr.append((name, count))
-    print(list(reversed(sorted(extr, key=lambda x: x[1]))))
 
 if __name__ == "__main__":
     main()
