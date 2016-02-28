@@ -54,84 +54,29 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
-ll brutForce(ll s, ll x)
-{
-    ll ans = 0;
-    fori1(s)
-        if ((i ^ (s - i)) == x)
-            ans++;
-    return ans;
-}
 
-ll ans = 0;
 ll rec(ll s, ll x)
 {
     int carry = 0;
-    ROF(j, 42, 0)
+    ROF(j, 60, 0)
     {
         ll i = 1ll << j;
-        if ((s & i) == 1 && (x & i) == 1)
-        {
-            if (carry == 1)
-                carry = 0;
-        }
-        if ((s & i) == 1 && (x & i) == 0)
-        {
-            if (carry == 0)
-                carry = 1;
-            else
-                return 0; 
-        }
-        if ((s & i) == 0 && (x & i) == 1)
-        {
-            count++;
-            carry = 1 - carry;
-        }
+        if (s & i && x & i && carry == 1)
+            return 0;
+        if ((s & i) == 0 && x & i && carry == 0)
+            return 0;
+        if (s & i && (x & i) == 0)
+            carry = 1;
         if ((s & i) == 0 && (x & i) == 0)
-        {
-            if (carry == 0);
-            else carry = 0;
-            
-        }
+            carry = 0;
     }
     return carry == 0 ? (1ll << __builtin_popcountll(x)) - 2 * (s == x) : 0;
-}
-
-ll get(ll x)
-{
-    if (x == 0)
-        return 0;
-    if (x % 2 == 0)
-        return get(x / 2);
-    else
-        return 2 * get(x / 2) + 2 - 2 * ((x / 2) == 0);
 }
 
 void run()
 {
     lls(s, x);
     writeln(rec(s, x));
-    return;
-    //if (s == x)
-    //{
-        //writeln(get(s));
-        //exit(0);
-    //}
-
-    forn1(s, 32)
-        writeln(s, brutForce(s, s), get(s));
-
-    int m = 34;
-    forn1(s, m)
-    {
-        forn1(x, m) 
-        {
-            ans = 0;
-            rec(s, x);
-            writeln(s, x, brutForce(s, x), ans);
-        }
-        writeln();
-    }
 }
 
 int main()
