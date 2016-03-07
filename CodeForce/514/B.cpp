@@ -64,8 +64,9 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 void run()
 {
     ints(n, x0, y0);
-    int ans = 1;
-    vector<pii> a;
+    set<pii, function<bool(pii, pii)>> a([](pii const& _a, pii const& b) {
+        return _a.first * b.second - _a.second * b.first > 0;
+    });
     fori(n)
     {
         ints(x, y);
@@ -74,19 +75,9 @@ void run()
         if (x < 0 || (x == 0 && y < 0))
             x = -x,
             y = -y;
-        a.pb({x, y});
+        a.insert({x, y});
     }
-    auto cmp = [](pii const& _a, pii const& b) {
-        int temp = _a.first * b.second - _a.second * b.first;
-        if (temp == 0)
-            return false;
-        return temp > 0;
-    };
-    sort(whole(a), cmp);
-    fori1(n)
-        if (cmp(a[i - 1], a[i]))
-            ans++;
-    writeln(ans);
+    writeln(a.size());
 }
 
 int main()
