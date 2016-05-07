@@ -53,78 +53,51 @@ tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
-
-//fenwickTree
-template <typename T>
-struct fenwickTree
-{
-    vector<T> t;
-    int n;
-    int MAX;
-
-    fenwickTree(int size, T value = 0)
-    {
-        n = size;
-        t.resize(n + 1, value);
-    }
-
-    fenwickTree(vector<T>& arr, int MA)
-    {
-        MAX = MA;
-        t.resize(n = arr.size(), 0);
-        fori(n)
-            update(i + 1, arr[i]);
-    }
-
-    void update(int index, T value)
-    {
-        for (; index <= n; index += index & -index)
-            t[index] = min(MAX, t[index] + value);
-    }
-
-    T sum(int i)
-    {
-        T res = 0;
-        for (; i; i -= i & -i)
-            res += t[i];
-        return res;
-    }
-
-    T sum(int l, int r)
-    {
-        return sum(r) - sum(l - 1);
-    }
-
-    T sum0(int l, int r)
-    {
-        return sum(r + 1) - sum(l);
-    }
-};
 //Igorjan
+
+void fail() {
+    writeln(-1);
+    exit(0);
+}
 
 void run()
 {
-    ints(n, k, a, b, q);
-    vector<int> x(n + 2, 0);
-    vector<int> y(n + 2, 0);
+    ints(n, k, a, b, c, d);
+    if (n == 4 || k <= n)
+        fail();
+    vector<int> x(n), y(n), z(n);
+    set<int> indices;
+    FOR(i, 1, n + 1)
+        indices.insert(i);
+    indices.erase(a);
+    indices.erase(b);
+    indices.erase(c);
+    indices.erase(d);
+    x[0] = a;
+    x[1] = b;
+    x[2] = c;
+    x[3] = d;
+    auto it = indices.begin();
+    for (int i = 4; i < n; ++i, it++)
+        x[i] = *it;
 
-    fenwickTree<int> A(x, a);
-    fenwickTree<int> B(y, b);
-    forn(Q, q)
-    {
-        ints(type);
-        if (type == 1)
-        {
-            ints(d, value);
-            A.update(d, value);
-            B.update(d, value);
-        }
-        else
-        {
-            ints(p);
-            writeln(B.sum(1, p - 1) + A.sum(p + k, n + 1));
-        }
-    }
+    y[0] = x[0];
+    y[1] = x[2];
+    y[2] = x[4];
+    y[3] = x[3];
+    FOR(i, 4, n - 1)
+        y[i] = x[i + 1];
+    y[n - 1] = x[1];
+
+    z[0] = x[2];
+    z[1] = x[0];
+    z[2] = x[4];
+    z[3] = x[1];
+    FOR(i, 4, n - 1)
+        z[i] = x[n - i + 3];
+    z[n - 1] = x[3];
+    writeln(y);
+    writeln(z);
 }
 
 int main()

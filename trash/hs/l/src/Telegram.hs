@@ -29,6 +29,7 @@ api :: String
 api = "https://api.telegram.org/bot" 
 
 
+-- Loads updates from telegram
 getUpdates :: IO (Data.Vector.Vector Value)
 getUpdates = do
     response <- jsonByURL $ api ++ token ++ "/getUpdates"
@@ -37,7 +38,7 @@ getUpdates = do
         then return $ fromJust $ response ^? key "result" . _Array
         else error "Error in telegram"
 
-
+-- Answers on message
 sendMessage :: Integer -> Maybe String -> IO Bool
 sendMessage chatId (Just text) = do
     response <- jsonByURL $ api ++ token ++ "/sendMessage?chat_id=" ++ show chatId ++ "&text=" ++ text
@@ -50,11 +51,13 @@ kostyl :: Text -> String
 kostyl x = init $ tail $ show x
 
 
+-- Converting value from USD to $value$
 getWithUsd :: Value -> String -> Maybe Double
 getWithUsd _ "USD" = Just 1
 getWithUsd conversion value = conversion ^? key (pack value) . _Double
 
 
+-- Parses message
 getExchange :: Value -> [String] -> IO (Maybe String)
 getExchange conversion (q : src : _ : dest : _) = do
     let x = getWithUsd conversion (Prelude.map toUpper src)
@@ -68,6 +71,7 @@ getExchange conversion (q : src : _ : dest : _) = do
 getExchange _ _ = return Nothing 
 
 
+-- Converts from message to answer
 convert :: MVar Value -> [String] -> IO (Maybe String)
 convert rates list@(_ : _ : _ : _ : _) = do
     conversion <- readMVar rates
@@ -75,6 +79,7 @@ convert rates list@(_ : _ : _ : _ : _) = do
 convert _ _ = return Nothing
 
 
+-- Marks message as read(answered)
 markAsRead :: AcidState Database.KeyValue -> (Key, Bool) -> IO (Maybe Key)
 markAsRead acid (updateId, True) = do
     update acid (InsertKey updateId)
@@ -82,6 +87,7 @@ markAsRead acid (updateId, True) = do
 markAsRead _ (_, False) = return Nothing
 
 
+-- Handle single message
 proceedMessage :: MVar Value -> Value -> Vector Integer -> IO (Integer, Bool)
 proceedMessage rates updateOfMessage ids = do
     let Just updateId = updateOfMessage ^? key "update_id" . _Integer
@@ -98,6 +104,7 @@ proceedMessage rates updateOfMessage ids = do
             return (updateId, response)
 
 
+-- Thread to watch messages
 telegram :: forall a. AcidState Database.KeyValue -> [Key] -> MVar Value -> Int -> IO (a, [Key])
 telegram acid start rates delay = runStateT (forever go) start
     where go = do 

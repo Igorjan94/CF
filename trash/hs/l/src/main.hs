@@ -16,6 +16,6 @@ main = do
     rates <- newEmptyMVar
     thread0 <- async $ exchange rates 100000000
     thread1 <- async $ telegram acid keys rates 10000000
-    (,) <$> wait thread0 <*> wait thread1
+    _ <- (,) <$> wait thread0 <*> wait thread1
     putStrLn "Finished"
     closeAcidState acid

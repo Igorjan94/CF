@@ -54,77 +54,35 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 
-//fenwickTree
-template <typename T>
-struct fenwickTree
-{
-    vector<T> t;
-    int n;
-    int MAX;
-
-    fenwickTree(int size, T value = 0)
-    {
-        n = size;
-        t.resize(n + 1, value);
-    }
-
-    fenwickTree(vector<T>& arr, int MA)
-    {
-        MAX = MA;
-        t.resize(n = arr.size(), 0);
-        fori(n)
-            update(i + 1, arr[i]);
-    }
-
-    void update(int index, T value)
-    {
-        for (; index <= n; index += index & -index)
-            t[index] = min(MAX, t[index] + value);
-    }
-
-    T sum(int i)
-    {
-        T res = 0;
-        for (; i; i -= i & -i)
-            res += t[i];
-        return res;
-    }
-
-    T sum(int l, int r)
-    {
-        return sum(r) - sum(l - 1);
-    }
-
-    T sum0(int l, int r)
-    {
-        return sum(r + 1) - sum(l);
-    }
-};
+//printAns
+ttti void printAnswerAndExit(T a){writeln(a);exit(0);}
 //Igorjan
 
 void run()
 {
-    ints(n, k, a, b, q);
-    vector<int> x(n + 2, 0);
-    vector<int> y(n + 2, 0);
+    ints(n, m, s, d);
+    vi a(n);
+    readln(a);
+    sort(whole(a));
 
-    fenwickTree<int> A(x, a);
-    fenwickTree<int> B(y, b);
-    forn(Q, q)
+    vector<pair<string, int>> ans;
+    int last = -1;
+    if (a[0] - 1 < s)
+        printAnswerAndExit("IMPOSSIBLE");
+    fori(n)
     {
-        ints(type);
-        if (type == 1)
-        {
-            ints(d, value);
-            A.update(d, value);
-            B.update(d, value);
-        }
-        else
-        {
-            ints(p);
-            writeln(B.sum(1, p - 1) + A.sum(p + k, n + 1));
-        }
+        ans.pb({"RUN", a[i] - last - 2});
+        last = a[i];
+        while (i + 1 < n && a[i + 1] - a[i] - 2 < s) ++i;
+        if (a[i] - last + 2 > d)
+            printAnswerAndExit("IMPOSSIBLE");
+
+        ans.pb({"JUMP", a[i] - last + 2});
+        last = a[i];
     }
+    if (last + 1 != m)
+        ans.pb({"RUN", m - last - 1});
+    writeln(ans);
 }
 
 int main()

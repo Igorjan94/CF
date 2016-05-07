@@ -174,6 +174,7 @@ struct linearSieve
 };
 
 //IgorjanfenwickTree
+//1-indexed, [l, r]
 template <typename T>
 struct fenwickTree
 {
@@ -219,6 +220,7 @@ struct fenwickTree
 };
 
 //IgorjansegmentTree
+//zero-indexed, [l..r]
 template<typename T>
 struct segmentTree
 {
@@ -417,6 +419,9 @@ pointtt int orientation(point<T>&a,point<T>&b,point<T>&c){T q=a.x*b.y-a.y*b.x-a.
 
 //IgorjanconvexHull
 pointtt vector<point<T>>convexHull(vector<point<T>>a){sort(a.begin(),a.end());int n=a.size(),j=-1,k=0;ROF(i,n-2,0)a.push_back(a[i]);fori(a.size()){for(;j>k&&orientation(a[j-1],a[j],a[i])!=1;--j);a[++j]=a[i];if(!k&&i==n-1)k=j;}a.resize(j);return a;}
+
+//IgorjanprintAns
+ttti void printAnswerAndExit(T a){writeln(a);exit(0);}
 
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */

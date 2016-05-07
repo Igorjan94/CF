@@ -11,6 +11,7 @@ import Control.Lens
 
 import Network
 
+-- Loads conversions from site
 getConversion :: MVar Value -> IO Value
 getConversion rates = do
     response <- jsonByURL "http://api.fixer.io/latest?base=USD"
@@ -18,6 +19,7 @@ getConversion rates = do
     _ <- tryPutMVar rates conversion
     return conversion
 
+-- Starts forever
 exchange :: MVar Value -> Int -> IO()
 exchange rates delay = forever $ do
     _ <- getConversion rates

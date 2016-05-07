@@ -53,78 +53,31 @@ tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
-
-//fenwickTree
-template <typename T>
-struct fenwickTree
-{
-    vector<T> t;
-    int n;
-    int MAX;
-
-    fenwickTree(int size, T value = 0)
-    {
-        n = size;
-        t.resize(n + 1, value);
-    }
-
-    fenwickTree(vector<T>& arr, int MA)
-    {
-        MAX = MA;
-        t.resize(n = arr.size(), 0);
-        fori(n)
-            update(i + 1, arr[i]);
-    }
-
-    void update(int index, T value)
-    {
-        for (; index <= n; index += index & -index)
-            t[index] = min(MAX, t[index] + value);
-    }
-
-    T sum(int i)
-    {
-        T res = 0;
-        for (; i; i -= i & -i)
-            res += t[i];
-        return res;
-    }
-
-    T sum(int l, int r)
-    {
-        return sum(r) - sum(l - 1);
-    }
-
-    T sum0(int l, int r)
-    {
-        return sum(r + 1) - sum(l);
-    }
-};
 //Igorjan
+
+void answer(bool ok) 
+{
+    writeln(ok ? "FINITE" : "INFINITE");
+    exit(0);
+}
 
 void run()
 {
-    ints(n, k, a, b, q);
-    vector<int> x(n + 2, 0);
-    vector<int> y(n + 2, 0);
-
-    fenwickTree<int> A(x, a);
-    fenwickTree<int> B(y, b);
-    forn(Q, q)
+    ints(n);
+    string s;
+    vi a(n);
+    vector<bool> used(n, false);
+    readln(s, a);
+    fori(n) if (s[i] == '<') a[i] *= -1;
+    int i = 0;
+    while (i >= 0 && i < n)
     {
-        ints(type);
-        if (type == 1)
-        {
-            ints(d, value);
-            A.update(d, value);
-            B.update(d, value);
-        }
-        else
-        {
-            ints(p);
-            writeln(B.sum(1, p - 1) + A.sum(p + k, n + 1));
-        }
+        used[i] = true;
+        i += a[i];
+        if (i >= 0 && i < n && used[i])
+            answer(false);
     }
+    answer(true);
 }
 
 int main()

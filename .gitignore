@@ -23,7 +23,9 @@ TDGame
 *TDGame*
 *.config
 *.hi
+*.ods
 vk
+vkBackup
 C++*
 study*
 temp*
@@ -31,3 +33,5 @@ temp*
 *hmmmm*
 *staff/cfsubmit.py
 *key.me2*
+trash
+codeforces.stat

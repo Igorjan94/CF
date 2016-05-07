@@ -53,78 +53,26 @@ tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
-
-//fenwickTree
-template <typename T>
-struct fenwickTree
-{
-    vector<T> t;
-    int n;
-    int MAX;
-
-    fenwickTree(int size, T value = 0)
-    {
-        n = size;
-        t.resize(n + 1, value);
-    }
-
-    fenwickTree(vector<T>& arr, int MA)
-    {
-        MAX = MA;
-        t.resize(n = arr.size(), 0);
-        fori(n)
-            update(i + 1, arr[i]);
-    }
-
-    void update(int index, T value)
-    {
-        for (; index <= n; index += index & -index)
-            t[index] = min(MAX, t[index] + value);
-    }
-
-    T sum(int i)
-    {
-        T res = 0;
-        for (; i; i -= i & -i)
-            res += t[i];
-        return res;
-    }
-
-    T sum(int l, int r)
-    {
-        return sum(r) - sum(l - 1);
-    }
-
-    T sum0(int l, int r)
-    {
-        return sum(r + 1) - sum(l);
-    }
-};
 //Igorjan
 
 void run()
 {
-    ints(n, k, a, b, q);
-    vector<int> x(n + 2, 0);
-    vector<int> y(n + 2, 0);
-
-    fenwickTree<int> A(x, a);
-    fenwickTree<int> B(y, b);
-    forn(Q, q)
+    ints(n);
+    vi a(n), ans(n, 0);
+    readln(a);fori(n)a[i]--;
+    fori(n)
     {
-        ints(type);
-        if (type == 1)
+        vector<int> colors(n, 0);
+        int index = a[i];
+        FOR(j, i, n)
         {
-            ints(d, value);
-            A.update(d, value);
-            B.update(d, value);
-        }
-        else
-        {
-            ints(p);
-            writeln(B.sum(1, p - 1) + A.sum(p + k, n + 1));
+            colors[a[j]]++;
+            if (colors[a[j]] > colors[index] || (colors[a[j]] == colors[index] && index > a[j]))
+                index = a[j];
+            ans[index]++;
         }
     }
+    writeln(ans);
 }
 
 int main()

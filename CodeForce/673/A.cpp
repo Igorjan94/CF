@@ -53,78 +53,23 @@ tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
-
-//fenwickTree
-template <typename T>
-struct fenwickTree
-{
-    vector<T> t;
-    int n;
-    int MAX;
-
-    fenwickTree(int size, T value = 0)
-    {
-        n = size;
-        t.resize(n + 1, value);
-    }
-
-    fenwickTree(vector<T>& arr, int MA)
-    {
-        MAX = MA;
-        t.resize(n = arr.size(), 0);
-        fori(n)
-            update(i + 1, arr[i]);
-    }
-
-    void update(int index, T value)
-    {
-        for (; index <= n; index += index & -index)
-            t[index] = min(MAX, t[index] + value);
-    }
-
-    T sum(int i)
-    {
-        T res = 0;
-        for (; i; i -= i & -i)
-            res += t[i];
-        return res;
-    }
-
-    T sum(int l, int r)
-    {
-        return sum(r) - sum(l - 1);
-    }
-
-    T sum0(int l, int r)
-    {
-        return sum(r + 1) - sum(l);
-    }
-};
 //Igorjan
 
 void run()
 {
-    ints(n, k, a, b, q);
-    vector<int> x(n + 2, 0);
-    vector<int> y(n + 2, 0);
-
-    fenwickTree<int> A(x, a);
-    fenwickTree<int> B(y, b);
-    forn(Q, q)
-    {
-        ints(type);
-        if (type == 1)
+    ints(n);
+    vi a(n), b(91 + 15, 0);
+    readln(a);
+    a.pb(90);
+    a.insert(a.begin(), 0);
+    int ans = 90;
+    fori1(a.size())
+        if (a[i] - a[i - 1] > 15)
         {
-            ints(d, value);
-            A.update(d, value);
-            B.update(d, value);
+            ans = min(a[i - 1] + 15, 90);
+            break;
         }
-        else
-        {
-            ints(p);
-            writeln(B.sum(1, p - 1) + A.sum(p + k, n + 1));
-        }
-    }
+    writeln(ans);
 }
 
 int main()
@@ -137,7 +82,7 @@ int main()
 //    freopen(FILENAME".out", "w", stdout);
     run();
 #ifndef ONLINE_JUDGE
-    writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
+    //writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
 #endif
     return 0;
 }
