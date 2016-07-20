@@ -82,10 +82,10 @@ ttti void print(T a){cout<<" "<<a;}
 ttti void priws(T a){cout<<a;}
 ttti void read(T& a){cin>>a;}
 
-//Igorjanbin_search
+//IgorjanbinSearch
 //x -> min, f(x) == true
 template<typename T, typename F>
-T bin_search(T l, T r, F f, T eps)
+T binSearch(T l, T r, F f, T eps)
 {
     T m;
     while (fabs(r - l) > eps)
@@ -110,7 +110,7 @@ struct dsu
         return a[i] == i ? i : a[i] = get(a[i]);
     }
 
-    void union(int i, int j)
+    void uni(int i, int j)
     {
         i = get(i);
         j = get(j);
@@ -295,6 +295,43 @@ struct segmentTree
     }
 };
 
+//sparseTable
+//zero-indexes, [l, r)
+template<typename T>
+struct sparseTable
+{
+    int n;
+    vector<vector<T>> st;
+    vector<int> logs;
+    typedef function<T (T, T)> F;
+    F f;
+    T NEITRAL_ELEMENT;
+
+    sparseTable(vector<T>& a, F g, T ne = 0)
+    {
+        NEITRAL_ELEMENT = ne;
+        n = a.size();
+        f = g;
+
+        logs.push_back(0);
+        logs.push_back(0);
+        FOR(i, 2, n + 1) logs.push_back(logs[i / 2] + 1);
+        int L = logs.back() + 1;
+        st.resize(L, vector<T>(n, ne));
+        fori(n)
+            st[0][i] = a[i];
+        FOR(k, 1, L)
+            for (int i = 0; i + (1 << k) <= n; i++)
+                st[k][i] = f(st[k - 1][i], st[k - 1][i + (1 << (k - 1))]);
+    }
+
+    T get(int l, int r)
+    {
+        int len = logs[r - l];
+        return f(st[len][l], st[len][r - (1 << len)]);
+    }
+};
+
 //Igorjanbfs
 template<typename S, typename T, typename F1, typename F2>
 vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParameter)
@@ -324,7 +361,7 @@ vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParamete
 
 //Igorjanbinpow
 template<typename T>
-T binpow (T a, ll n)
+T binpow(T a, ll n)
 {
     if (n == 0)
         return (T) 1;
