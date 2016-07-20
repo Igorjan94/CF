@@ -8,6 +8,7 @@ import subprocess
 
 def defineDays(s):
     s = s.replace('по пятницам и выходным', 'ПСВ')
+    s = s.replace('по пятницам и субботам', 'ПС')
     s = s.replace('ежедневно', '')
     s = s.replace('по выходным', 'СВ')
     s = s.replace('по рабочим', 'КСВ')
@@ -16,6 +17,7 @@ def defineDays(s):
     s = s.replace('по пятницам', 'П')
     s = s.replace('кроме пятн. и субб.', 'КПС')
     s = s.replace('кроме пятниц и вых.', 'КПСВ')
+    s = s.replace('кроме суббот', 'КС')
     s = s.replace('кроме воскресений', 'КВ')
     return s
 
