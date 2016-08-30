@@ -55,8 +55,33 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
 
+vi get(int n) 
+{
+    vector<int> a(n);
+    iota(whole(a), 1);
+    set<int> x;
+    do
+    {
+        int sum = 0;
+        fori(a.size())
+            sum = abs(sum - a[i]);
+        x.insert(sum);
+    }
+    while (next_permutation(whole(a)));
+    vi b;
+    for(auto y : x) b.pb(y);
+    return b;
+}
+
+int mx(int n)
+{
+    return n % 4 < 2 ? n : n - 1;
+}
+
 void run()
 {
+    ints(n, m);
+    writeln((m <= n && (mx(n) - m) % 2 == 0) ? "YES" : "NO");
 }
 
 int main()
@@ -67,9 +92,9 @@ int main()
     ios_base::sync_with_stdio(false);
 //    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
+    ints(t);fori(t)
     run();
 #ifndef ONLINE_JUDGE
-    writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
 #endif
     return 0;
 }

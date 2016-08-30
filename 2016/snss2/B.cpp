@@ -57,6 +57,11 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+    ints(n);
+    vi a(n);
+    readln(a);
+    sort(whole(a));
+    writeln(a);
 }
 
 int main()
@@ -69,7 +74,6 @@ int main()
 //    freopen(FILENAME".out", "w", stdout);
     run();
 #ifndef ONLINE_JUDGE
-    writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
 #endif
     return 0;
 }

@@ -57,6 +57,24 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+    ints(n);
+    vector<string> a(n);
+    readln(a);
+    bool ok = false;
+    fori(n)
+    {
+        if (!ok && a[i][0] == 'O' && a[i][1] == 'O')
+            a[i][0] = a[i][1] = '+',
+            ok = true;
+        if (!ok && a[i][3] == 'O' && a[i][4] == 'O')
+            a[i][3] = a[i][4] = '+',
+            ok = true;
+    }
+    if (ok)
+        writeln("YES"),
+        writeln(a);
+    else
+        writeln("NO");
 }
 
 int main()
