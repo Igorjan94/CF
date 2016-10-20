@@ -3,10 +3,8 @@
 
 using namespace std;
 
-#define forit(it, r) for (auto it = r.begin(); it != r.end(); ++it)
 #define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
 #define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
-#define forn1(i, n)  for (int i = 1; i < (int) (n); ++i)
 #define forn(i, n)   for (int i = 0; i < (int) (n); ++i)
 #define  fori1(n)    for (int i = 1; i < (int) (n); ++i)
 #define  forj1(n)    for (int j = 1; j < (int) (n); ++j)
@@ -16,9 +14,9 @@ using namespace std;
 #define      ll      long long
 #define      pb      push_back
 #define      vi      vector<int>
+#define      va      valarray<int>
 #define     pii      pair<int, int>
 #define     vll      vector<long long>
-#define     pll      pair<long long, long long>
 #define   whole(a)   a.begin(), a.end()
 #define    next      next__
 #define    prev      prev__
@@ -57,6 +55,11 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+    ints(n);
+    va a(n);
+    readln(a);
+    sort(begin(a), end(a));
+    writeln(a);    
 }
 
 int main()
@@ -103,6 +106,8 @@ ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second
 ttt12i ostream&operator<<(ostream&os,pair<T1,T2>&a){return os<<a.first<<" "<<a.second;}
 ttti   ostream&operator<<(ostream&os,vector<T>&a){if(a.size())os<<a[0];else os<<"\n";for(int i=1;i<a.size();++i)os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
 ttti   istream&operator>>(istream&is,vector<T>&a){if(a.size()==0){int n;is>>n;a.resize(n);}for(int i=0;i<a.size();++i)is>>a[i];return is;}
+ttti   ostream&operator<<(ostream&os,valarray<T>&a){if(a.size())os<<a[0];else os<<"\n";for(int i=1;i<a.size();++i)os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
+ttti   istream&operator>>(istream&is,valarray<T>&a){if(a.size()==0){int n;is>>n;a.resize(n);}for(int i=0;i<a.size();++i)is>>a[i];return is;}
 ttti void print(T a){cout<<" "<<a;}
 ttti void priws(T a){cout<<a;}
 ttti void read(T& a){cin>>a;}
