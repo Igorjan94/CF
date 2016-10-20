@@ -55,8 +55,54 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
 
+int n = 6;
+int m = 3;
+vector<vector<int>> a;
+bool check(int i, int j)
+{
+    int ans = 0;
+    forn(q, m)
+        forn(w, m)
+            ans += a[j][w] > a[i][q];
+    return ans > m * m / 2;
+}
+
 void run()
 {
+    a.resize(n);
+    vector<int> b(n * m);
+    fori(n)
+        a[i].resize(m);
+    iota(whole(b), 1);
+    int c = 0;
+    fori(m)
+        forj(n)
+            a[j][i] = b[c++];
+    //FOR(i, 3 * n, 4 * n)
+        //swap(a[i], a[5 * n - i - 1]);
+    //writeln(a);
+    do 
+    {
+        //break;
+        random_shuffle(b.begin(), b.end());
+        c = 0;
+        fori(m)
+            forj(n)
+                a[j][i] = b[c++];
+        bool ok = true;
+        fori(n)
+            ok &= check((i + 1) % n, i);
+        if (ok)
+        {
+            writeln(),
+            writeln("-------------------------"),
+            writeln(a),
+            writeln(),
+            writeln();
+            break;
+        }
+    } 
+    while (true);
 }
 
 int main()

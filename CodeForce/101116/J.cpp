@@ -57,6 +57,35 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+    ints(n);
+    vector<pii> a(n);
+    readln(a);
+    sort(whole(a), [](pii& a, pii& b){ return a.second == b.second ? a.first < b.first : a.second < b.second;});
+    int mn = INF;
+    fori(n)
+        forj(n)
+            if (a[j].first >= a[i].first)
+            {
+                int count = 0;
+                int q = 0;
+                int w = 0;
+                int dx = a[j].first - a[i].first;
+                for (; q < n; ++q)
+                {
+                    while (w < n && count <= n / 2)
+                    {
+                        if (a[w].first >= a[i].first && a[w].first <= a[j].first)
+                            count++, w++;
+                        else
+                            w++;
+                    }
+                    if (count > n / 2)
+                        mn = min(mn, dx * abs(a[w - 1].second - a[q].second));
+                    if (a[q].first >= a[i].first && a[q].first <= a[j].first)
+                        count--;
+                }
+            }
+    writeln(mn);
 }
 
 int main()
@@ -67,6 +96,8 @@ int main()
     ios_base::sync_with_stdio(false);
 //    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
+    ints(t);
+    fori(t)
     run();
 #ifndef ONLINE_JUDGE
     writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);

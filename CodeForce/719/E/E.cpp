@@ -57,6 +57,21 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+    ll x = 0;
+    ll y = 1;
+    ll z;
+    fori(100000000)
+    {
+        //writeln(i, y);
+        z = (x + y) % INF;
+        x = y;
+        y = z;
+        if (y == 0)
+        {
+            writeln(i, y);
+            break;
+        }
+    }
 }
 
 int main()

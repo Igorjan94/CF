@@ -57,6 +57,36 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+	ints(n, m);
+	vector<int> a(n);
+	readln(a);
+    int desirable = n / m;
+    int ccc = 0;
+    vector<int> songs(m + 1, 0);
+    vector<int> ans(n, -1);
+    vector<bool> full(n, false);
+    fori(n)
+        if (a[i] <= m)
+            if (songs[a[i]] < desirable)
+                songs[a[i]]++,
+                ans[i] = a[i];
+    fori(n)
+        if (ans[i] == -1)
+            forj1(m + 1)
+            {
+                if (songs[j] < desirable)
+                {
+                    songs[j]++;
+                    ans[i] = j;
+                    ccc++;
+                    break;
+                }
+            }
+    fori(n)
+        if (ans[i] == -1)
+            ans[i] = a[i];
+    writeln(desirable, ccc);
+    writeln(ans);
 }
 
 int main()

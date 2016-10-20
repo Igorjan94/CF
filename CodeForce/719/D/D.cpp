@@ -57,6 +57,14 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+	ints(n, m);
+	vector<int> t(n);
+	readln(t);
+    sort(whole(t));
+	vector<int> a(m);
+	readln(a);
+    ll time = 0;
+
 }
 
 int main()

@@ -53,10 +53,24 @@ tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
+
+//printAns
+ttti void printAnswerAndExit(T a){writeln(a);exit(0);}
 //Igorjan
 
 void run()
 {
+    int k;
+    scanf("%d\n", &k);
+    string s;
+    getline(cin, s);
+    int n = s.length();
+    fori(n)
+        if (s[i] == '1')
+            for (int j = i + k + 1; j < n; j += k)
+                if (s[j] == '1')
+                    printAnswerAndExit(make_pair(i + 1, j + 1));
+    writeln(0, 0);
 }
 
 int main()
@@ -64,7 +78,7 @@ int main()
 #ifndef ONLINE_JUDGE
     double time = clock();
 #endif
-    ios_base::sync_with_stdio(false);
+    //ios_base::sync_with_stdio(false);
 //    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
     run();

@@ -53,10 +53,73 @@ tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
+
 //Igorjan
 
 void run()
 {
+    string s, t;
+    readln(s, t);
+    string digits = "0123456789";
+    auto isFriends = [&digits](string s, string t) 
+    {
+        vector<int> a(256, 0), b(256, 0);
+        for (char c : s)
+            a[c]++;
+        for (char c : t)
+            b[c]++;
+        bool ret = true;
+        for (char c : digits)
+            ret &= (!!a[c] == !!b[c]);
+        return ret;
+    };
+    bool isFriend = isFriends(s, t);
+    if (isFriend)
+    {
+        writeln("friends");
+        return;
+    }
+    fori(-1 + s.size())
+    {
+        s[i]++;
+        s[i + 1]--;
+        if (s[0] != '0' && s[i] >= '0' && s[i] <= '9' && s[i + 1] >= '0' && s[i + 1] <= '9' && isFriends(s, t))
+        {
+            writeln("almost friends");
+            return;
+        }
+        s[i] -= 2;
+        s[i + 1] += 2;
+        if (s[0] != '0' && s[i] >= '0' && s[i] <= '9' && s[i + 1] >= '0' && s[i + 1] <= '9' && isFriends(s, t))
+        {
+            writeln("almost friends");
+            return;
+        }
+        s[i]++;
+        s[i + 1]--;
+    }
+    swap(s, t);
+    fori(-1 + s.size())
+    {
+        s[i]++;
+        s[i + 1]--;
+        if (s[0] != '0' && s[i] >= '0' && s[i] <= '9' && s[i + 1] >= '0' && s[i + 1] <= '9' && isFriends(s, t))
+        {
+            writeln("almost friends");
+            return;
+        }
+        s[i] -= 2;
+        s[i + 1] += 2;
+        if (s[0] != '0' && s[i] >= '0' && s[i] <= '9' && s[i + 1] >= '0' && s[i + 1] <= '9' && isFriends(s, t))
+        {
+            writeln("almost friends");
+            return;
+        }
+        s[i]++;
+        s[i + 1]--;
+    }
+
+    writeln("nothing");
 }
 
 int main()
@@ -67,7 +130,9 @@ int main()
     ios_base::sync_with_stdio(false);
 //    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
-    run();
+    ints(t);
+    fori(t)
+        run();
 #ifndef ONLINE_JUDGE
     writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
 #endif

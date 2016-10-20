@@ -57,6 +57,11 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+    ints(x1, x2, x3);
+    int ans = 10000;
+    fori1(101)
+        ans = min(ans, abs(x1 - i) + abs(x2 - i) + abs(x3 - i));
+    writeln(ans);
 }
 
 int main()

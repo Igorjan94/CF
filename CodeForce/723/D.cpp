@@ -57,6 +57,68 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+    ints(n, m, k);
+    int ccc = 0;
+    vector<string> s(n);
+    vector<vector<int>> used(n, vector<int>(m, 0));
+    readln(s);
+    vector<pair<int, pair<int, int>>> ans;
+
+    function<void(int, int)> fill2 = [&](int i, int j)
+    {
+        if (i < 0 || j < 0 || i == n || j == m || s[i][j] == '*')
+            return;
+        s[i][j] = '*';
+        fill2(i + 1, j);
+        fill2(i - 1, j);
+        fill2(i, j + 1);
+        fill2(i, j - 1);
+    };
+
+    function<void(int, int)> fill = [&](int i, int j)
+    {
+        if (i < 0 || j < 0 || i == n || j == m || s[i][j] == '*' || used[i][j])
+            return;
+        used[i][j] = true;
+        fill(i + 1, j);
+        fill(i - 1, j);
+        fill(i, j + 1);
+        fill(i, j - 1);
+    };
+
+    function<void(int, int)> bfs = [&](int i, int j)
+    {
+        if (i < 0 || j < 0 || i == n || j == m || s[i][j] == '*' || used[i][j])
+            return;
+        ccc++;
+        used[i][j] = true;
+        bfs(i + 1, j);
+        bfs(i - 1, j);
+        bfs(i, j + 1);
+        bfs(i, j - 1);
+    };
+
+    fori(n)
+        forj(m)
+            if (s[i][j] == '.')
+                if (i == 0 || j == 0 || i == n - 1 || j == m - 1)
+                    fill(i, j);
+
+    fori(n)
+        forj(m)
+            if (!used[i][j] && s[i][j] == '.')
+            {
+                ccc = 0;
+                bfs(i, j);
+                ans.pb({ccc, {i, j}});
+            }
+    sort(whole(ans));
+    int answer = 0;
+    fori(int(ans.size()) - k)
+        answer += ans[i].first,
+        fill2(ans[i].second.first, ans[i].second.second);
+    writeln(answer);
+    writeln(s);
 }
 
 int main()

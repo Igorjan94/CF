@@ -53,10 +53,24 @@ tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
+
+//printAns
+ttti void printAnswerAndExit(T a){writeln(a);exit(0);}
 //Igorjan
 
 void run()
 {
+	ints(n);
+	vector<int> a(n);
+	readln(a);
+    int back = a.back();
+    if (back == 15)
+        printAnswerAndExit("DOWN");
+    if (back == 0)
+        printAnswerAndExit("UP");
+    if (n == 1)
+        printAnswerAndExit(-1);
+    writeln(a[n - 2] < a[n - 1] ? "UP" : "DOWN");
 }
 
 int main()

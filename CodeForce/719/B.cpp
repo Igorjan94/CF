@@ -57,6 +57,34 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+	ints(n);
+    string s;
+    readln(s);
+    vector<int> r, b;
+    int ans = n * 2;
+    for (char c : "rb")
+    {
+        string t;
+        fori(n)
+            t.pb(c),
+            c = c == 'r' ? 'b' : 'r';
+        int rb = 0;
+        int br = 0;
+        fori(n)
+            if (s[i] != t[i])
+            {
+                if (s[i] == 'r')
+                    rb++;
+                else
+                    br++;
+            }
+        int swap = min(rb, br);
+        rb -= swap;
+        br -= swap;
+        int rest = rb + br;
+        ans = min(ans, swap + rest);
+    }
+    writeln(ans);
 }
 
 int main()
