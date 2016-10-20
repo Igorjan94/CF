@@ -53,23 +53,57 @@ tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
+
+//point
+#define pointtt template<typename T>
+
+pointtt struct point
+{
+    T x, y;
+    point(T _x, T _y) : x(_x), y(_y) {}
+    point(){}
+    point operator+(point b) { return point(x + b.x, y + b.y); }
+    point operator-() { return point(-x, -y); }
+    T operator!() { return x * x + y * y; }
+    bool operator<(point b) { return x == b.x ? y < b.y : x < b.x; }
+};
+pointtt istream&operator>>(istream&is,point<T>&a){return is>>a.x>>a.y;}
+pointtt T dist(point<T>&a,point<T>&b){return!point<T>(a+-b);}
+pointtt int orientation(point<T>&a,point<T>&b,point<T>&c){T q=a.x*b.y-a.y*b.x-a.x*c.y+a.y*c.x+b.x*c.y-b.y*c.x;return q>0?1:q<0?-1:0;}
+pointtt bool collinear_are_ordered_along_line(point<T>&a,point<T>&b,point<T>&c){return a<b&&b<c||c<b&&b<a;}
 //Igorjan
 
 void run()
 {
+    ints(n);
+    vector<point<ll>> p(n);
+    readln(p);
+    double ans = 0;
+    fori(n)
+        FOR(j, i + 1, n)
+        {
+            bool ok = true;
+            forn(k, n)
+                if (k != i && k != j)
+                    ok &= orientation(p[i], p[j], p[k]) != 0 || collinear_are_ordered_along_line(p[i], p[k], p[j]);
+            if (ok)
+                ans += sqrt(dist(p[i], p[j]));
+        }
+    printf("%.0lf\n", floor(ans + 0.5));
+    //writeln(floor(ans + 0.5));
 }
 
 int main()
 {
 #ifndef ONLINE_JUDGE
-    double time = clock();
+    //double time = clock();
 #endif
-    ios_base::sync_with_stdio(false);
-//    freopen(FILENAME".in", "r", stdin);
-//    freopen(FILENAME".out", "w", stdout);
+    //ios_base::sync_with_stdio(false);
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
     run();
 #ifndef ONLINE_JUDGE
-    writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
+    //writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
 #endif
     return 0;
 }

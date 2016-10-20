@@ -57,6 +57,32 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+    while (true)
+    {
+    ints(n, m);
+    if (n + m == 0)
+        return;
+    vector<string> s(n);
+    readln(s);
+    int ans = 0;
+    function<void(int, int)> dfs = [&](int i, int j)
+    {
+        if (i == -1 || j == -1 || i == n || j == m || s[i][j] == '.')
+            return;
+        s[i][j] = '.';
+        dfs(i + 1, j);
+        dfs(i - 1, j);
+        dfs(i, j + 1);
+        dfs(i, j - 1);
+    };
+    fori(n)
+        forj(m)
+            if (s[i][j] == 'X')
+                dfs(i, j),
+                ans++;
+    writeln("You have to tap", ans, "tiles");
+   
+    }
 }
 
 int main()

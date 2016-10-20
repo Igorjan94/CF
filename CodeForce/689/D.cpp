@@ -50,13 +50,82 @@ tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
 tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
 ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
-vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
+vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
+
+//segmentTree
+template<typename T>
+struct sparseTable
+{
+    int n;
+    vector<vector<T>> st;
+    vector<int> logs;
+    typedef function<T (T, T)> F;
+    F f;
+    T NEITRAL_ELEMENT;
+
+    sparseTable(vector<T>& a, F g, T ne = 0)
+    {
+        NEITRAL_ELEMENT = ne;
+        n = a.size();
+        f = g;
+
+        logs.push_back(0);
+        logs.push_back(0);
+        FOR(i, 2, n + 1) logs.push_back(logs[i / 2] + 1);
+        int L = logs.back() + 1;
+        st.resize(L, vector<T>(n, ne));
+        fori(n)
+            st[0][i] = a[i];
+        FOR(k, 1, L)
+            for (int i = 0; i + (1 << k) <= n; i++)
+                st[k][i] = f(st[k - 1][i], st[k - 1][i + (1 << (k - 1))]);
+    }
+
+    T get(int l, int r)
+    {
+        int len = logs[++r - l];
+        return f(st[len][l], st[len][r - (1 << len)]);
+    }
+};
+
 //Igorjan
 
 void run()
 {
+    ints(n);
+	vector<int> a(n), b(n);
+	readln(a, b);
+    sparseTable<int> fa(a, [](int x, int y){return max(x, y);}, numeric_limits<int>::min()), fb(b, [](int x, int y){return min(x, y);}, numeric_limits<int>::max());
+    ll ans = 0;
+    fori(n)
+    {
+        int m;
+        int l1 = i;
+        int r1 = n;
+        while (r1 - l1 > 1)
+        {
+            m = (r1 + l1) >> 1;
+            (fa.get(i, m) < fb.get(i, m)) ? l1 = m : r1 = m;
+        }
+        int index1 = l1 + (fa.get(i, l1) < fb.get(i, l1));
+        if (index1 == n)
+            continue;
+        int temp = fa.get(i, index1);//min(n - 1, index1));
+        int l2 = index1;
+        int r2 = n;
+        while (r2 - l2 > 1)
+        {
+            m = (r2 + l2) >> 1;
+            (fa.get(i, m) == temp && fb.get(i, m) == temp) ? l2 = m : r2 = m;
+        }
+        int index2 = l2 + (fa.get(i, l2) == temp && fb.get(i, l2) == temp);
+        ans += index2 - index1;
+        //wr(index1, index2);
+        //cout.flush();
+    }
+    writeln(ans);
 }
 
 int main()

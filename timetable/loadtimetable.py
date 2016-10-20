@@ -23,7 +23,7 @@ def defineDays(s):
 
 def defineTime(s):
     if flag == 1:
-        s = re.sub(r'\t\t00:[34]\d:00', ' б/о', s)
+        s = re.sub(r'\t\t00:[23]\d:00', ' б/о', s)
         s = re.sub(r'\d\d:[1..9]\d:00', '', s)
         s = re.sub(r'\d\d:\d\d:\d\d', '', s)
     else:

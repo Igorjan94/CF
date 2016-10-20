@@ -57,7 +57,42 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+    ints(n, time);
+    string s;
+    readln(s);
+    int index = s.find('.');
+    string t = s.substr(0, index) + s.substr(index + 1);
+    int breakIndex = n + 5;
+    int fours = 0;
+    for (int i = index; i < int(t.size()); ++i)
+    {
+        if (t[i] <= '3' && t[i] >= '0')
+        {
+            fours = 0;
+            continue;
+        }
+        if (t[i] == '4')
+            fours++;
+        if (t[i] >= '5')
+        {
+            int ff = min(time - 1, fours);
+            breakIndex = i - ff;
+            i -= ff + 1;
+
+            while (i >= 0 && t[i] == '9')
+                t[i] = '0',
+                --i;
+            if (i == -1)
+                ++i,
+                index++,
+                t = '0' + t;
+            t[i]++;
+            break;
+        }
+    }       
+    writeln(t.substr(0, index) + (breakIndex > index ? "." + t.substr(index, breakIndex - index) : ""));
 }
+
 
 int main()
 {

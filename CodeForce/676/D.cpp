@@ -50,13 +50,106 @@ tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
 tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
 ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
-vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
+vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
+int xt, yt, xm, ym, n, m;
+vector<string> s;
+int d[5][1111][1111];
+vector<vector<char>> mp;
+map<pii, bool> door[256];
+
+vector<pair<int, int>> get(char c) {
+    switch(c)
+    {
+        case '+': return {{0, 0}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        case '-': return {{0, 0}, {1, 0}, {-1, 0}};
+        case '|': return {{0, 0}, {0, 1}, {0, -1}};
+        case '^': return {{0, 0}, {0, -1}};
+        case '>': return {{0, 0}, {1, 0}};
+        case '<': return {{0, 0}, {-1, 0}};
+        case 'v': return {{0, 0}, {0, 1}};
+        case 'L': return {{0, 0}, {1, 0}, {0, 1}, {0, -1}};
+        case 'R': return {{0, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        case 'U': return {{0, 0}, {1, 0}, {-1, 0}, {0, 1}};
+        case 'D': return {{0, 0}, {1, 0}, {-1, 0}, {0, -1}};
+        default : return {};
+    }
+}
+
+char next(char c)
+{
+    switch(c)
+    {
+        case '+': return '+';
+        case '-': return '|';
+        case '|': return '-';
+        case '^': return '>';
+        case '>': return 'v';
+        case '<': return '^';
+        case 'v': return '<';
+        case 'L': return 'U';
+        case 'R': return 'D';
+        case 'U': return 'R';
+        case 'D': return 'L';
+        default : return '*';
+    }
+}
+
+int wave(int i, int j, int mod, int ans)
+{
+    queue<pair<pii, pii>> q;
+    q.push({{i, j}, {mod, ans}});
+    while (q.size())
+    {
+        tie(i, j) = q.front().first;
+        tie(mod, ans) = q.front().second;
+        //writeln(i, j, mod);
+        q.pop();
+        if (i == xm && j == ym)
+            return d[mod][j][i];
+        for (auto ddd : get(mp[s[j][i]][mod]))
+        {
+            int u = i + ddd.first;
+            int v = j + ddd.second;
+            int newmod = (mod + (u == i && v == j)) % 4;
+            if (u == -1 || v == -1 || u == m || v == n || s[v][u] == '*')
+                continue;
+            if ((door[mp[s[v][u]][mod]][{-ddd.first, -ddd.second}] || ddd.first + ddd.second == 0) && d[newmod][v][u] == INF)
+            {
+                d[newmod][v][u] = d[mod][j][i] + 1;
+                q.push({{u, v}, {newmod, ans + 1}});
+            }
+
+        }
+    }
+    return -1;
+}
 
 void run()
 {
+    readln(n, m);
+    s.resize(n);
+    mp.resize(256);
+    readln(s, yt, xt, ym, xm);--xt;--yt;--xm;--ym;
+    fori(n)
+        forj(m)
+            forn(k, 4)
+                d[k][i][j] = INF;
+    d[0][yt][xt] = 0;
+    string t = "+-|^><vLRDU*";
+    for (char c : t)
+    {
+        char r = c;
+        fori(4)
+            mp[r].pb(c),
+            c = next(c);
+    }
+    for (char c : t)
+        for (auto ddd : get(c))
+            door[c][ddd] = true;
+    writeln(wave(xt, yt, 0, 0));
 }
 
 int main()

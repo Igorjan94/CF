@@ -50,13 +50,18 @@ tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
 tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
 ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
-vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
+vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
 
 void run()
 {
+    ints(n);
+    vi a(n);
+    readln(a);
+    sort(whole(a));
+    writeln(a);
 }
 
 int main()
@@ -69,7 +74,6 @@ int main()
 //    freopen(FILENAME".out", "w", stdout);
     run();
 #ifndef ONLINE_JUDGE
-    writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
 #endif
     return 0;
 }

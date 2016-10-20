@@ -57,6 +57,81 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+    ints(n, m);
+    vector<string> s(n);
+    vector<vector<int>> a(n, vector<int>(m, -1));
+    readln(s);
+    queue<pair<int, int>> q;
+    int ans = 0;
+    fori(n)
+        forj(m)
+            if (s[i][j] == 'D')
+                q.push({i, j}),
+                a[i][j] = 0;
+            else if (s[i][j] == '.')
+                ans++;
+    int exitCount = q.size();
+    fori(n)
+    {
+        if (s[i][0] == 'D' && s[i][1] == 'X')
+            exitCount--,
+            s[i][0] = 'X';
+        if (s[i][m - 1] == 'D' && s[i][m - 2] == 'X')
+            exitCount--,
+            s[i][m - 1] = 'X';
+    }
+    forj(m)
+    {
+        if (s[0][j] == 'D' && s[1][j] == 'X')
+            exitCount--,
+            s[0][j] = 'X';
+        if (s[n - 1][j] == 'D' && s[n - 2][j] == 'X')
+            exitCount--,
+            s[n - 1][j] = 'X';
+    }
+    if (s[0][1] == s[1][0] && s[0][1] == 'D')
+        exitCount--;
+    if (s[0][m - 2] == s[1][m - 1] && s[0][m - 2] == 'D')
+        exitCount--;
+    if (s[n - 1][1] == s[n - 2][0] && s[n - 1][1] == 'D')
+        exitCount--;
+    if (s[n - 1][m - 2] == s[n - 2][m - 1] && s[n - 1][m - 2] == 'D')
+        exitCount--;
+    if (exitCount == 0)
+    {
+        writeln("impossible");
+        return;
+    }
+    ans = (ans + exitCount - 1) / exitCount;
+    vector<int> dx = {1, -1, 0, 0};
+    vector<int> dy = {0, 0, 1, -1};
+    while (q.size())
+    {
+        int i, j;
+        tie(i, j) = q.front();
+        q.pop();
+        forn(qq, 4)
+        {
+            int u = i + dy[qq];
+            int v = j + dx[qq];
+            if (u >= 0 && u < n && v >= 0 && v < m && a[u][v] == -1 && s[u][v] == '.')
+                a[u][v] = a[i][j] + 1,
+                q.push({u, v});
+        }
+    }
+    //writeln(a);
+    fori(n)
+        forj(m)
+        {
+            if (s[i][j] == '.')
+                ans = max(ans, a[i][j]);
+            if (a[i][j] == -1 && s[i][j] == '.')
+            {
+                writeln("impossible");
+                return;
+            }
+        }
+    writeln(ans);
 }
 
 int main()
@@ -67,7 +142,9 @@ int main()
     ios_base::sync_with_stdio(false);
 //    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
-    run();
+    ints(t);
+    fori(t)
+        run();
 #ifndef ONLINE_JUDGE
     writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
 #endif

@@ -50,13 +50,39 @@ tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
 tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
 ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
-vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
+vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
 
 void run()
 {
+    int n, k;
+    string s;
+    readln(n, k, s);
+    queue<int> qa, qb;
+    int ans = 0;
+    int a = -1;
+    int b = -1;
+    fori(n)
+    {
+        if (s[i] == 'a')
+        {
+            qb.push(i);
+            if (qb.size() > k)
+                b = qb.front(),
+                qb.pop();
+        }
+        else
+        {
+            qa.push(i);
+            if (qa.size() > k)
+                a = qa.front(),
+                qa.pop();
+        }
+        ans = max({ans, i - a, i - b});
+    }
+    writeln(ans);       
 }
 
 int main()

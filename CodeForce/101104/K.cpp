@@ -53,10 +53,67 @@ tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
+
+//point
+#define pointtt template<typename T>
+//sorts only if z is corner point;
+#define sortByPolarAngle(v, z, T) sort(v.begin(), v.end(), [&z](point<T>& a, point<T>& b) {\
+    int q = orientation(z, a, b); return q == 0 ? (a.begin == b.begin ? dist(z, a) < dist(z, b) : a.begin > b.begin) : q == -1;\
+});
+
+pointtt struct point
+{
+    T x, y;
+    int begin;
+    point(T _x, T _y) : x(_x), y(_y) {}
+    point(){}
+    point operator+(point b) { return point(x + b.x, y + b.y); }
+    point operator-() { return point(-x, -y); }
+    T operator*(point b) { return x * b.x + y * b.y; }
+    T operator^(point b) { return x * b.y - y * b.x; }
+    T operator!() { return x * x + y * y; }
+    bool operator<(point b) { return x == b.x ? y < b.y : x < b.x; }
+};
+pointtt istream&operator>>(istream&is,point<T>&a){return is>>a.x>>a.y;}
+pointtt ostream&operator<<(ostream&os,point<T>&a){return os<<a.x<<" "<<a.y<<" "<<a.begin;}
+pointtt T dist(point<T>&a,point<T>&b){return!point<T>(a+-b);}
+//dist from point C to line AB equals to answer.first / sqrt(answer.second);
+pointtt pair<T,T> dist(point<T>&a,point<T>&b,point<T>&c){return{abs((a+-b)*c)+(a^b),dist(a,b)};}
+pointtt int orientation(point<T>&a,point<T>&b,point<T>&c){T q=a.x*b.y-a.y*b.x-a.x*c.y+a.y*c.x+b.x*c.y-b.y*c.x;return q>0?1:q<0?-1:0;}
 //Igorjan
 
 void run()
 {
+    ints(n);
+    point<int> light;
+    vector<pair<point<int>, point<int>>> segments(n);
+    readln(light);
+    if (n == 0)
+    {
+        writeln(1);
+        return;
+    }
+    readln(segments);
+    vector<point<int>> points;
+    fori(n)
+    {
+        if (orientation(light, segments[i].first, segments[i].second) == 1)
+            swap(segments[i].first, segments[i].second);
+
+        segments[i].first.begin = 1;
+        segments[i].second.begin = -1;
+        points.pb(segments[i].first);
+        points.pb(segments[i].second);
+    }
+    sortByPolarAngle(points, light, int);
+    int b = 0;
+    int ans = 1;
+    fori(points.size())
+    {
+        b += points[i].begin;
+        ans += b == 0;
+    }
+    writeln(ans);
 }
 
 int main()
@@ -67,6 +124,8 @@ int main()
     ios_base::sync_with_stdio(false);
 //    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
+    ints(t);
+    fori(t)
     run();
 #ifndef ONLINE_JUDGE
     writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);

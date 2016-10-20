@@ -50,13 +50,90 @@ tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
 tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
 ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
-vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
+vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
 
+int n;
+vector<int> d;
+vector<vector<int>> edges;
+int answer = -1;
+int ccc = 0;
+vector<int> curr;
+vector<bool> ok;
+bool oneCycle;
+
+void dfs(int u, int CCC, int depth = 0, int p = -1)
+{
+    curr[u] = CCC;
+    //wr(u, p);
+    if (answer == -1 && d[u] != -1)
+    {
+        //wr(u, depth, d[u]);
+        answer = depth - d[u];
+        return;
+    }
+    if (d[u] != -1)
+        return;
+    ccc++;
+    oneCycle |= ok[u];
+    d[u] = depth;
+    for (int v : edges[u])
+        if (p != v)
+            dfs(v, CCC, depth + 1, u);
+}
+
 void run()
 {
+    readln(n);
+    d.resize(n, -1);
+    edges.resize(n);
+    curr.resize(n, -1);
+    ok.resize(n, false);
+
+    vi a(n);
+    readln(a);
+    fori(n)
+        edges[i].pb(--a[i]),
+        edges[a[i]].pb(i);
+    fori(n)
+        ok[i] = a[a[i]] == i;
+    vector<ll> asdas;
+    vector<ll> degs;
+    degs.pb(1);
+    fori(n)
+        degs.pb((degs.back() * 2) % INF);
+    fori(n)
+        if (d[i] == -1)
+        {
+            ll ans = 1;
+            answer = -1;
+            ccc = 0;
+            oneCycle = false;
+            dfs(i, i);
+            if (oneCycle)
+            {
+                ans = degs[ccc - 1];
+                //forj(ccc - 1)
+                    //ans = (ans * 2) % INF;
+            }
+            else
+            {
+                //forj(answer)
+                    //ans = (ans * 2) % INF;
+                ans = degs[answer];
+                ans = (ans - 2 + INF) % INF;
+                ans = (ans * degs[ccc - answer]) % INF;
+                //forj(ccc - answer)
+                    //ans = (ans * 2) % INF;
+            }
+            asdas.pb(ans);
+        }
+    ll ANS = 1;
+    fori(asdas.size())
+        ANS = (ANS * asdas[i]) % INF;
+    writeln(ANS);
 }
 
 int main()

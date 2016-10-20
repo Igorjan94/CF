@@ -50,13 +50,57 @@ tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
 tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
 ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
-vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
+vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
 
 void run()
 {
+    ints(n);
+    vector<vector<ll>> a(n, vector<ll>(n, 0));
+    readln(a);
+    vector<ll> r(n, 0), c(n, 0);
+    ll d1 = 0, d2 = 0;
+    bool ond1 = false, ond2 = false;
+    fori(n)
+    {
+        d1 += a[i][i],
+        d2 += a[i][n - i - 1];
+        ond1 |= a[i][i] == 0;
+        ond2 |= a[i][n - i - 1] == 0;
+    }
+    int I, J;
+    fori(n)
+        forj(n)
+        {
+            if (a[i][j] == 0) I = i, J = j;
+            r[i] += a[i][j];
+            c[j] += a[i][j];
+        }
+    ll sumr = 0, sumc = 0;
+    fori(n)
+    {
+        if (i != I)
+            sumr = r[i];
+        if (i != J)
+            sumc = c[i];
+    }
+    bool okWithoutD = sumr == sumc && r[I] == c[J] && (sumr - r[I] > 0 || n == 1);
+    ll ans = sumr - r[I];
+    r[I] = c[J] = sumr;
+    fori(n)
+        if (r[i] != sumr || c[i] != sumr)
+            okWithoutD = false;
+    if (ond1)
+        d1 += ans;
+    if (ond2)
+        d2 += ans;
+    okWithoutD &= d1 == sumr && d2 == sumr;
+    if (okWithoutD)
+        writeln(ans == 0 ? 1 : ans);
+    else
+        writeln(-1);
 }
 
 int main()

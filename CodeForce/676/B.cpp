@@ -50,13 +50,39 @@ tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
 tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
 ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
-vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
+vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
+int a[11][11];
+int n, t;
+int N = 2048;
+
+void rec(int i, int j, int c)
+{
+    if (i >= n || j >= n)
+        return;
+    a[i][j] += c;
+    c = a[i][j] - N;
+    a[i][j] = min(N, a[i][j]);
+    if (c > 0)
+    {
+        rec(i + 1, j, c / 2);
+        rec(i + 1, j + 1, c / 2);
+    }
+
+}
 
 void run()
 {
+    readln(n, t);
+    fori(t)
+        rec(0, 0, N);
+    int ans = 0;
+    fori(n + 1)
+        forj(n + 1)
+            ans += a[i][j] == N;
+    writeln(ans);
 }
 
 int main()

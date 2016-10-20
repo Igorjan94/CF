@@ -53,10 +53,24 @@ tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).
 vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
 
 ///-------------------------------------------------------------------------------------------------------------------------------------
+
+//printAns
+ttti void printAnswerAndExit(T a){writeln(a);exit(0);}
 //Igorjan
 
 void run()
 {
+    ints(n, k);
+    vi a(k);
+    readln(a);
+    map<int, int> m;
+    fori(k)
+        m[a[i]] = i + 1;
+    fori(k)
+        for (int j = a[i] * 2; j <= n; j += a[i])
+            if (m.find(j) != m.end())
+                printAnswerAndExit(make_pair(min(m[a[i]], m[j]), max(m[a[i]], m[j])));
+    writeln(0, 0);
 }
 
 int main()

@@ -57,6 +57,32 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 
 void run()
 {
+    ints(u, v, m);
+    vector<string> s(u), t(v);
+    vector<pair<string, string>> x(m);
+    readln(s, t, x);
+    set<string> convinced;
+    map<string, vector<string>> g;
+    sort(whole(t));
+    for (auto a : x)
+        g[a.first].pb(a.second);
+    auto is = [&convinced](string ss) { return convinced.find(ss) != convinced.end(); };
+    function<void(string)> dfs = [&](string ss) 
+    {
+        if (is(ss))
+            return;
+        convinced.insert(ss);
+        for (auto tt : g[ss])
+            if (!is(tt))
+                dfs(tt);
+    };
+    for (string a : s)
+        if (!is(a))
+            dfs(a);
+    for (auto a : t)
+        if (is(a))
+            cout << a << " ";
+    cout << "\n";
 }
 
 int main()
@@ -67,6 +93,8 @@ int main()
     ios_base::sync_with_stdio(false);
 //    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
+    ints(t);
+    fori(t)
     run();
 #ifndef ONLINE_JUDGE
     writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
