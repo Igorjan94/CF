@@ -23,7 +23,8 @@ def defineDays(s):
 
 def defineTime(s):
     if flag == 1:
-        s = re.sub(r'\t\t00:[23]\d:00', ' б/о', s)
+        if isBalt:
+            s = re.sub(r'\t\t00:[23]\d:00', ' б/о', s)
         s = re.sub(r'\d\d:[1..9]\d:00', '', s)
         s = re.sub(r'\d\d:\d\d:\d\d', '', s)
     else:
@@ -36,6 +37,7 @@ def removeRepeatingStations(s):
     if flag == 0:
         return s
     s = re.sub(r'Санкт-Петербург-.*?(\s|$)', r'\1', s)
+    t = s
     s = s.replace('Лигово', '')
     s = s.replace('Калище', '')
     s = s.replace('Лебяжье', '')
@@ -43,6 +45,7 @@ def removeRepeatingStations(s):
     s = s.replace('Новый Петергоф', '')
     s = s.replace('Гатчина Балтийская', 'Г')
     s = s.replace('Гатчина Варшавская', 'Г')
+    isBalt = s != t
     return s
 
 
@@ -63,8 +66,8 @@ def parse(directory, url):
     for y in x:
         s = y["tra"]["sch"] + "\t\t" + reve[y["tra"]["dep"]["st"]][0] + "\t\t" + reve[y["tra"]["arr"]["st"]][0] + "\t\t" + y["tra"]["tr-tim"]
         s = defineDays(s)
-        s = defineTime(s)
         s = removeRepeatingStations(s)
+        s = defineTime(s)
         s = re.sub(r'.*отменен.*', '!!!', s)
         if s != "!!!":
             print(y["tra"]["dep"]["tim"] + "\t\t" + s + "\t\t" + y["tra"]["cha"].replace('. Уточните дату поездки', ''))
@@ -76,6 +79,7 @@ st = os.path.dirname(os.path.abspath(__file__)) + '/stations.in'
 file = open(st, 'r')
 hash = defaultdict(list)
 reve = defaultdict(list)
+isBalt = False
 for string in file:
     l = string[:-1].rsplit(' ', 1)
     hash[l[0]].append(l[1])

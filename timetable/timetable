@@ -1,37 +1,39 @@
 #!/usr/bin/env sh
-#usage: ./timetable [-t] [-f <DD.MM.YYYY>] [-0] [-d <destination_directory>] [-s <source_directory>] \"from1 to1 ... fromN toN\""
 
 #setting default parametres
 a="/home/igorjan/206round/timetable"
-b="/home/igorjan/documents/timetable"
-flag=0;
-today="";
+b="/home/igorjan/new"
+flag=1;
+today=""
+todayDate=$(date +"%d.%m.%Y")
+tomorrow=$(date --date="tomorrow" +"%d.%m.%Y")
 
 function usage {
-   echo "usage: ./timetable.sh [-t] [-f <DD.MM.YYYY>] [-0] [-d <destination_directory>] [-s <source_directory>] \"from1 to1 ... fromN toN\"" 
+   echo "usage: timetable [-t<oday>] [-<to>M<orrow>] [-f <dd.MM.yyyy>] [-0] [-o <destination_directory>] [-s <source_directory>] \"from1 to1 ... fromN toN\"" 
    exit
 }
 
 #parsing arguments
-while getopts "0ts:d:f:" opt; do
+while getopts "0mto:s:d:f:" opt; do
   case $opt in
     \?) usage;;
     s) a=$OPTARG;;
+    o) b=$OPTARG;;
     d) b=$OPTARG;;
-    0) flag=1;;
-    t) today="&date=today";;
+    0) flag=0;;
+    t) today="&date=$todayDate";;
+    m) today="&date=$tomorrow";;
     f) today="&date=$OPTARG";;
   esac
 done
 
 shift $(($OPTIND - 1))
+arg=$1
 if [ $# -eq 0 ]
-	then usage
+    then arg="Л С С Л"
 fi
 
-arg=$1
-
-#create source_directory, clean temporary files
+#create output directory
 mkdir -p $b
 
 #setting script pathes
