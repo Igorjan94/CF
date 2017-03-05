@@ -53,16 +53,14 @@ vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);st
 ///-------------------------------------------------------------------------------------------------------------------------------------
 //Igorjan
 
-map<char, char> opposite;
+vector<pair<pii, char>> dirs = { {{1, 0}, 'D'}, {{0, -1}, 'L'}, {{0, 1}, 'R'}, {{-1, 0}, 'U'} };
 
 void run()
 {
-    opposite['D'] = 'U';
-    opposite['U'] = 'D';
-    opposite['L'] = 'R';
-    opposite['R'] = 'L';
     ints(n, m, k);
     vector<string> s(n);
+    vector<vector<int>> d(n, vector<int>(m, INF));
+    string ans(k, ' ');
     readln(s);
     int sx, sy;
     fori(n)
@@ -71,39 +69,46 @@ void run()
             {
                 sx = i;
                 sy = j;
+                d[i][j] = 0;
                 s[i][j] = '.';
             }
     auto check = [&](int i, int j) {
         return i >= 0 && j >= 0 && i < n && j < m && s[i][j] == '.';
     };
-    string ans(k, ' ');
-    bool ok = k % 2 == 0;
-    if (ok)
+    queue<pii> q;
+    q.push({sx, sy});
+    int i, j, u, v;
+    while (q.size())
     {
-        fori(k / 2)
+        tie(i, j) = q.front();
+        q.pop();
+        for (auto dir : dirs)
         {
-            if (check(sx + 1, sy))
-                ans[i] = 'D',
-                sx++;
-            else if (check(sx, sy - 1))
-                ans[i] = 'L',
-                sy--;
-            else if (check(sx, sy + 1))
-                ans[i] = 'R',
-                sy++;
-            else if (check(sx - 1, sy))
-                ans[i] = 'U',
-                sx--;
-            else
-                ok = false;
+            tie(u, v) = dir.first;
+            if (check(i + u, j + v) && d[i + u][j + v] == INF)
+                d[i + u][j + v] = d[i][j] + 1,
+                q.push({i + u, j + v});
         }
     }
-    if (ok)
-    {
-        fori(k / 2)
-            ans[k - i - 1] = opposite[ans[i]];
+
+    i = sx;
+    j = sy;
+
+    forn(step, k)
+        for (auto dir : dirs)
+        {
+            tie(u, v) = dir.first;
+            if (check(i + u, j + v) && d[i + u][j + v] <= k - step)
+            {
+                ans[step] = dir.second;
+                i += u;
+                j += v;
+                break;
+            }
+        }
+
+    if (k % 2 == 0 && ans[k - 1] != ' ')
         writeln(ans);
-    }
     else
         writeln("IMPOSSIBLE");
 }
