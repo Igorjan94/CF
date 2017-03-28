@@ -71,7 +71,7 @@ tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
 tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
 ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
-vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return move(v);}
+vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
 
 ttti   ostream&operator<<(ostream&os,vector<T>&a);
 ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
@@ -164,7 +164,7 @@ struct linearSieve
         while (x > 1)
             temp.push_back(minPrime[x]),
             x = prev[x];
-        return move(temp);
+        return temp;
     }
 
     bool isPrime(int x)
@@ -425,7 +425,7 @@ vector<int> multiply(const vector<int>& a, const vector<int>& b)
     fft(fa, true);
     fori(n)
         res.pb(int(fa[i].real() + 0.5));
-    return move(res);
+    return res;
 }
 
 //Igorjanpoint
@@ -455,7 +455,8 @@ pointtt pair<T,T> dist(point<T>&a,point<T>&b,point<T>&c){return{abs((a+-b)*c)+(a
 pointtt int orientation(point<T>&a,point<T>&b,point<T>&c){T q=a.x*b.y-a.y*b.x-a.x*c.y+a.y*c.x+b.x*c.y-b.y*c.x;return q>0?1:q<0?-1:0;}
 
 //IgorjanconvexHull
-pointtt vector<point<T>>convexHull(vector<point<T>>a){sort(a.begin(),a.end());int n=a.size(),j=-1,k=0;ROF(i,n-2,0)a.push_back(a[i]);fori(a.size()){for(;j>k&&orientation(a[j-1],a[j],a[i])!=1;--j);a[++j]=a[i];if(!k&&i==n-1)k=j;}a.resize(j);return a;}
+pointtt vector<point<T>>convexHull(vector<point<T>>a){sort(a.begin(),a.end());int n=a.size(),j=-1,k=0;ROF(i,n-2,0)a.push_back(a[i]);fori(a.size()){for(;j>k&&orientation(a[j-1],a[j],a[i])!=1;--j)
+    ;a[++j]=a[i];if(!k&&i==n-1)k=j;}a.resize(j);return a;}
 
 //IgorjanprintAns
 ttti void printAnswerAndExit(T a){writeln(a);exit(0);}

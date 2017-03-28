@@ -1,4 +1,4 @@
-// Igorjan94, template version from 19 March 2015 (deleted unused defines & reorganization from 05 November 2015)
+// Igorjan94, template version from 19 March 2015 (#define -> typedef, readln(vector) patched, version from 27 March 2017)
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -11,12 +11,12 @@ using namespace std;
 #define   fori(n)    for (int i = 0; i < (int) (n); ++i)
 #define   forj(n)    for (int j = 0; j < (int) (n); ++j)
 
-#define      ll      long long
+typedef vector<long long> vll;
+typedef  pair<int, int>   pii;
+typedef  valarray<int>    va;
+typedef   vector<int>     vi;
+typedef    long long      ll;
 #define      pb      push_back
-#define      vi      vector<int>
-#define      va      valarray<int>
-#define     pii      pair<int, int>
-#define     vll      vector<long long>
 #define   whole(a)   a.begin(), a.end()
 #define    next      next__
 #define    prev      prev__
@@ -105,9 +105,9 @@ ttti   ostream&operator<<(ostream&os,vector<T>&a);
 ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
 ttt12i ostream&operator<<(ostream&os,pair<T1,T2>&a){return os<<a.first<<" "<<a.second;}
 ttti   ostream&operator<<(ostream&os,vector<T>&a){if(a.size())os<<a[0];else os<<"\n";for(int i=1;i<a.size();++i)os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
-ttti   istream&operator>>(istream&is,vector<T>&a){if(a.size()==0){int n;is>>n;a.resize(n);}for(int i=0;i<a.size();++i)is>>a[i];return is;}
+ttti   istream&operator>>(istream&is,vector<T>&a){for(int i=0;i<a.size();++i)is>>a[i];return is;}
 ttti   ostream&operator<<(ostream&os,valarray<T>&a){if(a.size())os<<a[0];else os<<"\n";for(int i=1;i<a.size();++i)os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
-ttti   istream&operator>>(istream&is,valarray<T>&a){if(a.size()==0){int n;is>>n;a.resize(n);}for(int i=0;i<a.size();++i)is>>a[i];return is;}
+ttti   istream&operator>>(istream&is,valarray<T>&a){for(int i=0;i<a.size();++i)is>>a[i];return is;}
 ttti void print(T a){cout<<" "<<a;}
 ttti void priws(T a){cout<<a;}
 ttti void read(T& a){cin>>a;}
