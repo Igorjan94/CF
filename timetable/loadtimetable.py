@@ -23,7 +23,7 @@ def defineDays(s):
 
 def defineTime(s):
     if flag == 1:
-        if isBalt:
+        if not isBalt:
             s = re.sub(r'\t\t00:[23]\d:00', ' б/о', s)
         s = re.sub(r'\d\d:[1..9]\d:00', '', s)
         s = re.sub(r'\d\d:\d\d:\d\d', '', s)
@@ -45,6 +45,7 @@ def removeRepeatingStations(s):
     s = s.replace('Новый Петергоф', '')
     s = s.replace('Гатчина Балтийская', 'Г')
     s = s.replace('Гатчина Варшавская', 'Г')
+    global isBalt
     isBalt = s != t
     return s
 
@@ -68,6 +69,15 @@ def parse(directory, url):
         s = defineDays(s)
         s = removeRepeatingStations(s)
         s = defineTime(s)
+        if flag:
+            s = s.replace('Зеленогорск', 'Зел')
+            s = s.replace('Кирилловское', 'Кир')
+            s = s.replace('Каннельярви', 'Кан')
+            s = s.replace('Рощино', 'Рощ')
+            s = s.replace('Выборг', 'Выб')
+            s = s.replace('Гаврилово', 'Гав')
+            s = s.replace('Советский', 'Сов')
+        s = re.sub(r'\s+(б/о)', r' \1', s)
         s = re.sub(r'.*отменен.*', '!!!', s)
         if s != "!!!":
             print(y["tra"]["dep"]["tim"] + "\t\t" + s + "\t\t" + y["tra"]["cha"].replace('. Уточните дату поездки', ''))
