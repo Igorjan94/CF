@@ -16,10 +16,9 @@ fi
 
 if [ -x "$(command -v pacman)" ]; then
     installer="pacman -Sy --noconfirm"
-    isArch=true
+    isArch="isArch"
 else
     installer="apt-get install -y"
-    isArch=false
 fi
 
 echo "Installer: $installer"
@@ -113,7 +112,7 @@ fi
 if [ "$needsNode" ]; then
     echo "Installing nodejs..."
     if ! [ -x "$(command -v node)" ]; then
-        if [ isArch ]; then
+        if [ "$isArch" ]; then
             pacman -Sy --noconfirm nodejs npm
         else
             curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
@@ -128,7 +127,7 @@ fi
 if [ "$needsDocker" ]; then
     echo "Installing docker..."
     if ! [ -x "$(command -v docker)" ]; then
-        if [ isArch ]; then
+        if [ "$isArch" ]; then
             pacman -Sy --noconfirm docker
         else
             apt-get update
