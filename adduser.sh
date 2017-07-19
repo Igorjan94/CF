@@ -28,25 +28,31 @@ function usage {
    exit 0
 }
 
+OPTS=`getopt -o u:p:s:fh -l minimal,docker,images:,node,packages:,help,force,username:,password:,server:,sshkey: -- "$@"`
+if [ $? != 0 ]; then exit 1; fi
+eval set -- "$OPTS"
+
 #parsing arguments
-while getopts "u:p:s:k:ndi:vghr" opt; do
-  case $opt in
-    \?) usage;;
-    h) usage;;
-    u) user=$OPTARG;;
-    p) password=$OPTARG;;
-    s) server=$OPTARG;;
-    k) sshkey=$OPTARG;;
-    v) needsVim=true;;
-    g) needsGit=true;;
-    n) needsNode=true;;
-    d) needsDocker=true;;
-    i) needsDocker=true; dockerImages=$OPTARG;;
-    r) rewriteZshrc=true;;
-  esac
+while true ; do
+    case "$1" in
+        -h | --help     ) usage            ;shift;;
+        -f | --force    ) force=true       ;shift;;
+        --node          ) needsNode=true   ;shift;;
+        --docker        ) needsDocker=true ;shift;;
+        --minimal       ) minimal=true     ;shift;;
+
+        -u | --username ) user=$2                           ;shift 2;;
+        -p | --password ) password=$2                       ;shift 2;;
+        -s | --server   ) server=$2                         ;shift 2;;
+        --sshkey        ) sshkey=$2                         ;shift 2;;
+        --packages      ) packages=$2                       ;shift 2;;
+        --images        ) needsDocker=true; dockerImages=$2 ;shift 2;;
+
+        --              ) shift; break;;
+    esac
 done
 
-shift $(($OPTIND - 1))
+echo $@
 
 if [ "$server" ]; then
     server="$server: "
@@ -54,13 +60,18 @@ else
     server="$HOSTNAME: "
 fi
 
-ensureCommandExists "zsh"
 ensureCommandExists "curl"
-ensureCommandExists "sudo"
-if [ "$needsVim" ]; then
-    ensureCommandExists "vim"
+
+if [ "$packages" ]; then
+    for package in "$packages"; do
+        $installer $package
+    done
 fi
-if [ "$needsGit" ]; then
+
+if [ "$minimal" ]; then
+    ensureCommandExists "zsh"
+    ensureCommandExists "sudo"
+    ensureCommandExists "vim"
     ensureCommandExists "git"
 fi
 
@@ -90,11 +101,11 @@ if [ "$user" ]; then
     fi
 
     zshrc="$home/.zshrc"
-    if [ ! -f $zshrc ] || [ "$rewriteZshrc" ]; then
+    if [ ! -f $zshrc ] || [ "$force" ]; then
         echo "Downloading .zshrc (Prompt: '$server')..."
         curl https://raw.githubusercontent.com/Igorjan94/x/master/.zshrcMinimal 2>/dev/null | sed "s/Server 79: /$server/g" | sed "s:/usr/bin/vim:`which vim`:g" > $zshrc
         echo "alias sudo='sudo -S'" >> $zshrc
-        echo "alias magic='curl igorjan94.ru | bash -s -- '" >> $zshrc
+        echo "alias magic='curl igorjan94.ru 2&>/dev/null | bash -s -- '" >> $zshrc
     fi
 
     if [ "$sshkey" ]; then
