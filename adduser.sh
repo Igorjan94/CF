@@ -52,8 +52,6 @@ while true ; do
     esac
 done
 
-echo $@
-
 if [ "$server" ]; then
     server="$server: "
 else
