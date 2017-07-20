@@ -12,12 +12,17 @@ if [ ! -f $settings ]; then
     echo '[]' > "$settings"
 fi
 
+projects=`jq '.' $settings`
+
+fail () {
+    echo "$1"
+    exit 1
+}
+
 usage () {
    echo "H" 
    exit 0
 }
-
-projects=`jq '.' $settings`
 
 toNamedParams () {
     type=$1
@@ -50,8 +55,7 @@ deleteProjectByName () {
 
 checkType () {
     if [ "$1" == "node" ] || [ "$1" == "front" ] || [ "$1" == "tarantool" ]; then return; fi
-    echo "Incorrect type!"
-    exit 1
+    fail "Incorrect type!"
 }
 
 
@@ -83,54 +87,58 @@ done
 
 #Parsing # {{{
 if [ "$1" == "create" ]; then # {{{
-    if [ ! "$name" ] || [ ! "$type" ] || [ ! "$rep" ]; then
-        echo "Type and name and rep are required!"
-        exit 1
-    fi
+    if [ ! "$name" ] || [ ! "$type" ] || [ ! "$rep" ]; then fail "Type and name and rep are required!"; fi
+    case "$name" in
+        *\ *) fail 'Name cannot contain spaces!';;
+    esac
+
     getProjectByName "$name"
-    if [ "$found" ]; then
-        echo "Project already exists!"
-        exit 1
-    fi
+    if [ "$found" ]; then fail "Project already exists!"; fi
     checkType $type
 
     addProject "$type" "$name" "$container" "$host" "$server"
     if [ "$type" == "front" ]; then
-        docker exec -ti "$container" bash -c "cd /home/nesuko && rm -rf $name && git clone $rep $name && cd $name && npm i && bower i --allow-root"
-        docker exec -ti "$container" bash -c "mkdir -p /var/www/$name"
+        docker exec -ti "$container" bash -c "mkdir -p /home/nesuko && cd /home/nesuko && rm -rf $name && git clone $rep $name && cd $name && npm i && bower i -F --allow-root"
+        docker exec -ti "$container" bash -c "rm -rf /var/www/$name && mkdir -p /var/www/$name"
         docker exec -ti "$container" bash -c "echo -e \"server {
     listen   80;
 
     server_name $host;
-	root /var/www/$name/dist;
+    root /var/www/$name/dist;
     index index.html index.htm;
 
-	location / {
-		allow all;
-		try_files \$uri \$uri/ /index.html =404;
-	}
+    location / {
+        allow all;
+        try_files \"'$'\"uri \"'$'\"uri/ /index.html =404;
+    }
 }\" > /etc/nginx/sites-available/$host"
-        docker exec -ti "$container" bash -c "ln -s /etc/nginx/sites-available/$host /etc/nginx/sites-enabled/$host"
+        docker exec -ti "$container" bash -c "ln -fs /etc/nginx/sites-available/$host /etc/nginx/sites-enabled/$host"
         docker restart $container
+    elif [ "$type" == "node" ]; then
+        path="/var/node/$name"
+        logs="/var/logs/$name"
+        #TODO: подумать на счёт порта!1!!1
+        docker exec -ti "$container" bash -c "mkdir -p $logs && mkdir -p /var/node && cd /var/node && rm -rf $name && git clone $rep $name && cd $name && npm i"
+        docker exec -ti "$container" bash -c "NODE_ENV=production HOST=$host PORT=$port forever start -a -c 'node --harmony' --pidFile '$path/pid' --sourceDir '$path' --workingDir '$path' -l '$logs/.log' -e '$logs/.err' -o '$logs/.out' bin/www"
     fi
 # }}}
 
 elif [ "$1" == "pull" ]; then # {{{
-    if [ ! "$name" ]; then
-        echo "Name is required!"
-        exit 1
-    fi
+    if [ ! "$name" ]; then fail "Name is required!"; fi
     getProjectByName "$name"
-    if [ ! "$found" ]; then
-        echo "Project with name '$name' is not found!"
-        exit 1
-    fi
-    echo "Found project $foundName of type $foundType!"
+    if [ ! "$found" ]; then fail "Project with name '$name' is not found!"; fi
+
     if [ $foundType == "front" ]; then
         if [ "$bower" ]; then
-            docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git pull && rm -rf bower_components && bower i --allow-root && SRV=$foundServer npm run build && cp -r /home/nesuko/$foundName/dist /var/www/$foundName"
+            docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git pull && rm -rf bower_components && bower i -F --allow-root && SRV=$foundServer npm run build && cp -r /home/nesuko/$foundName/dist /var/www/$foundName"
         else
             docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git pull && SRV=$foundServer npm run build && cp -r /home/nesuko/$foundName/dist /var/www/$foundName"
+        fi
+    elif [ "$type" == "node" ]; then
+        if [ "$nodeModules" ]; then
+            docker exec -ti "$container" bash -c "cd /var/node/$name && git pull && rm -rf node_modules && npm i"
+        else
+            docker exec -ti "$container" bash -c "cd /var/node/$name && git pull"
         fi
     fi
 fi #}}}
