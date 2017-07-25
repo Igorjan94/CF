@@ -64,7 +64,7 @@ checkType () {
 
 
 
-OPTS=`getopt -o h -l name:,host:,rep:,repository:,type:,container:,server:,help,bower -- "$@"`
+OPTS=`getopt -o h -l name:,host:,rep:,repository:,type:,container:,server:,help -- "$@"`
 if [ $? != 0 ]; then exit 1; fi
 eval set -- "$OPTS"
 
@@ -72,7 +72,6 @@ eval set -- "$OPTS"
 while true ; do
     case "$1" in
         -h | --help          ) usage        ;shift;;
-        --bower              ) bower="bower";shift;;
 
         --name               ) name=$2      ;shift 2;;
         --host               ) host=$2      ;shift 2;;
@@ -98,6 +97,7 @@ if [ "$1" == "create" ]; then # {{{
 
     addProject "$type" "$name" "$container" "$host" "$server"
     if [ "$type" == "front" ]; then
+#TODO: pull на горячую
         docker exec -ti "$container" bash -c "mkdir -p /home/nesuko && cd /home/nesuko && rm -rf $name && git clone $rep $name && cd $name && npm i && bower i -F --allow-root"
         docker exec -ti "$container" bash -c "rm -rf /var/www/$name && mkdir -p /var/www/$name"
         docker exec -ti "$container" bash -c "echo -e \"server {
@@ -114,6 +114,11 @@ if [ "$1" == "create" ]; then # {{{
 }\" > /etc/nginx/sites-available/$host"
         docker exec -ti "$container" bash -c "ln -fs /etc/nginx/sites-available/$host /etc/nginx/sites-enabled/$host"
         docker restart $container
+    elif [ "$type" == "mysql" ]; then
+        docker run -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=y3l0l3k0r -e MYSQL_USER=external -e MYSQL_PASSWORD=y3l0l3k0r -e MYSQL_DATABASE=damos --restart=always -d mysql/mysql-server  --character-set-server=utf8 --collation-server=utf8_general_ci
+#CREATE USER foo@'%' IDENTIFIED BY 'password';
+#GRANT ALL PRIVILEGES ON *.* TO 'foo'@'%' WITH GRANT OPTION;
+#FLUSH PRIVILEGES;
     elif [ "$type" == "node" ]; then
         path="/var/node/$name"
         logs="/var/logs/$name"
@@ -129,11 +134,7 @@ elif [ "$1" == "pull" ]; then # {{{
     if [ ! "$found" ]; then fail "Project with name '$name' is not found!"; fi
 
     if [ $foundType == "front" ]; then
-        if [ "$bower" ]; then
-            docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git pull && rm -rf bower_components && bower i -F --allow-root && SRV=$foundServer npm run build && cp -r /home/nesuko/$foundName/dist /var/www/$foundName"
-        else
-            docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git pull && SRV=$foundServer npm run build && cp -r /home/nesuko/$foundName/dist /var/www/$foundName"
-        fi
+        docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git pull | grep bower && rm -rf bower_components && bower i -F --allow-root; SRV=$foundServer npm run build && cp -r /home/nesuko/$foundName/dist /var/www/$foundName"
     elif [ "$type" == "node" ]; then
         if [ "$nodeModules" ]; then
             docker exec -ti "$container" bash -c "cd /var/node/$name && git pull && rm -rf node_modules && npm i"
