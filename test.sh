@@ -158,9 +158,8 @@ if [ "$1" == "create" ]; then # {{{
         proxy_set_header X-Real-IP \"'$'\"remote_addr;
         proxy_set_header X-Forwarded-For \"'$'\"proxy_add_x_forwarded_for;
         proxy_pass http://localhost:$port/;
-    }
 }\" > /etc/nginx/sites-available/locations/$name"
-        docker kill -s HUP $container
+        docker exec -ti $container bash -c "nginx -s reload"
     fi #}}}
 # }}}
 
@@ -171,8 +170,9 @@ elif [ "$1" == "pull" ]; then # {{{
 
     if [ $foundType == "front" ]; then
         docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git pull | grep 'bower\.json' && rm -rf bower_components && bower i -F --allow-root; SRV=$foundServer npm run build && cp -r /home/nesuko/$foundName/dist /var/www/$foundName"
-    elif [ "$type" == "node" ]; then
-        docker exec -ti "$container" bash -c "cd /var/node/$name && git pull | grep 'package\.json' && rm -rf node_modules && npm i"
+    elif [ "$foundType" == "node" ]; then
+        docker exec -ti "$foundContainer" bash -c "cd /var/node/$foundName && git pull | grep 'package\.json' && rm -rf node_modules && npm i"
+        docker exec -ti "$foundContainer" bash -c "pm2 restart $foundName"
     fi
 fi #}}}
 # }}}
