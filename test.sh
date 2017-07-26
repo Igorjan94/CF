@@ -48,7 +48,7 @@ toNamedParams () {
 }
 
 addProject () {
-    toNamedParams $@
+    toNamedParams "$@"
     projects=`echo $projects | jq ". + [{
     \"type\": \"$type\",
     \"name\": \"$name\",
@@ -142,7 +142,7 @@ if [ "$1" == "create" ]; then # {{{
     }
 }\" > /etc/nginx/sites-available/$host"
         docker exec -ti "$container" bash -c "ln -fs /etc/nginx/sites-available/$host /etc/nginx/sites-enabled/$host"
-        docker kill -HUP $container
+        docker kill -s HUP $container
 #}}}
     elif [ "$type" == "mysql" ]; then #{{{
         docker run -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=y3l0l3k0r -e MYSQL_USER=external -e MYSQL_PASSWORD=y3l0l3k0r -e MYSQL_DATABASE=damos --restart=always -d mysql/mysql-server  --character-set-server=utf8 --collation-server=utf8_general_ci
@@ -151,7 +151,7 @@ if [ "$1" == "create" ]; then # {{{
 #FLUSH PRIVILEGES;
 #}}}
     elif [ "$type" == "node" ]; then #{{{
-        docker exec -ti "$container" bash -c "mkdir -p /var/node && cd /var/node && rm -rf $name && git clone $rep $name && cd $name && npm i && NODE_ENV=production HOST='$server:81/$host' PORT=$port $arguments pm2 start --node-args='--harmony' bin/www && pm2 startup"
+        docker exec -ti "$container" bash -c "mkdir -p /var/node && cd /var/node && rm -rf $name && git clone $rep $name && cd $name && npm i && NODE_ENV=production HOST='$server:81/$host' PORT=$port $arguments pm2 start --name=$name --node-args='--harmony' bin/www && pm2 startup"
 
         docker exec -ti "$container" bash -c "echo -e \"location /$host/ {
         proxy_set_header Host \"'$'\"host;
@@ -160,7 +160,7 @@ if [ "$1" == "create" ]; then # {{{
         proxy_pass http://localhost:$port/;
     }
 }\" > /etc/nginx/sites-available/locations/$name"
-        docker kill -HUP $container
+        docker kill -s HUP $container
     fi #}}}
 # }}}
 
