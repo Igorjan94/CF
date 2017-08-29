@@ -21,10 +21,13 @@ def defineDays(s):
     s = s.replace('кроме воскресений', 'КВ')
     return s
 
+def fastRepl(r):
+    time = int(r.group(1))
+    return 'б/о' if time < minutes else r.group(0)
+
 def defineTime(s):
     if flag == 1:
-        if not isBalt:
-            s = re.sub(r'\t\t00:[23]\d:00', ' б/о', s)
+        s = re.sub(r'00:(\d\d):\d\d', fastRepl, s)
         s = re.sub(r'\d\d:[1..9]\d:00', '', s)
         s = re.sub(r'\d\d:\d\d:\d\d', '', s)
     else:
@@ -45,8 +48,8 @@ def removeRepeatingStations(s):
     s = s.replace('Новый Петергоф', '')
     s = s.replace('Гатчина Балтийская', 'Г')
     s = s.replace('Гатчина Варшавская', 'Г')
-    global isBalt
-    isBalt = s != t
+#     global isBalt
+#     isBalt = s != t
     return s
 
 
@@ -65,7 +68,10 @@ def parse(directory, url):
     x = x["tra-list"]
     sys.stdout = open(filename + ".out", 'w')
     for y in x:
-        s = y["tra"]["sch"] + "\t\t" + reve[y["tra"]["dep"]["st"]][0] + "\t\t" + reve[y["tra"]["arr"]["st"]][0] + "\t\t" + y["tra"]["tr-tim"]
+        s = y["tra"]["sch"] + "\t\t" + reve[y["tra"]["dep"]["st"]][0] + "\t\t" + reve[y["tra"]["arr"]["st"]][0]
+        if y["tra"]["typ"] == 'Ласточка':
+            s += ' ★'
+        s += "\t\t" + y["tra"]["tr-tim"]
         s = defineDays(s)
         s = removeRepeatingStations(s)
         s = defineTime(s)
@@ -77,10 +83,16 @@ def parse(directory, url):
             s = s.replace('Выборг', 'Выб')
             s = s.replace('Гаврилово', 'Гав')
             s = s.replace('Советский', 'Сов')
-        s = re.sub(r'\s+(б/о)', r' \1', s)
+        s = re.sub(r'\s*(б/о)\s*', r' \1 ', s)
         s = re.sub(r'.*отменен.*', '!!!', s)
+        s = re.sub(r'\s*(★)', r' \1', s)
         if s != "!!!":
-            print(y["tra"]["dep"]["tim"] + "\t\t" + s + "\t\t" + y["tra"]["cha"].replace('. Уточните дату поездки', ''))
+            s = y["tra"]["dep"]["tim"] + "\t\t" + s
+            s = re.sub(r'\t{2}(\w*)\t{2,}', r'\t\1\t', s)
+            s = re.sub(r'\s+$', '', s)
+            s = s + "\t" + y["tra"]["cha"].replace('. Уточните дату поездки', '')
+            print(s)
+
     sys.stdout.close()
     subprocess.Popen(['mousepad', filename + ".out"])
 
@@ -89,7 +101,7 @@ st = os.path.dirname(os.path.abspath(__file__)) + '/stations.in'
 file = open(st, 'r')
 hash = defaultdict(list)
 reve = defaultdict(list)
-isBalt = False
+# isBalt = False
 for string in file:
     l = string[:-1].rsplit(' ', 1)
     hash[l[0]].append(l[1])
@@ -98,7 +110,8 @@ for string in file:
 directory = sys.argv[1]
 today     = sys.argv[2]
 flag      = int(sys.argv[3])
-args      = sys.argv[4:]
+minutes   = int(sys.argv[4])
+args      = sys.argv[5:]
 if directory[-1] != os.sep:
     directory += os.sep
 i = 0
