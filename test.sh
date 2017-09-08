@@ -80,7 +80,7 @@ deleteProjectByName () {
 }
 
 checkType () {
-    if [ "$1" == "node" ] || [ "$1" == "front" ] || [ "$1" == "tarantool" ]; then return; fi
+    if [ "$1" == "node" ] || [ "$1" == "front" ] || [ "$1" == "tarantool" ] || [ "$1" == "python" ]; then return; fi
     fail "Incorrect type!"
 }
 
@@ -128,7 +128,7 @@ if [ "$1" == "create" ]; then # {{{
     if [ "$type" == "front" ]; then #{{{
         docker exec -ti "$container" bash -c "mkdir -p /home/nesuko && cd /home/nesuko && rm -rf $name && git clone $rep $name && cd $name && npm i && bower i -F --allow-root"
         docker exec -ti "$container" bash -c "rm -rf /var/www/$name && mkdir -p /var/www/$name"
-        docker exec -ti "$container" bash -c "SRV=$server npm run build && cp -r /home/nesuko/$name/dist /var/www/$name"
+        docker exec -ti "$container" bash -c "cd /home/nesuko/$name && SRV=$server npm run build && cp -r /home/nesuko/$name/dist /var/www/$name"
         docker exec -ti "$container" bash -c "echo -e \"server {
     listen   80;
 
@@ -170,6 +170,9 @@ elif [ "$1" == "pull" ]; then # {{{
 
     if [ $foundType == "front" ]; then
         docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git pull | grep 'bower\.json' && rm -rf bower_components && bower i -F --allow-root; SRV=$foundServer npm run build && cp -r /home/nesuko/$foundName/dist /var/www/$foundName"
+    elif [ "$foundType" == "python" ]; then
+        cd /home/igorjan/$foundName && git pull | grep 'requirements\.txt' && docker exec -ti "$foundContainer" bash -c "pip install -r requirements.txt"
+        docker restart "$foundContainer"
     elif [ "$foundType" == "node" ]; then
         docker exec -ti "$foundContainer" bash -c "cd /var/node/$foundName && git pull | grep 'package\.json' && rm -rf node_modules && npm i"
         docker exec -ti "$foundContainer" bash -c "pm2 restart $foundName"
