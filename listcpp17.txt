@@ -1,0 +1,78 @@
+fold expressions
+
+template<auto n>
+
+// Мой deduction guide
+template<typename T, typename U>
+S(const T &first, const U &second) -> S<T, U>;
+S s = { 42, "hello" };
+
+if constexpr (std::is_pointer<T>::value) return *t else t;
+
+constexpr auto squared = [](int x) { return x * x; };
+
+auto lambda2 = [*this]() mutable { g(); };
+
+inline int MyVar = 42;
+
+if (auto[it, ok] = myMap.insert({ 2, "hello" }); ok)
+
+#if __has_include(<optional>)
+  #include <optional>
+#endif
+
+[[fallthrough]]
+[[nodiscard]]
+[[maybe_unused]]
+
+std::byte
+
+Постфиксные выражения вычисляются слева направо (в том числе вызовы функций и доступ к членам объектов)
+Выражения присваивания вычисляются справа налево.
+Операнды операторов << и >> вычисляются слева направо.
+
+Filesystem
+
+std::optional
+std::any
+std::variant
+
+std::string_view
+
+namespace ns1::ns2
+
+std::string str = "hello";
+char *p = str.data();
+
+std::for_each(std::execution::par, vct.begin(), vct.end(), [](auto &e) { e += 42; });
+
+std::invoke(Func, 10, 20)
+
+std::as_const
+
+std::size, std::data и std::empty
+
+std::clamp(7, 0, 10)  // 7
+std::clamp(7, 0, 5)   // 5
+std::clamp(7, 10, 50) // 10
+
+std::gcd
+std::lcm
+
+логические метафункции std::conjunction, std::disjunction и std::negation
+
+auto &r = vct.emplace_back(10);
+
+std::tuple args{ 'c', 42, 3.14 };
+std::apply(Func, args);
+
+std::tuple args{ 'c', 42, 3.14 };
+S s = std::make_from_tuple<S>(args);
+
+auto node = myMap.extract(2);
+node.key() = 42;
+myMap.insert(std::move(node));
+
+static_assert(a == 42);
+
+
