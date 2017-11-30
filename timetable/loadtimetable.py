@@ -17,6 +17,7 @@ def defineDays(s):
     s = s.replace('по пятницам', 'П')
     s = s.replace('кроме пятн. и субб.', 'КПС')
     s = s.replace('кроме пятниц и вых.', 'КПСВ')
+    s = s.replace('кроме четвергов и вых.', 'КЧСВ')
     s = s.replace('кроме суббот', 'КС')
     s = s.replace('кроме воскресений', 'КВ')
     return s
@@ -87,10 +88,14 @@ def parse(directory, url):
         s = re.sub(r'.*отменен.*', '!!!', s)
         s = re.sub(r'\s*(★)', r' \1', s)
         if s != "!!!":
-            s = y["tra"]["dep"]["tim"] + "\t\t" + s
+            temp = y["tra"]["dep"]["tim"]
+            # if not flag:
+            temp += "\t" + y["tra"]["arr"]["tim"]
+            s = temp + "\t\t" + s
             s = re.sub(r'\t{2}(\w*)\t{2,}', r'\t\1\t', s)
             s = re.sub(r'\s+$', '', s)
-            s = s + "\t" + y["tra"]["cha"].replace('. Уточните дату поездки', '')
+            if not flag:
+                s = s + "\t" + y["tra"]["cha"].replace('. Уточните дату поездки', '')
             print(s)
 
     sys.stdout.close()
