@@ -24,7 +24,7 @@ def defineDays(s):
 
 def fastRepl(r):
     time = int(r.group(1))
-    return 'б/о' if time < minutes else r.group(0)
+    return ' б/о' if time < minutes else r.group(0)
 
 def defineTime(s):
     if flag == 1:
@@ -32,16 +32,15 @@ def defineTime(s):
         s = re.sub(r'\d\d:[1..9]\d:00', '', s)
         s = re.sub(r'\d\d:\d\d:\d\d', '', s)
     else:
-        s = re.sub(r'00:(\d\d):00', r'\1 м', s)
-        s = re.sub(r'0(\d):(\d\d):00', r'\1 ч \2 м', s)
-        s = re.sub(r'(\d\d):(\d\d):00', r'\1 ч \2 м', s)
+        s = re.sub(r'00:(\d\d):00', r' \1 м', s)
+        s = re.sub(r'0(\d):(\d\d):00', r' \1 ч \2 м', s)
+        s = re.sub(r'(\d\d):(\d\d):00', r' \1 ч \2 м', s)
     return s
 
 def removeRepeatingStations(s):
     if flag == 0:
         return s
     s = re.sub(r'Санкт-Петербург-.*?(\s|$)', r'\1', s)
-    t = s
     s = s.replace('Лигово', '')
     s = s.replace('Калище', '')
     s = s.replace('Лебяжье', '')
@@ -49,8 +48,13 @@ def removeRepeatingStations(s):
     s = s.replace('Новый Петергоф', '')
     s = s.replace('Гатчина Балтийская', 'Г')
     s = s.replace('Гатчина Варшавская', 'Г')
-#     global isBalt
-#     isBalt = s != t
+    s = s.replace('Зеленогорск', 'Зел')
+    s = s.replace('Кирилловское', 'Кир')
+    s = s.replace('Каннельярви', 'Кан')
+    s = s.replace('Рощино', 'Рощ')
+    s = s.replace('Выборг', 'Выб')
+    s = s.replace('Гаврилово', 'Гав')
+    s = s.replace('Советский', 'Сов')
     return s
 
 
@@ -60,46 +64,35 @@ def parse(directory, url):
     except:
         print('something went wrong in tutu, or just stations with same names', file=sys.stderr)
         return
-    if "error" in x:
+    if 'error' in x:
         return
-    filename = directory + reve[x["dep-st"]][0] + '—' + reve[x["arr-st"]][0]
-    if not (x["dat"] is None):
-        filename += ", " + x["dat"]
+    filename = directory + reve[x['dep-st']][0] + '—' + reve[x['arr-st']][0]
+    if not (x['dat'] is None):
+        filename += ', ' + x['dat']
     filename = re.sub(r'(Санкт-Петербург)-.*?\.', r'\1', filename)
-    x = x["tra-list"]
-    sys.stdout = open(filename + ".out", 'w')
+    x = x['tra-list']
+    sys.stdout = open(filename + '.out', 'w')
     for y in x:
-        s = y["tra"]["sch"] + "\t\t" + reve[y["tra"]["dep"]["st"]][0] + "\t\t" + reve[y["tra"]["arr"]["st"]][0]
-        if y["tra"]["typ"] == 'Ласточка':
-            s += ' ★'
-        s += "\t\t" + y["tra"]["tr-tim"]
-        s = defineDays(s)
-        s = removeRepeatingStations(s)
-        s = defineTime(s)
+        train = {
+            'departure': y['tra']['dep']['tim'],
+            'arrival': y['tra']['arr']['tim'],
+            'from': removeRepeatingStations(reve[y['tra']['dep']['st']][0]),
+            'to': removeRepeatingStations(reve[y['tra']['arr']['st']][0]),
+            'schedule': defineDays(y['tra']['sch']) + (' ★' if y['tra']['typ'] == 'Ласточка' else '') + defineTime(y['tra']['tr-tim']),
+            'change': y['tra']['cha']
+        }
+        if train['schedule'].find('отменен') != -1:
+            continue
+
         if flag:
-            s = s.replace('Зеленогорск', 'Зел')
-            s = s.replace('Кирилловское', 'Кир')
-            s = s.replace('Каннельярви', 'Кан')
-            s = s.replace('Рощино', 'Рощ')
-            s = s.replace('Выборг', 'Выб')
-            s = s.replace('Гаврилово', 'Гав')
-            s = s.replace('Советский', 'Сов')
-        s = re.sub(r'\s*(б/о)\s*', r' \1 ', s)
-        s = re.sub(r'.*отменен.*', '!!!', s)
-        s = re.sub(r'\s*(★)', r' \1', s)
-        if s != "!!!":
-            temp = y["tra"]["dep"]["tim"]
-            # if not flag:
-            temp += "\t" + y["tra"]["arr"]["tim"]
-            s = temp + "\t\t" + s
-            s = re.sub(r'\t{2}(\w*)\t{2,}', r'\t\1\t', s)
-            s = re.sub(r'\s+$', '', s)
-            if not flag:
-                s = s + "\t" + y["tra"]["cha"].replace('. Уточните дату поездки', '')
-            print(s)
+            s = '{}\t{}\t{}\t{}'.format(train['departure'], train['schedule'], train['from'], train['to'])
+        else:
+            s = '{}\t{}\t{}\t{}\t{}\t{}'.format(train['departure'], train['arrival'], train['schedule'], train['from'], train['to'], train['change'].replace('. Уточните дату поездки', ''))
+
+        print(re.sub(r'\t +', '\t', s))
 
     sys.stdout.close()
-    subprocess.Popen(['mousepad', filename + ".out"])
+    subprocess.Popen(['mousepad', filename + '.out'])
 
 
 st = os.path.dirname(os.path.abspath(__file__)) + '/stations.in'
@@ -123,13 +116,13 @@ i = 0
 while i < len(args):
     arg1 = args[i]
     if hash[arg1] == []:
-        arg1 += " " + args[i + 1]
+        arg1 += ' ' + args[i + 1]
         i += 1
     fl = 0
     for fro in hash[arg1]:
         arg2 = args[i + 1]
         if hash[arg2] == []:
-            arg2 += " " + args[i + 2]
+            arg2 += ' ' + args[i + 2]
             fl = 1
         for to in hash[arg2]:
             parse(directory, 'http://www.tutu.ru/spb/rasp.php?st1=' + fro + '&st2=' + to + '&json' + today)
