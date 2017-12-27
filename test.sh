@@ -18,7 +18,7 @@
 # }]
 
 #Staff  #{{{
-settings="settings.json"
+settings="/home/igorjan/settings.json"
 if [ ! -f $settings ]; then
     echo '[]' > "$settings"
 fi
@@ -44,6 +44,8 @@ toNamedParams () {
     host=$6
     port=$7
     arguments=$8
+    folder=$9
+    script=${10}
     if [ ! "$container" ]; then container="$type"; fi
 }
 
@@ -57,7 +59,9 @@ addProject () {
     \"server\": \"$server\",
     \"host\": \"$host\",
     \"port\": \"$port\",
-    \"arguments\": \"$arguments\"
+    \"arguments\": \"$arguments\",
+    \"folder\": \"$folder\",
+    \"script\": \"$script\"
 }]"`
 }
 
@@ -71,6 +75,8 @@ getProjectByName () {
     foundHost=`echo $found | jq -r '.host'`
     foundPort=`echo $found | jq -r '.port'`
     foundArguments=`echo $found | jq -r '.arguments'`
+    foundFolder=`echo $found | jq -r '.folder'`
+    foundScript=`echo $found | jq -r '.script'`
     unset found
     if [ "$foundType" != "" ]; then found=true; fi
 }
@@ -91,7 +97,7 @@ checkType () {
 #}}}
 
 #Options #{{{
-OPTS=`getopt -o ht:n:c:r:s:h:p:a: -l type:,name:,container:,rep:,repository:,server:,host:,port:,arguments:,help -- "$@"`
+OPTS=`getopt -o ht:n:c:r:s:h:p:a:f: -l type:,name:,container:,rep:,repository:,server:,host:,port:,arguments:,folder:,script:,help -- "$@"`
 if [ $? != 0 ]; then exit 1; fi
 eval set -- "$OPTS"
 
@@ -108,6 +114,8 @@ while true ; do
         -h | --host               ) host=$2      ;shift 2;;
         -p | --port               ) port=$2      ;shift 2;;
         -a | --arguments          ) arguments=$2 ;shift 2;;
+        -f | --folder             ) folder=$2    ;shift 2;;
+        --script                  ) script=$2    ;shift 2;;
 
         --                        ) shift; break;;
     esac
@@ -124,16 +132,16 @@ if [ "$1" == "create" ]; then # {{{
     if [ "$found" ]; then fail "Project already exists!"; fi
     checkType $type
 
-    addProject "$type" "$name" "$container" "$rep" "$server" "$host" "$port" "$arguments"
+    addProject "$type" "$name" "$container" "$rep" "$server" "$host" "$port" "$arguments" "$folder" "$script"
     if [ "$type" == "front" ]; then #{{{
         docker exec -ti "$container" bash -c "mkdir -p /home/nesuko && cd /home/nesuko && rm -rf $name && git clone $rep $name && cd $name && npm i && bower i -F --allow-root"
         docker exec -ti "$container" bash -c "rm -rf /var/www/$name && mkdir -p /var/www/$name"
-        docker exec -ti "$container" bash -c "cd /home/nesuko/$name && SRV=$server npm run build && cp -r /home/nesuko/$name/dist /var/www/$name"
+        docker exec -ti "$container" bash -c "cd /home/nesuko/$name && SRV=$server npm run $script && cp -r /home/nesuko/$name/$folder /var/www/$name"
         docker exec -ti "$container" bash -c "echo -e \"server {
     listen   80;
 
     server_name $host;
-    root /var/www/$name/dist;
+    root /var/www/$name/$folder;
     index index.html index.htm;
 
     location / {
@@ -144,22 +152,6 @@ if [ "$1" == "create" ]; then # {{{
         docker exec -ti "$container" bash -c "ln -fs /etc/nginx/sites-available/$host /etc/nginx/sites-enabled/$host"
         docker kill -s HUP $container
 #}}}
-    elif [ "$type" == "mysql" ]; then #{{{
-        docker run -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=y3l0l3k0r -e MYSQL_USER=external -e MYSQL_PASSWORD=y3l0l3k0r -e MYSQL_DATABASE=damos --restart=always -d mysql/mysql-server  --character-set-server=utf8 --collation-server=utf8_general_ci
-#CREATE USER foo@'%' IDENTIFIED BY 'password';
-#GRANT ALL PRIVILEGES ON *.* TO 'foo'@'%' WITH GRANT OPTION;
-#FLUSH PRIVILEGES;
-#}}}
-    elif [ "$type" == "node" ]; then #{{{
-        docker exec -ti "$container" bash -c "mkdir -p /var/node && cd /var/node && rm -rf $name && git clone $rep $name && cd $name && npm i && NODE_ENV=production HOST='$server:81/$host' PORT=$port $arguments pm2 start --name=$name --node-args='--harmony' bin/www && pm2 startup"
-
-        docker exec -ti "$container" bash -c "echo -e \"location /$host/ {
-        proxy_set_header Host \"'$'\"host;
-        proxy_set_header X-Real-IP \"'$'\"remote_addr;
-        proxy_set_header X-Forwarded-For \"'$'\"proxy_add_x_forwarded_for;
-        proxy_pass http://localhost:$port/;
-}\" > /etc/nginx/sites-available/locations/$name"
-        docker exec -ti $container bash -c "nginx -s reload"
     fi #}}}
 # }}}
 
@@ -169,18 +161,14 @@ elif [ "$1" == "pull" ]; then # {{{
     if [ ! "$found" ]; then fail "Project with name '$name' is not found!"; fi
 
     if [ $foundType == "front" ]; then
-        docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git pull | grep 'bower\.json' && rm -rf bower_components && bower i -F --allow-root; SRV=$foundServer npm run build && cp -r /home/nesuko/$foundName/dist /var/www/$foundName"
+        docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git pull | grep 'bower\.json' && rm -rf bower_components && bower i -F --allow-root; SRV=$foundServer npm run $foundScript && cp -r /home/nesuko/$foundName/$foundFolder /var/www/$foundName"
     elif [ "$foundType" == "python" ]; then
         cd /home/igorjan/$foundName && git pull | grep 'requirements\.txt' && docker exec -ti "$foundContainer" bash -c "pip install -r requirements.txt"
+        docker exec -ti "$foundContainer" bash -c "./manage.py migrate"
         docker restart "$foundContainer"
-    elif [ "$foundType" == "node" ]; then
-        docker exec -ti "$foundContainer" bash -c "cd /var/node/$foundName && git pull | grep 'package\.json' && rm -rf node_modules && npm i"
-        docker exec -ti "$foundContainer" bash -c "pm2 restart $foundName"
     fi
 fi #}}}
 # }}}
 
 echo "$projects"
 echo "$projects" > $settings
-
-
