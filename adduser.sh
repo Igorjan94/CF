@@ -28,7 +28,7 @@ function usage {
    exit 0
 }
 
-OPTS=`getopt -o u:p:s:fh -l minimal,docker,images:,node,packages:,help,force,username:,password:,server:,sshkey: -- "$@"`
+OPTS=`getopt -o u:p:s:fh -l minimal,docker,node,packages:,help,force,username:,password:,server:,sshkey: -- "$@"`
 if [ $? != 0 ]; then exit 1; fi
 eval set -- "$OPTS"
 
@@ -46,7 +46,6 @@ while true ; do
         -s | --server   ) server=$2                         ;shift 2;;
         --sshkey        ) sshkey=$2                         ;shift 2;;
         --packages      ) packages=$2                       ;shift 2;;
-        --images        ) needsDocker=true; dockerImages=$2 ;shift 2;;
 
         --              ) shift; break;;
     esac
@@ -86,6 +85,7 @@ if [ "$user" ]; then
     fi
 
     if [ ! `getent passwd $user 2>/dev/null` ]; then
+        ensureCommandExists "zsh"
         if [ "$password" ]; then
             echo "Creating user '$user' with password '$password'..."
             useradd -m -g sudo -p $(openssl passwd -1 $password) -s `which zsh` $user
@@ -137,10 +137,12 @@ if [ "$needsDocker" ]; then
     echo "Installing docker..."
     if ! [ -x "$(command -v docker)" ]; then
         if [ "$isArch" ]; then
-            pacman -Sy --noconfirm docker
+            pacman -Sy --noconfirm docker docker-compose
         else
             apt-get update
             apt-get install docker-ce
+            curl -L https://github.com/docker/compose/releases/download/1.17.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
         fi
     else
         echo "Found docker"
@@ -154,13 +156,4 @@ if [ "$needsDocker" ]; then
     echo "Starting and enabling daemon..."
     systemctl start docker
     systemctl enable docker
-
-    if [ "$dockerImages" ]; then
-        echo "Loading docker images..."
-        for container in "$dockerImages"
-        do
-            echo "Loading '$container'..."
-            curl "igorjan94.ru/data/$container.tar.gz" | gunzip | docker load
-        done
-    fi
 fi
