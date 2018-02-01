@@ -21,14 +21,22 @@ else
     installer="apt-get install -y"
 fi
 
-echo "Installer: $installer"
-
 function usage {
-   echo "usage: adduser.sh -u username -p password -s server_name -k sshkey -n <install node> -d <install docker> -i 'image1 image2 ...' -g <install git> -v <install vim> -h <help> -r <rewrite zshrc>" 
+   cat << END
+usage: adduser.sh
+    -u | --user     <username>
+    -p | --password <password>
+    -s | --server   <server_name>
+    -k | --sshkey   <sshkey>
+    -n | --node
+    -d | --docker
+    -h | --help
+    -f | --force
+END
    exit 0
 }
 
-OPTS=`getopt -o u:p:s:fh -l minimal,docker,node,packages:,help,force,username:,password:,server:,sshkey: -- "$@"`
+OPTS=`getopt -o hfndmu:p:s:k: -l help,force,node,docker,minimal,username:,password:,server:,sshkey:,packages -- "$@"`
 if [ $? != 0 ]; then exit 1; fi
 eval set -- "$OPTS"
 
@@ -37,19 +45,21 @@ while true ; do
     case "$1" in
         -h | --help     ) usage            ;shift;;
         -f | --force    ) force=true       ;shift;;
-        --node          ) needsNode=true   ;shift;;
-        --docker        ) needsDocker=true ;shift;;
-        --minimal       ) minimal=true     ;shift;;
+        -n | --node     ) needsNode=true   ;shift;;
+        -d | --docker   ) needsDocker=true ;shift;;
+        -m | --minimal  ) minimal=true     ;shift;;
 
         -u | --username ) user=$2                           ;shift 2;;
         -p | --password ) password=$2                       ;shift 2;;
         -s | --server   ) server=$2                         ;shift 2;;
-        --sshkey        ) sshkey=$2                         ;shift 2;;
+        -k | --sshkey   ) sshkey=$2                         ;shift 2;;
         --packages      ) packages=$2                       ;shift 2;;
 
         --              ) shift; break;;
     esac
 done
+
+echo "Installer: $installer"
 
 if [ "$server" ]; then
     server="$server: "
@@ -144,16 +154,15 @@ if [ "$needsDocker" ]; then
             curl -L https://github.com/docker/compose/releases/download/1.17.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
         fi
+        if [ "$user" ]; then
+            echo "Adding user '$user' in docker group..."
+            usermod -aG docker "$user"
+        fi 
+
+        echo "Starting and enabling daemon..."
+        systemctl start docker
+        systemctl enable docker
     else
         echo "Found docker"
     fi
-
-    if [ "$user" ]; then
-        echo "Adding user '$user' in docker group..."
-        usermod -aG docker "$user"
-    fi 
-
-    echo "Starting and enabling daemon..."
-    systemctl start docker
-    systemctl enable docker
 fi
