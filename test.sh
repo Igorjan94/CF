@@ -31,7 +31,7 @@ fail () {
 }
 
 usage () {
-   echo "H" 
+   cat $settings
    exit 0
 }
 
@@ -46,6 +46,7 @@ toNamedParams () {
     arguments=$8
     folder=$9
     script=${10}
+    branch=${11}
     if [ ! "$container" ]; then container="$type"; fi
 }
 
@@ -61,7 +62,8 @@ addProject () {
     \"port\": \"$port\",
     \"arguments\": \"$arguments\",
     \"folder\": \"$folder\",
-    \"script\": \"$script\"
+    \"script\": \"$script\",
+    \"branch\": \"$branch\"
 }]"`
 }
 
@@ -77,6 +79,7 @@ getProjectByName () {
     foundArguments=`echo $found | jq -r '.arguments'`
     foundFolder=`echo $found | jq -r '.folder'`
     foundScript=`echo $found | jq -r '.script'`
+    foundBranch=`echo $found | jq -r '.branch'`
     unset found
     if [ "$foundType" != "" ]; then found=true; fi
 }
@@ -97,7 +100,7 @@ checkType () {
 #}}}
 
 #Options #{{{
-OPTS=`getopt -o ht:n:c:r:s:h:p:a:f: -l type:,name:,container:,rep:,repository:,server:,host:,port:,arguments:,folder:,script:,help -- "$@"`
+OPTS=`getopt -o ht:n:c:r:s:h:p:a:f:b: -l type:,name:,container:,rep:,repository:,server:,host:,port:,arguments:,folder:,script:,branch:,help -- "$@"`
 if [ $? != 0 ]; then exit 1; fi
 eval set -- "$OPTS"
 
@@ -115,6 +118,7 @@ while true ; do
         -p | --port               ) port=$2      ;shift 2;;
         -a | --arguments          ) arguments=$2 ;shift 2;;
         -f | --folder             ) folder=$2    ;shift 2;;
+        -b | --branch             ) branch=$2    ;shift 2;;
         --script                  ) script=$2    ;shift 2;;
 
         --                        ) shift; break;;
@@ -132,9 +136,10 @@ if [ "$1" == "create" ]; then # {{{
     if [ "$found" ]; then fail "Project already exists!"; fi
     checkType $type
 
-    addProject "$type" "$name" "$container" "$rep" "$server" "$host" "$port" "$arguments" "$folder" "$script"
+    if [ ! "$branch" ]; then branch="master"; fi
+    addProject "$type" "$name" "$container" "$rep" "$server" "$host" "$port" "$arguments" "$folder" "$script" "$branch"
     if [ "$type" == "front" ]; then #{{{
-        docker exec -ti "$container" bash -c "mkdir -p /home/nesuko && cd /home/nesuko && rm -rf $name && git clone $rep $name && cd $name && npm i && bower i -F --allow-root"
+        docker exec -ti "$container" bash -c "mkdir -p /home/nesuko && cd /home/nesuko && rm -rf $name && git clone $rep $name && cd $name && git checkout $branch && npm i && bower i -F --allow-root"
         docker exec -ti "$container" bash -c "rm -rf /var/www/$name && mkdir -p /var/www/$name"
         docker exec -ti "$container" bash -c "cd /home/nesuko/$name && SRV=$server npm run $script && cp -r /home/nesuko/$name/$folder /var/www/$name"
         docker exec -ti "$container" bash -c "echo -e \"server {
@@ -161,14 +166,16 @@ elif [ "$1" == "pull" ]; then # {{{
     if [ ! "$found" ]; then fail "Project with name '$name' is not found!"; fi
 
     if [ $foundType == "front" ]; then
-        docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git pull | grep 'bower\.json' && rm -rf bower_components && bower i -F --allow-root; SRV=$foundServer npm run $foundScript && cp -r /home/nesuko/$foundName/$foundFolder /var/www/$foundName"
+	if [ "$branch" ]; then foundBranch="$branch"; fi
+	if [ ! "$foundBranch" ]; then foundBranch="master"; fi
+        docker exec -ti $foundContainer bash -c "cd /home/nesuko/$foundName && git stash && git checkout $foundBranch && git pull && npm i --all && SRV=$foundServer npm run $foundScript && cp -r /home/nesuko/$foundName/$foundFolder /var/www/$foundName"
     elif [ "$foundType" == "python" ]; then
-        cd /home/igorjan/$foundName && git pull | grep 'requirements\.txt' && docker exec -ti "$foundContainer" bash -c "pip install -r requirements.txt"
+        cd /home/igorjan/$foundName && git pull && docker exec -ti "$foundContainer" bash -c "pip install -r requirements.txt"
         docker exec -ti "$foundContainer" bash -c "./manage.py migrate"
         docker restart "$foundContainer"
     fi
 fi #}}}
 # }}}
 
-echo "$projects"
+# echo "$projects"
 echo "$projects" > $settings
