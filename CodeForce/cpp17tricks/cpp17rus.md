@@ -210,6 +210,22 @@ for (auto [key, value] : m)
     cout << "key: " << key << '\n' << "value: " << value << '\n';
 ```
 
+* Хорошим примером использования может служить задача [problem:938D]. Код со структурным связыванием (Алгоритм Дейкстры) становится намного понятнее и читаемее: сравните [submission:35474147] и [submission:35346635].
+
+```
+while (!q.empty())
+{
+    auto [dist, u] = *q.begin();
+    q.erase(q.begin());
+    used[u] = true;
+    for (auto& [w, v] : g[u])
+        if (!used[v] && d[v] > dist + 2 * w)
+            q.erase({d[v], v}),
+            d[v] = dist + 2 * w,
+            q.insert({d[v], v});
+}
+```
+
 ### Инициализатор в `if` и `switch`
 
 ```
