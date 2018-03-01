@@ -210,6 +210,22 @@ for (auto [key, value] : m)
     cout << "key: " << key << '\n' << "value: " << value << '\n';
 ```
 
+* A good example of usage is problem [problem:938D]. Code with structured bindings (Dijkstra algo) is much more readable and understandable: compare [submission:35474147] and [submission:35346635].
+
+```
+while (!q.empty())
+{
+    auto [dist, u] = *q.begin();
+    q.erase(q.begin());
+    used[u] = true;
+    for (auto& [w, v] : g[u])
+        if (!used[v] && d[v] > dist + 2 * w)
+            q.erase({d[v], v}),
+            d[v] = dist + 2 * w,
+            q.insert({d[v], v});
+}
+```
+
 ### Initializer in `if` and `switch`
 
 ```
