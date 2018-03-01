@@ -295,7 +295,7 @@ struct segmentTree
     }
 };
 
-//sparseTable
+//IgorjansparseTable
 //zero-indexes, [l, r)
 template<typename T>
 struct sparseTable
@@ -305,11 +305,9 @@ struct sparseTable
     vector<int> logs;
     typedef function<T (T, T)> F;
     F f;
-    T NEITRAL_ELEMENT;
 
-    sparseTable(vector<T>& a, F g, T ne = 0)
+    sparseTable(vector<T>& a, F g)
     {
-        NEITRAL_ELEMENT = ne;
         n = a.size();
         f = g;
 
@@ -317,7 +315,7 @@ struct sparseTable
         logs.push_back(0);
         FOR(i, 2, n + 1) logs.push_back(logs[i / 2] + 1);
         int L = logs.back() + 1;
-        st.resize(L, vector<T>(n, ne));
+        st.resize(L, vector<T>(n));
         fori(n)
             st[0][i] = a[i];
         FOR(k, 1, L)
