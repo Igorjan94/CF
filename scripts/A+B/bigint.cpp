@@ -306,8 +306,13 @@ public:
 
     void write()
     {
-        writeln("THIS =", a);
+        for (auto&& x : *this)
+            cout << x << " ";
+        writeln();
     }
+
+    auto begin() const { return a.crbegin(); }
+    auto end() const { return a.crend(); }
 };
 
 int main()
