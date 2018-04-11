@@ -93,16 +93,14 @@ private:
     {
         if (x >= base - y)
             return {x - (base - y), 1};
-        else
-            return {x + y, 0};
+        return {x + y, 0};
     }
 
     static pair<T, T> sub(T x, T y, T base)
     {
         if (x < y)
             return {x + (base - y), 1};
-        else
-            return {x - y, 0};
+        return {x - y, 0};
     }
 
     static pair<T, T> mul(T x, T y, T base)
@@ -293,6 +291,7 @@ public:
     bool operator!=(const bigint &v) const { return *this < v || v < *this; }
     // }}}
 
+    // Cast {{{
     template<typename T2, size_t B2>
     explicit operator bigint<T2, B2>() {
         typedef bigint<T2, B2> bigint2;
@@ -306,6 +305,7 @@ public:
             temp *= bigint2(-1);
         return temp;
     }
+    // }}}
 
     void write()
     {
