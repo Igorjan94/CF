@@ -32,89 +32,100 @@ private:
     vector<T> a = {0};
     int sign = 1;
 
+public:
+    auto begin() const { return a.crbegin(); }
+    auto end() const { return a.crend(); }
+
+private:
     // Friend stream operators {{{
     friend std::ostream & operator<< <>(std::ostream &os, bigint<T, B> b);
     friend std::istream & operator>> <>(std::istream &os, bigint<T, B>& b);
     // }}}
 
-    static vector<int> toVectorInt(T t) // {{{
-    {
-        vector<int> temp;
-        while (t)
-            temp.push_back(t % 10),
-            t /= 10;
-        return temp;
-    } // }}}
-
-    static void addVectors(vector<int>& x, vector<int> y, int index = 0) // {{{
+    template<typename X, typename F>
+    static void addVectors(vector<X>& x, vector<X> y, F f = bigint::add, X base = B, int index = 0) // {{{
     {
         for (int i = 0, carry = 0; i < SZ(y) || carry; ++i)
         {
-            int value = getDigit(x, i + index) + getDigit(y, i) + carry;
-            carry = value > 9;
-            if (carry) value -= 10;
+            auto [value, currentCarry] = f(getDigit(x, i + index), getDigit(y, i) + carry, base);
             setDigit(x, i + index, value);
+            carry = currentCarry;
         }
     } // }}}
 
-    static void mul(vector<int>& x, vector<int>& y) // {{{
+    template<typename X>
+    static vector<X> mulVectorDigit(vector<X> x, X y, X base) // {{{
     {
-        vector<int> temp;
+        vector<X> temp;
+        X carry = 0;
+        for (int i = 0; i < SZ(x) || carry; ++i)
+        {
+            auto [value, residue] = mul(getDigit(x, i), y, base);
+            auto [summ, currentCarry] = add(residue, carry, base);
+            temp.push_back(summ);
+            carry = value + currentCarry;
+        }
+        return move(temp);
+    } // }}}
+
+    template<typename X>
+    static void mulVectors(vector<X>& x, vector<X>& y, X base = B) // {{{
+    {
+        vector<X> temp;
         for (int i = 0; i < SZ(y); ++i)
-            if (y[i])
-                for (int j = 0; j < y[i]; ++j)
-                    addVectors(temp, x, i);
-            else
-                temp.push_back(0);
+            addVectors(temp, mulVectorDigit<X>(x, y[i], base), bigint::add, base, i);
         x = temp;
     } // }}}
 
     string toString() // {{{
     {
-        auto base = toVectorInt(B);
-
+        bigint<unsigned long long, 10> temp(*this);
         stringstream os;
         if (sign == -1 && (a.size() != 1 || a[0]))
             os << '-';
-        vector<int> temp = {0};
-        for (int i = SZ(a) - 1; i >= 0; --i)
-            mul(temp, base),
-            addVectors(temp, toVectorInt(a[i]));
-        trimZeroes(temp);
-        reverse(temp.begin(), temp.end());
-        for (int& x : temp)
+        for (auto&& x : temp)
             os << x;
         return os.str();
     } // }}}
 
-    // Secure add/sub {{{
-    static pair<T, T> add(T x, T y)
+    //Secure arithmetics {{{
+    static pair<T, T> add(T x, T y, T base)
     {
-        if (x >= B - y)
-            return {x - (B - y), 1};
+        if (x >= base - y)
+            return {x - (base - y), 1};
         else
             return {x + y, 0};
     }
 
-    static pair<T, T> sub(T x, T y)
+    static pair<T, T> sub(T x, T y, T base)
     {
         if (x < y)
-            return {x + (B - y), 1};
+            return {x + (base - y), 1};
         else
             return {x - y, 0};
-    } // }}}
+    }
 
-    // Calc {{{
-    template<typename F>
-    void calc(bigint<T, B>& x, F f)
+    static pair<T, T> mul(T x, T y, T base)
     {
-        for (int i = 0, carry = 0; i < max(SZ(a), SZ(x.a)) || carry; ++i)
+        T value = T(0);
+        T residue = T(0);
+        T currentCarry = T(0);
+        while (y)
         {
-            auto [value, currCarry] = f(get(i), x.get(i) + carry);
-            setDigit(a, i, value);
-            carry = currCarry;
+            if (y & 1)
+            {
+                auto [summ, carry] = add(residue, x, base);
+                residue = summ;
+                value += currentCarry + carry;
+            }
+            auto [summ, carry] = add(x, x, base);
+            x = summ;
+            currentCarry = currentCarry * 2 + carry;
+            y >>= 1;
         }
-    } // }}}
+        return {value, residue};
+    }
+    // }}}
 
     //Secure get by index {{{
     T get(unsigned i) { return getDigit(a, i); }
@@ -154,68 +165,38 @@ private:
         res.sign *= res.sign;
         return res;
     } // }}}
-
-    static bool cmp(string& x, int index, string& y) // {{{
-    {
-        if (index && x[index - 1] > '0')
-            return true;
-        for (int i = 0; i < SZ(y); ++i)
-            if (x[index + i] != y[i])
-                return x[index + i] > y[i];
-        return true;
-    } // }}}
-
-    static bool substruct(string& x, int index, string& y) // {{{
-    {
-        bool ge = cmp(x, index, y);
-        if (ge)
-            for (int i = SZ(y) - 1, carry = 0; i >= 0 || carry; --i)
-            {
-                x[index + i] = x[index + i] - carry - (i >= 0 ? y[i] - '0' : 0);
-                if (x[index + i] < '0')
-                    carry = 1,
-                    x[index + i] += 10;
-                else
-                    carry = 0;
-            }
-        return ge;
-    } // }}}
-
-    static pair<T, string> divide(string& x, string& y) // {{{
-    {
-        string ans;
-        int yz = SZ(y);
-        int xz = SZ(x);
-        for (int i = 0; i + yz <= xz; ++i)
-        {
-            ans.push_back('0');
-            while (substruct(x, i, y))
-                ans.back()++;
-        }
-        while (ans.size() && ans[0] == '0') ans.erase(ans.begin());
-        return {stoll(x.substr(max(0, xz - yz), yz)), ans};
-    } // }}}
+    
+    static string shortValue(T t) { stringstream s; s << t; return s.str(); }
 
 public:
     // Constuctors {{{
     bigint() {}
 
+    bigint(long long x)
+    {
+        if (x < 0)
+            sign = -1,
+            x *= -1;
+        a.clear();
+        while (x)
+            a.push_back(x % B),
+            x /= B;
+        a.push_back(0);
+        trimZeroes();
+    }
+
     bigint(string s)
     {
-        string base = to_string(B);
-        a.clear();
+        bool ok = false;
         if (s[0] == '-')
-            sign = -1,
+            ok = true,
             s.erase(s.begin());
+        bigint ten(10);
 
-        do
-        {
-            auto [rem, div] = divide(s, base);
-            a.push_back(rem);
-            s = div;
-        }
-        while (s.size());
-
+        for (char& c : s)
+            *this *= ten,
+            *this += bigint(c - 48);
+        if (ok) sign = -1;
         trimZeroes();
     }
     // }}}
@@ -231,7 +212,7 @@ public:
     bigint& operator+=(bigint x) // {{{
     {
         if (sign == x.sign)
-            calc(x, bigint::add),
+            addVectors(a, x.a, bigint::add),
             trimZeroes();
         else
             *this -= -x;
@@ -249,13 +230,20 @@ public:
                 sign *= -1;
                 return *this;
             }
-            calc(x, bigint::sub);
+            addVectors(a, x.a, bigint::sub);
             trimZeroes();
         }
         else
             *this += -x;
         return *this;
     } // }}}
+
+    bigint& operator*=(bigint x)
+    {
+        sign *= x.sign;
+        mulVectors(a, x.a);
+        return *this;
+    }
     // }}}
 
     // Binary operators {{{
@@ -269,6 +257,12 @@ public:
     {
         bigint<T, B> sum = *this;
         return sum -= v;
+    }
+
+    bigint operator*(const bigint &v)
+    {
+        bigint<T, B> prod = *this;
+        return prod *= v;
     }
     // }}}
     
@@ -301,7 +295,16 @@ public:
 
     template<typename T2, size_t B2>
     explicit operator bigint<T2, B2>() {
-        return bigint<T2, B2>(toString());
+        typedef bigint<T2, B2> bigint2;
+        bigint2 temp(0);
+        bigint2 deg(1);
+        bigint2 base(B);
+        for (T& x : a)
+            temp += deg * bigint2(x),
+            deg *= base;
+        if (sign == -1)
+            temp *= bigint2(-1);
+        return temp;
     }
 
     void write()
@@ -310,16 +313,17 @@ public:
             cout << x << " ";
         writeln();
     }
-
-    auto begin() const { return a.crbegin(); }
-    auto end() const { return a.crend(); }
 };
 
 int main()
 {
     bigint<long long> a, b;
     readln(a, b);
-    writeln(a + b);
-    writeln(a - b);
+    bigint<unsigned char, 2> x(a), y(b);
+    bigint<int> u(x), v(y);
+    bigint<short, 229> c(u), d(v);
+    writeln(c + d);
+    writeln(c - d);
+    writeln(c * d);
     return 0;
 }

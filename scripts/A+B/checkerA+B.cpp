@@ -5,21 +5,24 @@ using namespace std;
 
 string numberFormat = "-?[1-9][0-9]*|0";
 
-pair<string, string> readAns(InStream& stream)
+tuple<string, string, string> readAns(InStream& stream)
 {
     string first = stream.readString(numberFormat);
     string second = stream.readString(numberFormat);
-    return {first, second};
+    string third = stream.readString(numberFormat);
+    return {first, second, third};
 }
 
 int main(int argc, char* argv[]) {
     registerTestlibCmd(argc, argv);
-    auto jans = readAns(ans);
-    auto pans = readAns(ouf);
-    if (jans.first != pans.first)
-        quitf(_wa, "Test %s: summ is incorrect: expected = %s, found = %s\n", argv[1], jans.first.c_str(), pans.first.c_str());
-    else if (jans.second != pans.second)
-        quitf(_wa, "Test %s: difference is incorrect: expected = %s, found = %s\n", argv[1], jans.second.c_str(), pans.second.c_str());
-    else if (jans == pans)
-        quitf(_ok, "Test %s: summ and difference are correct!", argv[1]);
+    auto [ja, js, jm] = readAns(ans);
+    auto [pa, ps, pm] = readAns(ouf);
+    if (ja != pa)
+        quitf(_wa, "Test %s: summ is incorrect: expected = %s, found = %s\n", argv[1], ja.c_str(), pa.c_str());
+    else if (js != ps)
+        quitf(_wa, "Test %s: difference is incorrect: expected = %s, found = %s\n", argv[1], js.c_str(), ps.c_str());
+    else if (jm != pm)
+        quitf(_wa, "Test %s: product is incorrect: expected = %s, found = %s\n", argv[1], jm.c_str(), pm.c_str());
+    else
+        quitf(_ok, "Test %s: summ, difference and product are correct!", argv[1]);
 }
