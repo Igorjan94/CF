@@ -89,7 +89,7 @@ T binSearch(T l, T r, F f, T eps)
 {
     T m;
     while (fabs(r - l) > eps)
-        m = (r + l) / 2,
+        m = l + (r - l) / 2,
         (f(m) ? r : l) = m;
     return f(l) ? l : r;
 }
@@ -361,17 +361,27 @@ vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParamete
 template<typename T>
 T binpow(T a, ll n)
 {
-    if (n == 0)
-        return (T) 1;
-    if (n == 1)
-        return a;
-    T res = a;
-    --n;
-    while (n)
+    T res = T(1);
+    while (n > 0)
     {
         if (n & 1)
             res *= a;
         a *= a;
+        n >>= 1;
+    }
+    return res;
+}
+
+//Igorjanbinpow
+template<typename T>
+T binpow(T a, ll n, T mod)
+{
+    T res = T(1);
+    while (n > 0)
+    {
+        if (n & 1)
+            res = (res * a) % mod;
+        a = (a * a) % mod;
         n >>= 1;
     }
     return res;
