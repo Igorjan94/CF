@@ -1,3 +1,7 @@
+*
+!*.*
+!*/
+
 *input*
 *output*
 *out*
@@ -36,3 +40,5 @@ temp*
 trash
 codeforces.stat
 *vk200*
+*.pch
+scripts/A+B/tests
