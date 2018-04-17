@@ -54,7 +54,7 @@ private:
     // }}}
 
     template<typename X, typename F>
-    static void addVectors(vector<X>& x, vector<X> y, F f = bigint::add, int index = 0) // {{{
+    static void addVectors(vector<X>& x, const vector<X>& y, F f = bigint::add, int index = 0) // {{{
     {
         for (int i = 0, carry = 0; i < SZ(y) || carry; ++i)
         {
@@ -65,7 +65,7 @@ private:
     } // }}}
 
     template<typename X>
-    static vector<X> mulVectorDigit(vector<X> x, X y) // {{{
+    static vector<X> mulVectorDigit(const vector<X>& x, X y) // {{{
     {
         vector<X> temp;
         X carry = 0;
@@ -80,7 +80,7 @@ private:
     } // }}}
 
     template<typename X>
-    static void mulVectors(vector<X>& x, vector<X>& y) // {{{
+    static void mulVectors(vector<X>& x, const vector<X>& y) // {{{
     {
         vector<X> temp;
         for (int i = 0; i < SZ(y); ++i)
@@ -88,20 +88,17 @@ private:
         x = temp;
     } // }}}
 
-    pair<bigint, bigint> divmod(bigint& x, bigint& y) // {{{
+    pair<bigint, bigint> divmod(const bigint& x, const bigint& z) // {{{
     {
         bigint zero = bigint(0);
-        if (y == zero)
+        if (z == zero)
             throw "Division by zero!";
         int xs = x.sign;
-        int ys = y.sign;
-        x.sign = y.sign = 1;
+        int ys = z.sign;
+        bigint y = z.abs();
 
-        if (x < y)
-        {
-            x.sign = xs;
+        if (x.abs() < y)
             return {zero, x};
-        }
 
         bigint div, mod;
         div.a.clear();
@@ -110,7 +107,7 @@ private:
         {
             mod.a.insert(mod.a.begin(), a[i]);
             mod.trimZeroes();
-            T xxx = binSearch(T(0), T(B), [&](T m) { return y * bigint(m) > mod; }, T(1));
+            T xxx = binSearch(T(0), T(B), [&](T m) { return bigint(m) * y > mod; }, T(1));
             if (xxx)
             {
                 --xxx;
@@ -195,7 +192,7 @@ private:
         trimZeroes(a);
     } // }}}
 
-    bigint abs() // {{{
+    bigint abs() const // {{{
     {
         bigint res = *this;
         res.sign *= res.sign;
@@ -222,7 +219,7 @@ private:
     // }}}
 
     //Karatsuba multiply {{{
-    void fastMul(bigint& y)
+    void fastMul(const bigint& y)
     {
         int xs = size();
         int ys = y.size();
@@ -292,17 +289,17 @@ public:
     }
     // }}}
 
-    void operator=(const bigint &v) { // {{{
+    void operator=(const bigint& v) { // {{{
         sign = v.sign;
         a = v.a;
     } // }}}
 
     T operator[](int i) { return a[i]; }
 
-    int size() { return SZ(a); }
+    int size() const { return SZ(a); }
 
     // ?= operators {{{
-    bigint& operator+=(bigint x) // {{{
+    bigint& operator+=(const bigint& x) // {{{
     {
         if (sign == x.sign)
             addVectors(a, x.a, bigint::add),
@@ -312,15 +309,15 @@ public:
         return *this;
     } // }}}
 
-    bigint& operator-=(bigint x) // {{{
+    bigint& operator-=(const bigint& x) // {{{
     {
         if (sign == x.sign)
         {
             if (abs() < x.abs())
             {
-                swap(*this, x);
-                *this -= x;
-                sign *= -1;
+                bigint temp = x;
+                temp -= *this;
+                *this = -temp;
                 return *this;
             }
             addVectors(a, x.a, bigint::sub);
@@ -331,11 +328,11 @@ public:
         return *this;
     } // }}}
 
-    bigint& operator*=(bigint x) // {{{
+    bigint& operator*=(const bigint& x) // {{{
     {
         int resSign = sign * x.sign;
-        sign = x.sign = 1;
-        if (x.size() <= 50)
+        sign = 1;
+        if (x.size() * size() <= 1000)
             mulVectors(a, x.a);
         else
             fastMul(x);
@@ -344,14 +341,14 @@ public:
     }
     // }}}
 
-    bigint& operator/=(bigint x) // {{{
+    bigint& operator/=(const bigint& x) // {{{
     {
         *this = divmod(*this, x).first;
         return *this;
     }
     // }}}
 
-    bigint& operator%=(bigint x) // {{{
+    bigint& operator%=(const bigint& x) // {{{
     {
         *this = divmod(*this, x).second;
         return *this;
@@ -360,31 +357,31 @@ public:
     // }}}
 
     // Binary operators {{{
-    bigint operator+(const bigint &v)
+    bigint operator+(const bigint& v)
     {
         bigint sum = *this;
         return sum += v;
     }
 
-    bigint operator-(const bigint &v)
+    bigint operator-(const bigint& v)
     {
         bigint sum = *this;
         return sum -= v;
     }
 
-    bigint operator/(const bigint &v)
+    bigint operator/(const bigint& v)
     {
         bigint div = *this;
         return div /= v;
     }
 
-    bigint operator%(const bigint &v)
+    bigint operator%(const bigint& v)
     {
         bigint mod = *this;
         return mod %= v;
     }
 
-    bigint operator*(const bigint &v)
+    bigint operator*(const bigint& v)
     {
         bigint prod = *this;
         return prod *= v;
