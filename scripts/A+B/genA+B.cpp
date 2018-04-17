@@ -42,4 +42,10 @@ int main(int argc, char* argv[])
         second = rnd.next("[1-9][0-9]{10}");
         all(first, second);
     }
+    for (int i = 0; i < 10; ++i)
+    {
+        first = rnd.next("[1-9][0-9]{1000}");
+        second = rnd.next("[1-9][0-9]{1000}");
+        printTest(first, second);
+    }
 }

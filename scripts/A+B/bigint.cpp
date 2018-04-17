@@ -88,7 +88,7 @@ private:
         x = temp;
     } // }}}
 
-    pair<bigint, bigint> divmod(bigint& x, bigint& y)
+    pair<bigint, bigint> divmod(bigint& x, bigint& y) // {{{
     {
         bigint zero = bigint(0);
         if (y == zero)
@@ -122,7 +122,7 @@ private:
         div.sign = xs * ys;
         mod.sign = xs;
         return {div, mod};
-    }
+    } // }}}}
 
     //Secure arithmetics {{{
     static pair<T, T> add(T x, T y)
@@ -186,6 +186,8 @@ private:
     {
         while (c.size() > 1 && !c.back())
             c.pop_back();
+        if (c.size() == 0)
+            c.push_back(T(0));
     }
 
     void trimZeroes()
@@ -200,6 +202,52 @@ private:
         return res;
     } // }}}
     
+    //Shift-unshift {{{
+    void shift(int d)
+    {
+        int sz = min(size(), ::abs(d));
+        for (int i = 0; i < sz; ++i)
+            if (d > 0)
+                a.pop_back();
+            else
+                a.erase(a.begin());
+        trimZeroes();
+    }
+
+    void unshift(int d)
+    {
+        for (int i = 0; i < d; ++i)
+            a.insert(a.begin(), 0);
+    }
+    // }}}
+
+    //Karatsuba multiply {{{
+    void fastMul(bigint& y)
+    {
+        int xs = size();
+        int ys = y.size();
+        int n = max(xs, ys);
+        int m = n / 2;
+        bigint a0(*this);
+        bigint a1(*this);
+        bigint b0(y);
+        bigint b1(y);
+
+        a0.shift(max(0, xs - m));
+        a1.shift(-m);
+        b0.shift(max(0, ys - m));
+        b1.shift(-m);
+
+        bigint&& a0b0 = a0 * b0;
+        bigint&& a1b1 = a1 * b1;
+        bigint&& temp = (a0 + a1) * (b0 + b1) - a0b0 - a1b1;
+
+        temp.unshift(m);
+        a1b1.unshift(2 * m);
+
+        *this = a0b0 + temp + a1b1;
+    } // }}}
+
     string toString() // {{{
     {
         bigint<unsigned long long, 10> temp(*this);
@@ -251,6 +299,8 @@ public:
 
     T operator[](int i) { return a[i]; }
 
+    int size() { return SZ(a); }
+
     // ?= operators {{{
     bigint& operator+=(bigint x) // {{{
     {
@@ -283,8 +333,13 @@ public:
 
     bigint& operator*=(bigint x) // {{{
     {
-        sign *= x.sign;
-        mulVectors(a, x.a);
+        int resSign = sign * x.sign;
+        sign = x.sign = 1;
+        if (x.size() <= 50)
+            mulVectors(a, x.a);
+        else
+            fastMul(x);
+        sign = resSign;
         return *this;
     }
     // }}}
@@ -301,6 +356,7 @@ public:
         *this = divmod(*this, x).second;
         return *this;
     }
+    // }}}
     // }}}
 
     // Binary operators {{{
