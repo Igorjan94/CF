@@ -85,7 +85,7 @@ ttti void read(T& a){cin>>a;}
 //IgorjanbinSearch
 //x -> min, f(x) == true
 template<typename T, typename F>
-T binSearch(T l, T r, F f, T eps)
+T binSearch(T l, T r, F f, T eps = 1)
 {
     T m;
     while (fabs(r - l) > eps)
@@ -220,7 +220,7 @@ struct fenwickTree
 };
 
 //IgorjansegmentTree
-//zero-indexed, [l..r]
+//0-indexed, [l..r]
 template<typename T>
 struct segmentTree
 {
@@ -296,7 +296,7 @@ struct segmentTree
 };
 
 //IgorjansparseTable
-//zero-indexes, [l, r)
+//0-indexed, [l, r)
 template<typename T>
 struct sparseTable
 {
@@ -372,9 +372,9 @@ T binpow(T a, ll n)
     return res;
 }
 
-//Igorjanbinpow
+//Igorjanbinpowmod
 template<typename T>
-T binpow(T a, ll n, T mod)
+T binpowmod(T a, ll n, T mod)
 {
     T res = T(1);
     while (n > 0)
