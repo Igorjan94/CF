@@ -59,15 +59,13 @@ vector<bool> sieve(int n)
 //}}}
 ///-------------------------------------------------------------------------------------------------------------------------------------
 
-ll gc(ll a, ll b) { return b == 0 ? a : gc(b, a % b); }
-
 vector<int> primes;
 
 bool run()
 {
     ll p, q, b;
-    scanf("%lld%lld%lld", &p, &q, &b);
-    ll g = gc(p, q);
+    readln(p, q, b);
+    ll g = gcd(p, q);
     p /= g;
     q /= g;
     if (p % q == 0)
@@ -78,7 +76,7 @@ bool run()
                 q /= x;
     do
     {
-        g = gc(q, b);
+        g = gcd(q, b);
         q /= g;
     } while (g > 1 && q > 1);
     return q == 1;
@@ -94,13 +92,12 @@ int main()
 #ifndef ONLINE_JUDGE
     double time = clock();
 #endif
-    //ios_base::sync_with_stdio(false);
+    ios_base::sync_with_stdio(false);
 //    freopen(FILENAME".in", "r", stdin);
 //    freopen(FILENAME".out", "w", stdout);
-    int t;
-    scanf("%d", &t);
+    ints(t);
     fori(t)
-        printf(run() ? "Finite\n" : "Infinite\n");
+        writeln(run() ? "Finite" : "Infinite");
 #ifndef ONLINE_JUDGE
     writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
 #endif
