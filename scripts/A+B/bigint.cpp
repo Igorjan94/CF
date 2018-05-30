@@ -136,25 +136,25 @@ private:
         return {x - y, 0};
     }
 
+    static pair<T, T> addPairs(pair<T, T> x, pair<T, T> y)
+    {
+        auto [summ, carry] = add(x.second, y.second);
+        return {x.first + y.first + carry, summ};
+    }
+
     static pair<T, T> mul(T x, T y)
     {
-        T value = T(0);
-        T residue = T(0);
-        T currentCarry = T(0);
+        pair<T, T> a = {T(0), x};
+        pair<T, T> res = {T(0), T(0)};
+
         while (y)
         {
             if (y & 1)
-            {
-                auto [summ, carry] = add(residue, x);
-                residue = summ;
-                value += currentCarry + carry;
-            }
-            auto [summ, carry] = add(x, x);
-            x = summ;
-            currentCarry = currentCarry * 2 + carry;
+                res = addPairs(res, a);
+            a = addPairs(a, a);
             y >>= 1;
         }
-        return {value, residue};
+        return res;
     }
     // }}}
 
@@ -449,6 +449,6 @@ int main()
     writeln(c + d);
     writeln(c - d);
     writeln(c * d);
-    writeln(c / d, c % d);
+    //writeln(c / d, c % d);
     return 0;
 }
