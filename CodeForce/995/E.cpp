@@ -64,76 +64,63 @@ ll binpow(ll a, ll n, ll p)
 void run()
 {
     ints(u, v, p);
-    int SIZE = 19;
-    map<int, vi> can, can2;
-    function<void(int, vi)> dfs = [&](int u, vi states)
-    {
-        if (can[u].size() != 0 || states.size() >= SIZE)
-            return;
-        can[u] = states;
+    map<int, pii> p1, p2;
+    queue<int> q1, q2;
+    int found = -1;
+    q1.push(u);
+    q2.push(v);
 
-        if (states.size() == 0 || states.back() != 2)
-        {
-            states.pb(1);
-            dfs((u + 1) % p, states);
-            states.pop_back();
-        }
-        if (states.size() == 0 || states.back() != 1)
-        {
-            states.pb(2);
-            dfs((u + p - 1) % p, states);
-            states.pop_back();
-        }
-        if (states.size() == 0 || states.back() != 3)
-        {
-            states.pb(3);
-            dfs(binpow(u, p - 2, p), states);
-            states.pop_back();
-        }
+    auto contains = [&](map<int, pii>& m, int value) { return m.find(value) != m.end(); };
+
+    auto push1 = [&](int next, pii prev) {
+        if (contains(p1, next))
+            return;
+        p1[next] = prev;
+        q1.push(next);
     };
 
-    function<void(int, vi)> dfs2 = [&](int u, vi states)
-    {
-        if (can2[u].size() != 0 || states.size() >= SIZE)
+    auto push2 = [&](int next, pii prev) {
+        if (contains(p2, next))
             return;
-        can2[u] = states;
-
-        if (states.size() == 0 || states.back() != 1)
-        {
-            states.pb(2);
-            dfs2((u + 1) % p, states);
-            states.pop_back();
-        }
-        if (states.size() == 0 || states.back() != 2)
-        {
-            states.pb(1);
-            dfs2((u + p - 1) % p, states);
-            states.pop_back();
-        }
-        if (states.size() == 0 || states.back() != 3)
-        {
-            states.pb(3);
-            dfs2(binpow(u, p - 2, p), states);
-            states.pop_back();
-        }
+        p2[next] = prev;
+        q2.push(next);
+        if (contains(p1, next))
+            found = next;
     };
 
-    dfs(u, {});
-    dfs2(v, {});
-    for (auto& [k, v]: can)
-        if (can2[k].size() != 0)
-        {
-            vi ans;
-            for (auto& x: v)
-                ans.pb(x);
-            auto temp = can2[k];
-            reverse(whole(temp));
-            for (auto& x: temp)
-                ans.pb(x);
-            writeln(ans.size());
-            writeln(ans);
-            return;
-        }
+    auto next = [&](int x) { return (x + 1) % p; };
+    auto prev = [&](int x) { return (x + p - 1) % p; };
+    auto inverse = [&](int x) { return binpow(x, p - 2, p); };
+
+    while (found == -1)
+    {
+        int x = q1.front();
+        int y = q2.front();
+        q1.pop();
+        q2.pop();
+
+        push1(next(x), {x, 1});
+        push1(prev(x), {x, 2});
+        push1(inverse(x), {x, 3});
+
+        push2(next(y), {y, 2});
+        push2(prev(y), {y, 1});
+        push2(inverse(y), {y, 3});
+    }
+
+    vi ans;
+    int x = found;
+    int y = found;
+    while (x != u)
+        ans.pb(p1[x].second),
+        x = p1[x].first;
+    reverse(whole(ans));
+    while (y != v)
+        ans.pb(p2[y].second),
+        y = p2[y].first;
+    writeln(ans.size());
+    writeln(ans);
+    return;
 }
 
 //{{{
