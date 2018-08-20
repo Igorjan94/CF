@@ -4,7 +4,7 @@
 a="/home/igorjan/206round/timetable"
 b="/home/igorjan/new"
 flag=1;
-today=""
+today="&date=all"
 todayDate=$(date +"%d.%m.%Y")
 tomorrow=$(date --date="tomorrow" +"%d.%m.%Y")
 minutes=39
