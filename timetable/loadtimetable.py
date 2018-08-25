@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from collections import defaultdict
 import re
 import sys
@@ -5,61 +7,148 @@ import os
 import getopt
 import requests
 import subprocess
+from argparse import ArgumentParser, ArgumentTypeError
+import datetime
 
-def fastRepl(r):
-    return 'б/о' if int(r.group(1)) < minutes else r.group(0)
+def matcher(s, pat=re.compile(r'^all|\d\d\.\d\d\.\d\d\d\d$')):
+    if not pat.match(s):
+        raise ArgumentTypeError('Expected date in format "dd.MM.yyyy"')
+    return s
+
+def getArgs():
+    parser = ArgumentParser()
+    parser.add_argument('-o', '--output', dest='directory', default='/home/igorjan/new', help='output directory for timetable files')
+    parser.add_argument('-t', '--today', dest='today', action='store_true', help='load timetable for today')
+    parser.add_argument('-m', '--tomorrow', dest='tomorrow', action='store_true', help='load timetable for tomorrow')
+    parser.add_argument('-d', '--date', dest='date', default='all', type=matcher, help='load timetable for date=DATE')
+    parser.add_argument('-f', '--full', dest='full', action='store_true', help='do not minify')
+    parser.add_argument('-c', '--collapse', dest='collapse', action='store_false', default=True, help='do not collapse trains with same departure time')
+    parser.add_argument('stations', nargs='+')
+    args = parser.parse_args()
+
+    if args.directory[-1] != os.sep:
+        args.directory += os.sep
+    if args.today:
+        args.date = datetime.date.today().strftime("%d.%m.%Y")
+    if args.tomorrow:
+        args.date = (datetime.date.today() + datetime.timedelta(days = 1)).strftime("%d.%m.%Y")
+    if args.full:
+        args.collapse = False
+    if len(args.stations) % 2 == 1:
+        raise ArgumentTypeError('Count of stations must be even')
+
+    return args
+
+def getStations():
+    file = open(os.path.dirname(os.path.abspath(__file__)) + '/stations.in', 'r')
+    stationById = defaultdict(list)
+    idByStation = defaultdict(list)
+    for string in file:
+        l = string[:-1].rsplit(' ', 1)
+        stationById[l[1]].append(l[0])
+        idByStation[l[0]].append(l[1])
+    return stationById, idByStation
+
+def getMins(date):
+    return int(date[0:2]) * 60 + int(date[3:5])
+
+def getDate(mins):
+    hours = mins // 60
+    mins %= 60
+    res = ''
+    if hours != 0: res += str(hours) + ' ч'
+    if mins != 0: res += str(mins) + ' м'
+    return re.sub(r'ч(\d)', r'ч \1', res)
 
 dayReplacers = [ ('по пятницам и выходным', 'ПСВ'), ('по пятницам и субботам', 'ПС'), ('ежедневно', ''), ('по выходным', 'СВ'), ('по рабочим', 'КСВ'), ('по воскресеньям', 'В'), ('по субботам', 'С'), ('по пятницам', 'П'), ('кроме пятн\. и субб\.', 'КПС'), ('кроме пятниц и вых\.', 'КПСВ'), ('кроме четвергов и вых\.', 'КЧСВ'), ('кроме суббот', 'КС'), ('кроме воскресений', 'КВ') ]
 placeReplacers = [ ('Лигово', ''), ('Калище', ''), ('Лебяжье', ''), ('Ораниенбаум-1', ''), ('Новый Петергоф', ''), ('Гатчина Балтийская', 'Г'), ('Гатчина Варшавская', 'Г'), ('Зеленогорск', 'Зел'), ('Кирилловское', 'Кир'), ('Каннельярви', 'Кан'), ('Рощино', 'Рощ'), ('Выборг', 'Выб'), ('Гаврилово', 'Гав'), ('Советский', 'Сов'), (r'Санкт-Петербург-.*?(\s|$)', r'\1') ]
 
-freeReplacers = [ (r'00:(\d\d):\d\d', fastRepl), (r'\d\d:[1..9]\d:00', ''), (r'\d\d:\d\d:\d\d', '') ]
-timeReplacers = [ (r'00:(\d\d):00', r'\1 м'), (r'0(\d):00:00', r'\1 ч'), (r'0(\d):(\d\d):00', r'\1 ч \2 м'), (r'(\d\d):(\d\d):00', r'\1 ч \2 м') ]
-
 def replacer(s, repl):
-    for what, how in repl:
-        s = re.sub(what, how, s)
+    for what, how in repl: s = re.sub(what, how, s)
     return s
 
-def defineTime(s):
-    return replacer(s, timeReplacers if flag == 0 else freeReplacers)
+def getTimetable(fro, to, date):
+    for idFrom in fro:
+        for idTo in to:
+            try:
+                x = requests.get('https://www.tutu.ru/spb/rasp.php?st1={}&st2={}&json&date={}'.format(idFrom, idTo, date)).json()
+                if 'error' in x:
+                    print(x['error'], file = sys.stderr)
+                else:
+                    return x
+            except:
+                print('No route from {} to {}'.format(idFrom, idTo))
+    raise Exception('No route found:(')
 
-def removeRepeatingStations(s):
-    return s if flag == 0 else replacer(s, placeReplacers)
+def parse(directory, fro, to, date, full, collapse, st = getStations()):
+    stationById, idByStation = st
+    x = getTimetable(idByStation[fro], idByStation[to], date)
 
-def parse(directory, url):
-    try:
-        x = requests.get(url).json()
-    except:
-        print('something went wrong in tutu, or just stations with same names', file=sys.stderr)
-        return
-    if 'error' in x:
-        return
-
-    filename = directory + reve[x['dep-st']][0] + '—' + reve[x['arr-st']][0]
+    filename = directory + stationById[x['dep-st']][0] + '—' + stationById[x['arr-st']][0]
     if not (x['dat'] is None):
         filename += ', ' + x['dat']
     filename = re.sub(r'(Санкт-Петербург)-.*?\.', r'\1', filename)
     sys.stdout = open(filename + '.out', 'w')
 
     trains = []
+    averageTime = 0
+    lastTime = 0
     for y in x['tra-list']:
-        isLast = '★' if y['tra']['typ'] == 'Ласточка' else ''
         train = {
             'departure': y['tra']['dep']['tim'],
             'arrival': y['tra']['arr']['tim'],
-            'from': removeRepeatingStations(reve[y['tra']['dep']['st']][0]),
-            'to': removeRepeatingStations(reve[y['tra']['arr']['st']][0]),
+            'from': stationById[y['tra']['dep']['st']][0],
+            'to': stationById[y['tra']['arr']['st']][0],
             'schedule': replacer(y['tra']['sch'], dayReplacers),
-            'time': isLast + ' ' + defineTime(y['tra']['tr-tim']),
+            'type': '★' if y['tra']['typ'] == 'Ласточка' else '',
+            'time': getMins(y['tra']['tr-tim']),
             'change': y['tra']['cha'].replace('. Уточните дату поездки', '')
         }
-        if train['schedule'].find('отменен') == -1:
-            trains.append(train)
+        if train['schedule'].find('отменен') != -1:
+            continue
 
-    if flag:
-        fields = ['departure', 'schedule', 'time', 'from', 'to']
+        if train['departure'] == lastTime and abs(train['time'] - trains[-1]['time']) <= 2 and collapse:
+            trains[-1]['from'] += '/' + train['from']
+            trains[-1]['to'] += '/' + train['to']
+            trains[-1]['schedule'] += '/' + train['schedule']
+            trains[-1]['type'] += '/' + train['type']
+        else:
+            trains.append(train)
+            averageTime += train['time']
+            lastTime = train['departure']
+
+    averageTime /= len(trains)
+    for train in trains:
+        if full:
+            train['time'] = getDate(train['time'])
+        else:
+            if len(trains) > 10 and train['time'] + 2 < averageTime:
+                train['time'] = getDate(train['time']).replace(' ', '')
+            elif train['time'] - 10 > averageTime:
+                train['time'] = getDate(train['time'])
+            else:
+                train['time'] = ''
+            train['time'] = train['type'] + ' ' + train['time']
+            train['time'] = re.sub(r'^\s*(.*?)\s*$', r'\1', train['time'])
+            train['from'] = replacer(train['from'], placeReplacers)
+            train['to'] = replacer(train['to'], placeReplacers)
+
+        train['from'] = re.sub(r'^(\w+)(/\1)+$', r'\1', train['from'])
+        train['to']   = re.sub(r'^(\w+)(/\1)+$', r'\1', train['to'])
+        train['time'] = re.sub(r'^\s*/*\s*$', '', train['time'])
+        train['from'] = re.sub(r'^\s*/*\s*$', '', train['from'])
+        train['to'] = re.sub(r'^\s*/*\s*$', '', train['to'])
+        if train['from'] == '' and train['to'] == '' and (train['schedule'] == 'КСВ/СВ' or train['schedule'] == 'СВ/КСВ'):
+            train['schedule'] = ''
+        train['time'] = re.sub('^/', '❤/', train['time'])
+        train['time'] = re.sub('/$', '/❤', train['time'])
+        train['time'] = re.sub('//', '/❤/', train['time'])
+
+    if full:
+        fields = ['departure', 'arrival', 'schedule', 'type', 'time', 'from', 'to', 'change']
     else:
-        fields = ['departure', 'arrival', 'schedule', 'time', 'from', 'to', 'change']
+        fields = ['departure', 'schedule', 'time', 'from', 'to']
+
     resultedFields = []
     for f in fields:
         isNeeded = False
@@ -74,35 +163,9 @@ def parse(directory, url):
     sys.stdout.close()
     subprocess.Popen(['mousepad', filename + '.out'])
 
+def main():
+    args = getArgs()
+    for i in range(0, len(args.stations), 2):
+        parse(args.directory, args.stations[i], args.stations[i + 1], args.date, args.full, args.collapse)
 
-st = os.path.dirname(os.path.abspath(__file__)) + '/stations.in'
-file = open(st, 'r')
-hash = defaultdict(list)
-reve = defaultdict(list)
-for string in file:
-    l = string[:-1].rsplit(' ', 1)
-    hash[l[0]].append(l[1])
-    reve[l[1]].append(l[0])
-
-directory = sys.argv[1]
-today     = sys.argv[2]
-flag      = int(sys.argv[3])
-minutes   = int(sys.argv[4])
-args      = sys.argv[5:]
-if directory[-1] != os.sep:
-    directory += os.sep
-i = 0
-while i < len(args):
-    arg1 = args[i]
-    if hash[arg1] == []:
-        arg1 += ' ' + args[i + 1]
-        i += 1
-    fl = 0
-    for fro in hash[arg1]:
-        arg2 = args[i + 1]
-        if hash[arg2] == []:
-            arg2 += ' ' + args[i + 2]
-            fl = 1
-        for to in hash[arg2]:
-            parse(directory, 'https://www.tutu.ru/spb/rasp.php?st1=' + fro + '&st2=' + to + '&json' + today)
-    i += 2 + fl
+main()
