@@ -10,6 +10,11 @@ import subprocess
 from argparse import ArgumentParser, ArgumentTypeError
 import datetime
 
+class dotdict(dict):
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+ 
 def matcher(s, pat=re.compile(r'^all|\d\d\.\d\d\.\d\d\d\d$')):
     if not pat.match(s):
         raise ArgumentTypeError('Expected date in format "dd.MM.yyyy"')
@@ -94,60 +99,60 @@ def parse(directory, fro, to, date, full, collapse, st = getStations()):
     averageTime = 0
     lastTime = 0
     for y in x['tra-list']:
-        train = {
-            'departure': y['tra']['dep']['tim'],
-            'arrival': y['tra']['arr']['tim'],
-            'from': stationById[y['tra']['dep']['st']][0],
-            'to': stationById[y['tra']['arr']['st']][0],
-            'schedule': replacer(y['tra']['sch'], dayReplacers),
-            'type': '★' if y['tra']['typ'] == 'Ласточка' else '',
-            'time': getMins(y['tra']['tr-tim']),
-            'change': y['tra']['cha'].replace('. Уточните дату поездки', '')
-        }
-        if train['schedule'].find('отменен') != -1:
+        train = dotdict(
+            departure = y['tra']['dep']['tim'],
+            arrival   = y['tra']['arr']['tim'],
+            fro       = stationById[y['tra']['dep']['st']][0],
+            to        = stationById[y['tra']['arr']['st']][0],
+            schedule  = replacer(y['tra']['sch'], dayReplacers),
+            type      = '★' if y['tra']['typ'] == 'Ласточка' else '',
+            time      = getMins(y['tra']['tr-tim']),
+            change    = y['tra']['cha'].replace('. Уточните дату поездки', '')
+        )
+        if train.schedule.find('отменен') != -1:
             continue
 
-        if train['departure'] == lastTime and abs(train['time'] - trains[-1]['time']) <= 2 and collapse:
-            trains[-1]['from'] += '/' + train['from']
-            trains[-1]['to'] += '/' + train['to']
-            trains[-1]['schedule'] += '/' + train['schedule']
-            trains[-1]['type'] += '/' + train['type']
+        if train.departure == lastTime and abs(train.time - trains[-1].time) <= 2 and collapse:
+            trains[-1].fro      += '/' + train.fro
+            trains[-1].to       += '/' + train.to
+            trains[-1].schedule += '/' + train.schedule
+            trains[-1].type     += '/' + train.type
         else:
             trains.append(train)
-            averageTime += train['time']
-            lastTime = train['departure']
+            averageTime += train.time
+            lastTime = train.departure
 
     averageTime /= len(trains)
     for train in trains:
         if full:
-            train['time'] = getDate(train['time'])
+            train.time = getDate(train.time)
         else:
-            if len(trains) > 10 and train['time'] + 2 < averageTime:
-                train['time'] = getDate(train['time']).replace(' ', '')
-            elif train['time'] - 10 > averageTime:
-                train['time'] = getDate(train['time'])
+            if len(trains) > 10 and train.time + 2 < averageTime:
+                train.time = getDate(train.time).replace(' ', '')
+            elif train.time - 10 > averageTime:
+                train.time = getDate(train.time)
             else:
-                train['time'] = ''
-            train['time'] = train['type'] + ' ' + train['time']
-            train['time'] = re.sub(r'^\s*(.*?)\s*$', r'\1', train['time'])
-            train['from'] = replacer(train['from'], placeReplacers)
-            train['to'] = replacer(train['to'], placeReplacers)
+                train.time = ''
+            train.time = train.type + ' ' + train.time
+            train.time = re.sub(r'^\s*(.*?)\s*$', r'\1', train.time)
+            train.fro  = replacer(train.fro, placeReplacers)
+            train.to   = replacer(train.to, placeReplacers)
 
-        train['from'] = re.sub(r'^(\w+)(/\1)+$', r'\1', train['from'])
-        train['to']   = re.sub(r'^(\w+)(/\1)+$', r'\1', train['to'])
-        train['time'] = re.sub(r'^\s*/*\s*$', '', train['time'])
-        train['from'] = re.sub(r'^\s*/*\s*$', '', train['from'])
-        train['to'] = re.sub(r'^\s*/*\s*$', '', train['to'])
-        if train['from'] == '' and train['to'] == '' and (train['schedule'] == 'КСВ/СВ' or train['schedule'] == 'СВ/КСВ'):
-            train['schedule'] = ''
-        train['time'] = re.sub('^/', '❤/', train['time'])
-        train['time'] = re.sub('/$', '/❤', train['time'])
-        train['time'] = re.sub('//', '/❤/', train['time'])
+        train.fro  = re.sub(r'^(\w+)(/\1)+$', r'\1', train.fro)
+        train.to   = re.sub(r'^(\w+)(/\1)+$', r'\1', train.to)
+        train.time = re.sub(r'^\s*/*\s*$', '', train.time)
+        train.fro  = re.sub(r'^\s*/*\s*$', '', train.fro)
+        train.to   = re.sub(r'^\s*/*\s*$', '', train.to)
+        if train.fro == '' and train.to == '' and (train.schedule == 'КСВ/СВ' or train.schedule == 'СВ/КСВ'):
+            train.schedule = ''
+        train.time = re.sub('^/', '❤/', train.time)
+        train.time = re.sub('/$', '/❤', train.time)
+        train.time = re.sub('//', '/❤/', train.time)
 
     if full:
-        fields = ['departure', 'arrival', 'schedule', 'type', 'time', 'from', 'to', 'change']
+        fields = ['departure', 'arrival', 'schedule', 'type', 'time', 'fro', 'to', 'change']
     else:
-        fields = ['departure', 'schedule', 'time', 'from', 'to']
+        fields = ['departure', 'schedule', 'time', 'fro', 'to']
 
     resultedFields = []
     for f in fields:
