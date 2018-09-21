@@ -67,6 +67,7 @@ def getDate(mins):
 
 dayReplacers = [ ('по пятницам и выходным', 'ПСВ'), ('по пятницам и субботам', 'ПС'), ('ежедневно', ''), ('по выходным', 'СВ'), ('по рабочим', 'КСВ'), ('по воскресеньям', 'В'), ('по субботам', 'С'), ('по пятницам', 'П'), ('кроме пятн\. и субб\.', 'КПС'), ('кроме пятниц и вых\.', 'КПСВ'), ('кроме четвергов и вых\.', 'КЧСВ'), ('кроме суббот', 'КС'), ('кроме воскресений', 'КВ') ]
 placeReplacers = [ ('Лигово', ''), ('Калище', ''), ('Лебяжье', ''), ('Ораниенбаум-1', ''), ('Новый Петергоф', ''), ('Гатчина Балтийская', 'Г'), ('Гатчина Варшавская', 'Г'), ('Зеленогорск', 'Зел'), ('Кирилловское', 'Кир'), ('Каннельярви', 'Кан'), ('Рощино', 'Рощ'), ('Выборг', 'Выб'), ('Гаврилово', 'Гав'), ('Советский', 'Сов'), (r'Санкт-Петербург-.*?(\s|$)', r'\1') ]
+daysSorter = { '': 0, 'К': 1, 'П': 2, 'С': 3, 'В': 4 }
 
 def replacer(s, repl):
     for what, how in repl: s = re.sub(what, how, s)
@@ -96,8 +97,6 @@ def parse(directory, fro, to, date, full, collapse, st = getStations()):
     sys.stdout = open(filename + '.out', 'w')
 
     trains = []
-    averageTime = 0
-    lastTime = 0
     for y in x['tra-list']:
         train = dotdict(
             departure = y['tra']['dep']['tim'],
@@ -111,17 +110,25 @@ def parse(directory, fro, to, date, full, collapse, st = getStations()):
         )
         if train.schedule.find('отменен') != -1:
             continue
+        trains.append(train)
 
-        if train.departure == lastTime and abs(train.time - trains[-1].time) <= 2 and collapse:
-            trains[-1].fro      += '/' + train.fro
-            trains[-1].to       += '/' + train.to
-            trains[-1].schedule += '/' + train.schedule
-            trains[-1].type     += '/' + train.type
+    trains = sorted(trains, key = lambda x: (x.departure, daysSorter[x.schedule[:1]]))
+
+    averageTime = 0
+    lastTime = 0
+    trains2 = []
+    for train in trains:
+        if train.departure == lastTime and abs(train.time - trains2[-1].time) <= 2 and collapse:
+            trains2[-1].fro      += '/' + train.fro
+            trains2[-1].to       += '/' + train.to
+            trains2[-1].schedule += '/' + train.schedule
+            trains2[-1].type     += '/' + train.type
         else:
-            trains.append(train)
+            trains2.append(train)
             averageTime += train.time
             lastTime = train.departure
 
+    trains = trains2
     averageTime /= len(trains)
     for train in trains:
         if full:
