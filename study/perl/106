@@ -1,4 +1,4 @@
 #!/usr/bin/perl
 while (<>) {
-	print if /(^|\W)(\d)+(\W|$)/;
+	print if /(^|\W)\d+(\W|$)/;
 }

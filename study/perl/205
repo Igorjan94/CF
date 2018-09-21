@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 while(<>)
 {
-    s/(\W|^)(\w)(\w)(\w*)/$1$3$2$4/g;
+    s/\b(\w)(\w)/$2$1/g;
     print;
 }

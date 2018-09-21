@@ -1,4 +1,4 @@
 #!/usr/bin/perl
 while (<>) {
-	print if /(z|y|x)(.{5,17})(x|y|z)/;
+	print if /[xyz].{5,17}[xyz]/;
 }
