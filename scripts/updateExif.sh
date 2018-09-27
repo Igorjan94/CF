@@ -2,7 +2,7 @@
 
 lat="${1/[.,]/}"
 long="${2/[.,]/}"
-cd $3
+cd "$3"
 
 exiv2 -v\
     -M"set Exif.GPSInfo.GPSLatitude $lat/1000000 0/1 0/1"\
