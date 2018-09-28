@@ -28,6 +28,7 @@ def getArgs():
     parser.add_argument('-d', '--date', dest='date', default='all', type=matcher, help='load timetable for date=DATE')
     parser.add_argument('-f', '--full', dest='full', action='store_true', help='do not minify')
     parser.add_argument('-c', '--collapse', dest='collapse', action='store_false', default=True, help='do not collapse trains with same departure time')
+    parser.add_argument('-r', '--remove', dest='remove', action='store_false', default=True, help='remove slow trains and normal lastochkas')
     parser.add_argument('stations', nargs='+')
     args = parser.parse_args()
 
@@ -86,7 +87,7 @@ def getTimetable(fro, to, date):
                 print('No route from {} to {}'.format(idFrom, idTo))
     raise Exception('No route found:(')
 
-def parse(directory, fro, to, date, full, collapse, st = getStations()):
+def parse(directory, fro, to, date, full, collapse, remove, st = getStations()):
     stationById, idByStation = st
     x = getTimetable(idByStation[fro], idByStation[to], date)
 
@@ -105,56 +106,61 @@ def parse(directory, fro, to, date, full, collapse, st = getStations()):
             to        = stationById[y['tra']['arr']['st']][0],
             schedule  = replacer(y['tra']['sch'], dayReplacers),
             type      = '★' if y['tra']['typ'] == 'Ласточка' else '',
-            time      = getMins(y['tra']['tr-tim']),
-            change    = y['tra']['cha'].replace('. Уточните дату поездки', '')
+            minutes   = getMins(y['tra']['tr-tim']),
+            change    = y['tra']['cha'].replace('. Уточните дату поездки', ''),
+            skip      = False
         )
         if train.schedule.find('отменен') != -1:
             continue
         trains.append(train)
 
     trains = sorted(trains, key = lambda x: (x.departure, daysSorter[x.schedule[:1]]))
-
-    averageTime = 0
-    lastTime = 0
-    trains2 = []
-    for train in trains:
-        if train.departure == lastTime and abs(train.time - trains2[-1].time) <= 2 and collapse:
-            trains2[-1].fro      += '/' + train.fro
-            trains2[-1].to       += '/' + train.to
-            trains2[-1].schedule += '/' + train.schedule
-            trains2[-1].type     += '/' + train.type
-        else:
-            trains2.append(train)
-            averageTime += train.time
-            lastTime = train.departure
-
-    trains = trains2
-    averageTime /= len(trains)
+    averageTime = sum(map(lambda train: train.minutes, trains)) / len(trains)
     for train in trains:
         if full:
-            train.time = getDate(train.time)
+            train.time = getDate(train.minutes)
         else:
-            if len(trains) > 10 and train.time + 2 < averageTime:
-                train.time = getDate(train.time).replace(' ', '')
-            elif train.time - 10 > averageTime:
-                train.time = getDate(train.time)
+            if len(trains) > 10 and train.minutes + 4 < averageTime:
+                train.time = '' if remove else getDate(train.minutes).replace(' ', '')
+            elif train.minutes - 10 > averageTime:
+                train.time = getDate(train.minutes)
+                train.skip = True
             else:
                 train.time = ''
-            train.time = train.type + ' ' + train.time
-            train.time = re.sub(r'^\s*(.*?)\s*$', r'\1', train.time)
-            train.fro  = replacer(train.fro, placeReplacers)
-            train.to   = replacer(train.to, placeReplacers)
+                train.skip = train.type == '★'
 
-        train.fro  = re.sub(r'^(\w+)(/\1)+$', r'\1', train.fro)
-        train.to   = re.sub(r'^(\w+)(/\1)+$', r'\1', train.to)
-        train.time = re.sub(r'^\s*/*\s*$', '', train.time)
-        train.fro  = re.sub(r'^\s*/*\s*$', '', train.fro)
-        train.to   = re.sub(r'^\s*/*\s*$', '', train.to)
-        if train.fro == '' and train.to == '' and (train.schedule == 'КСВ/СВ' or train.schedule == 'СВ/КСВ'):
-            train.schedule = ''
-        train.time = re.sub('^/', '❤/', train.time)
-        train.time = re.sub('/$', '/❤', train.time)
-        train.time = re.sub('//', '/❤/', train.time)
+    if remove: trains = list(filter(lambda train: not train.skip, trains))
+
+    if collapse:
+        trains2 = []
+        lastTime, lastDep = 0, 0
+        for train in trains:
+            if train.departure == lastDep and abs(train.minutes - lastTime) <= 2 and collapse:
+                trains2[-1].fro      += '/' + train.fro
+                trains2[-1].to       += '/' + train.to
+                trains2[-1].schedule += '/' + train.schedule
+                trains2[-1].type     += '/' + train.type
+            else:
+                trains2.append(train)
+                lastDep, lastTime = train.departure, train.minutes
+        trains = trains2
+
+        for train in trains:
+            if not full:
+                train.time = train.type + ' ' + train.time
+                train.time = re.sub(r'^\s*(.*?)\s*$', r'\1', train.time)
+                train.fro  = replacer(train.fro, placeReplacers)
+                train.to   = replacer(train.to, placeReplacers)
+
+            train.fro  = re.sub(r'^(\w+)(/\1)+$', r'\1', train.fro)
+            train.to   = re.sub(r'^(\w+)(/\1)+$', r'\1', train.to)
+            train.time = re.sub(r'^\s*/*\s*$', '', train.time)
+            train.fro  = re.sub(r'^\s*/*\s*$', '', train.fro)
+            train.to   = re.sub(r'^\s*/*\s*$', '', train.to)
+            if train.fro == '' and train.to == '' and (train.schedule == 'КСВ/СВ' or train.schedule == 'СВ/КСВ'): train.schedule = ''
+            train.time = re.sub('^/', '❤/', train.time)
+            train.time = re.sub('/$', '/❤', train.time)
+            train.time = re.sub('//', '/❤/', train.time)
 
     if full:
         fields = ['departure', 'arrival', 'schedule', 'type', 'time', 'fro', 'to', 'change']
@@ -178,6 +184,6 @@ def parse(directory, fro, to, date, full, collapse, st = getStations()):
 def main():
     args = getArgs()
     for i in range(0, len(args.stations), 2):
-        parse(args.directory, args.stations[i], args.stations[i + 1], args.date, args.full, args.collapse)
+        parse(args.directory, args.stations[i], args.stations[i + 1], args.date, args.full, args.collapse, args.remove)
 
 main()
