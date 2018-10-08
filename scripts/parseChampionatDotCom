@@ -15,17 +15,17 @@ def matcher(s, pat=re.compile(r'^\d\d\d\d-\d\d-\d\d$')):
 
 def getArgs():
     parser = ArgumentParser()
-    parser.add_argument('-m', '--tomorrow', dest='tomorrow', action='store_true', help='load results for tomorrow')
-    parser.add_argument('-y', '--yesterday', dest='yesterday', action='store_true', help='load results for yesterday')
+    parser.add_argument('-m', '--tomorrow', dest='tomorrow', action='count', help='load results for tomorrow')
+    parser.add_argument('-y', '--yesterday', dest='yesterday', action='count', help='load results for yesterday')
     parser.add_argument('-d', '--date', dest='date', type=matcher, help='load results for date=DATE')
     args = parser.parse_args()
 
     if not args.date:
         args.date = datetime.date.today().strftime("%Y-%m-%d")
     if args.tomorrow:
-        args.date = (datetime.date.today() + datetime.timedelta(days = 1)).strftime("%Y-%m-%d")
+        args.date = (datetime.date.today() + datetime.timedelta(days = args.tomorrow)).strftime("%Y-%m-%d")
     if args.yesterday:
-        args.date = (datetime.date.today() + datetime.timedelta(days = -1)).strftime("%Y-%m-%d")
+        args.date = (datetime.date.today() + datetime.timedelta(days = -args.yesterday)).strftime("%Y-%m-%d")
     print(args.date)
     return args.date
 
@@ -47,23 +47,28 @@ url = 'https://www.championat.com/stat/{}.json?_={}'.format(getArgs(), str(math.
 actions = requests.get(url).json()
 # actions = requests.get('https://www.championat.com/stat/2018-10-06.json?_=' + str(math.floor(time.time() * 1000))).json()
 # actions = requests.get('https://www.championat.com/live/live/?_=' + str(math.floor(time.time() * 1000))).json()
-names = ['Россия - Премьер-Лига', 'Олимп - Суперкубок России', 'Лига чемпионов', 'Кубок России', 'Товарищеские матчи (сборные)', 'Лига наций УЕФА', 'Суперкубок УЕФА', 'Лига Европы', 'КХЛ', 'ЧМ', 'Еврохоккейтур']
+names = ['Россия - Премьер-Лига', 'Олимп - Суперкубок России', 'Лига чемпионов', 'Кубок России', 'Товарищеские матчи (сборные)', 'Лига наций УЕФА', 'Суперкубок УЕФА', 'Лига Европы', 'КХЛ', 'ЧМ', 'Еврохоккейтур', 'Кубок мира']
 
 datas = [
     ( 'Хоккей', 'hockey', [2593, 2813, 2819]),
     ( 'Футбол', 'football', [2599, 2609, 2605, 2647, 2537, 2681, 2607, 2525, ]),
+    ( 'Биатлон', 'biathlon', [])
 ]
 
 def printTour(temp):
     table = []
     for match in temp['matches']:
-        if 'result' not in match:
+        if 'result' not in match or 'detailed' not in match['result']:
             match['result'] = {'detailed': {'goal1': 0, 'goal2': 0, 'extra': ''}}
         result = match['result']['detailed']
         goals1 = result['goal1']
         goals2 = result['goal2']
-        team1 = match['teams'][0]['name']
-        team2 = match['teams'][1]['name']
+        if 'teams' not in match:
+            team1 = match['name']
+            team2 = ''
+        else:
+            team1 = match['teams'][0]['name']
+            team2 = match['teams'][1]['name']
         time = match['time']
         status = match['status']
         our = boldTeam(team1) or boldTeam(team2)
@@ -94,6 +99,8 @@ def printTour(temp):
     print(table.table)
 
 for (name, nameKey, tournaments) in datas:
+    if nameKey not in actions:
+        continue
     print('\n>>>>> ' + name)
     # for tour in tournaments:
         # temp = actions[nameKey]['tournaments']
