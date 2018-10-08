@@ -47,7 +47,7 @@ url = 'https://www.championat.com/stat/{}.json?_={}'.format(getArgs(), str(math.
 actions = requests.get(url).json()
 # actions = requests.get('https://www.championat.com/stat/2018-10-06.json?_=' + str(math.floor(time.time() * 1000))).json()
 # actions = requests.get('https://www.championat.com/live/live/?_=' + str(math.floor(time.time() * 1000))).json()
-names = ['Россия - Премьер-Лига', 'Олимп - Суперкубок России', 'Лига чемпионов', 'Кубок России', 'Товарищеские матчи (сборные)', 'Лига наций УЕФА', 'Суперкубок УЕФА', 'Лига Европы', 'КХЛ', 'ЧМ', 'Еврохоккейтур', 'НХЛ']
+names = ['Россия - Премьер-Лига', 'Олимп - Суперкубок России', 'Лига чемпионов', 'Кубок России', 'Товарищеские матчи (сборные)', 'Лига наций УЕФА', 'Суперкубок УЕФА', 'Лига Европы', 'КХЛ', 'ЧМ', 'Еврохоккейтур']
 
 datas = [
     ( 'Хоккей', 'hockey', [2593, 2813, 2819]),
