@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+
+import requests
+import math
+import datetime
+import time
+import terminaltables
+import re
+from argparse import ArgumentParser, ArgumentTypeError
+
+def matcher(s, pat=re.compile(r'^\d\d\d\d-\d\d-\d\d$')):
+    if not pat.match(s):
+        raise ArgumentTypeError('Expected date in format "yyyy-MM-dd"')
+    return s
+
+def getArgs():
+    parser = ArgumentParser()
+    parser.add_argument('-m', '--tomorrow', dest='tomorrow', action='store_true', help='load results for tomorrow')
+    parser.add_argument('-y', '--yesterday', dest='yesterday', action='store_true', help='load results for yesterday')
+    parser.add_argument('-d', '--date', dest='date', type=matcher, help='load results for date=DATE')
+    args = parser.parse_args()
+
+    if not args.date:
+        args.date = datetime.date.today().strftime("%Y-%m-%d")
+    if args.tomorrow:
+        args.date = (datetime.date.today() + datetime.timedelta(days = 1)).strftime("%Y-%m-%d")
+    if args.yesterday:
+        args.date = (datetime.date.today() + datetime.timedelta(days = -1)).strftime("%Y-%m-%d")
+    print(args.date)
+    return args.date
+
+colors = {
+    'GREEN': '\033[92m',
+    'YELLOW': '\033[93m',
+    'RED': '\033[91m',
+    'ENDC': '\033[0m',
+    'BOLD': '\033[1m',
+}
+
+def setColor(color, s):
+    return colors[color.upper()] + s + colors['ENDC']
+
+def boldTeam(team):
+    return team == 'Зенит' or team == 'СКА' or team == 'Россия'
+
+url = 'https://www.championat.com/stat/{}.json?_={}'.format(getArgs(), str(math.floor(time.time() * 1000)))
+actions = requests.get(url).json()
+# actions = requests.get('https://www.championat.com/stat/2018-10-06.json?_=' + str(math.floor(time.time() * 1000))).json()
+# actions = requests.get('https://www.championat.com/live/live/?_=' + str(math.floor(time.time() * 1000))).json()
+names = ['Россия - Премьер-Лига', 'Олимп - Суперкубок России', 'Лига чемпионов', 'Кубок России', 'Товарищеские матчи (сборные)', 'Лига наций УЕФА', 'Суперкубок УЕФА', 'Лига Европы', 'КХЛ', 'ЧМ', 'Еврохоккейтур', 'НХЛ']
+
+datas = [
+    ( 'Хоккей', 'hockey', [2593, 2813, 2819]),
+    ( 'Футбол', 'football', [2599, 2609, 2605, 2647, 2537, 2681, 2607, 2525, ]),
+]
+
+def printTour(temp):
+    table = []
+    for match in temp['matches']:
+        if 'result' not in match:
+            match['result'] = {'detailed': {'goal1': 0, 'goal2': 0, 'extra': ''}}
+        result = match['result']['detailed']
+        goals1 = result['goal1']
+        goals2 = result['goal2']
+        team1 = match['teams'][0]['name']
+        team2 = match['teams'][1]['name']
+        time = match['time']
+        status = match['status']
+        our = boldTeam(team1) or boldTeam(team2)
+        if goals1 > goals2:
+            team1 = setColor('green', team1)
+            team2 = setColor('red', team2)
+        elif goals2 > goals1:
+            team1 = setColor('red', team1)
+            team2 = setColor('green', team2)
+        elif status == 'окончен':
+            team1 = setColor('yellow', team1)
+            team2 = setColor('yellow', team2)
+
+        score = str(goals1) + ':' + str(goals2)
+        if result['extra'] != '': score += ' (' + result['extra'] + ')'
+        arr = [team1, team2, time, score, status]
+        if our:
+            arr[3] = '> ' + arr[3] + ' <'
+            arr = list(map(lambda x: colors['BOLD'] + x, arr))
+            arr[4] += colors['ENDC']
+        table.append(arr)
+
+    table = terminaltables.AsciiTable(table, title=temp['name'])
+    # table = terminaltables.SingleTable(table, title=temp['name'])
+    table.inner_heading_row_border = False
+    for i in range(5):
+        table.justify_columns[i] = 'center'
+    print(table.table)
+
+for (name, nameKey, tournaments) in datas:
+    print('\n>>>>> ' + name)
+    # for tour in tournaments:
+        # temp = actions[nameKey]['tournaments']
+        # key = nameKey + '-' + str(tour)
+        # if key in temp:
+            # printTour(temp[key])
+    for tour in actions[nameKey]['tournaments'].values():
+        found = False
+        for name in names:
+            if tour['name'].find(name) != -1:
+                printTour(tour)
+
+
