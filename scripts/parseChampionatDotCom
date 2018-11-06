@@ -41,9 +41,6 @@ colors = {
 def setColor(color, s):
     return colors[color.upper()] + s + colors['ENDC']
 
-def boldTeam(team):
-    return team == 'Зенит' or team == 'СКА' or team == 'Россия'
-
 url = 'https://www.championat.com/stat/{}.json?_={}'.format(getArgs(), str(math.floor(time.time() * 1000)))
 actions = requests.get(url).json()
 # actions = requests.get('https://www.championat.com/stat/2018-10-06.json?_=' + str(math.floor(time.time() * 1000))).json()
@@ -52,7 +49,12 @@ names = ['Россия - Премьер-Лига', 'Олимп - Суперку�
 
 datas = [ ('Хоккей', 'hockey'), ('Футбол', 'football'), ('Биатлон', 'biathlon') ]
 
-def printTour(temp):
+def boldTeam(team, name):
+    if name[:4] == 'Лига':
+        return team in ['Зенит', 'Локомотив М', 'Краснодар', 'Ростов', 'ЦСКА', 'Спартак М', 'Оренбург', 'Рубин', 'Урал', 'Ахмат', 'Динамо М']
+    return team in ['Зенит', 'СКА', 'Россия']
+
+def printTour(temp, name):
     table = []
     for match in temp['matches']:
         if 'result' not in match or 'detailed' not in match['result']:
@@ -68,7 +70,7 @@ def printTour(temp):
             team2 = match['teams'][1]['name']
         time = match['time']
         status = match['status']
-        our = boldTeam(team1) or boldTeam(team2)
+        our = boldTeam(team1, name) or boldTeam(team2, name)
         if status == 'окончен':
             if goals1 > goals2:
                 team1 = setColor('green', team1)
@@ -104,6 +106,6 @@ for (name, nameKey) in datas:
         found = False
         for name in names:
             if tour['name'].find(name) != -1:
-                printTour(tour)
+                printTour(tour, name)
 
 
