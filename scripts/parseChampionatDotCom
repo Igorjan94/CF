@@ -19,13 +19,14 @@ def getArgs():
     parser.add_argument('-y', '--yesterday', dest='yesterday', action='count', help='load results for yesterday')
     parser.add_argument('-d', '--date', dest='date', type=matcher, help='load results for date=DATE')
     args = parser.parse_args()
+    today = datetime.date.today() + datetime.timedelta(hours = -3)
 
     if not args.date:
-        args.date = datetime.date.today().strftime("%Y-%m-%d")
+        args.date = today.strftime("%Y-%m-%d")
     if args.tomorrow:
-        args.date = (datetime.date.today() + datetime.timedelta(days = args.tomorrow)).strftime("%Y-%m-%d")
+        args.date = (today + datetime.timedelta(days = args.tomorrow)).strftime("%Y-%m-%d")
     if args.yesterday:
-        args.date = (datetime.date.today() + datetime.timedelta(days = -args.yesterday)).strftime("%Y-%m-%d")
+        args.date = (today + datetime.timedelta(days = -args.yesterday)).strftime("%Y-%m-%d")
     print(args.date)
     return args.date
 
@@ -49,11 +50,7 @@ actions = requests.get(url).json()
 # actions = requests.get('https://www.championat.com/live/live/?_=' + str(math.floor(time.time() * 1000))).json()
 names = ['Россия - Премьер-Лига', 'Олимп - Суперкубок России', 'Лига чемпионов', 'Кубок России', 'Товарищеские матчи (сборные)', 'Лига наций УЕФА', 'Суперкубок УЕФА', 'Лига Европы', 'КХЛ', 'ЧМ', 'Еврохоккейтур', 'Кубок мира']
 
-datas = [
-    ( 'Хоккей', 'hockey', [2593, 2813, 2819]),
-    ( 'Футбол', 'football', [2599, 2609, 2605, 2647, 2537, 2681, 2607, 2525, ]),
-    ( 'Биатлон', 'biathlon', [])
-]
+datas = [ ('Хоккей', 'hockey'), ('Футбол', 'football'), ('Биатлон', 'biathlon') ]
 
 def printTour(temp):
     table = []
@@ -72,15 +69,16 @@ def printTour(temp):
         time = match['time']
         status = match['status']
         our = boldTeam(team1) or boldTeam(team2)
-        if goals1 > goals2:
-            team1 = setColor('green', team1)
-            team2 = setColor('red', team2)
-        elif goals2 > goals1:
-            team1 = setColor('red', team1)
-            team2 = setColor('green', team2)
-        elif status == 'окончен':
-            team1 = setColor('yellow', team1)
-            team2 = setColor('yellow', team2)
+        if status == 'окончен':
+            if goals1 > goals2:
+                team1 = setColor('green', team1)
+                team2 = setColor('red', team2)
+            elif goals2 > goals1:
+                team1 = setColor('red', team1)
+                team2 = setColor('green', team2)
+            else:
+                team1 = setColor('yellow', team1)
+                team2 = setColor('yellow', team2)
 
         score = str(goals1) + ':' + str(goals2)
         if result['extra'] != '': score += ' (' + result['extra'] + ')'
@@ -98,15 +96,10 @@ def printTour(temp):
         table.justify_columns[i] = 'center'
     print(table.table)
 
-for (name, nameKey, tournaments) in datas:
+for (name, nameKey) in datas:
     if nameKey not in actions:
         continue
     print('\n>>>>> ' + name)
-    # for tour in tournaments:
-        # temp = actions[nameKey]['tournaments']
-        # key = nameKey + '-' + str(tour)
-        # if key in temp:
-            # printTour(temp[key])
     for tour in actions[nameKey]['tournaments'].values():
         found = False
         for name in names:
