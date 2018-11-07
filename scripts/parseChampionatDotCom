@@ -19,7 +19,7 @@ def getArgs():
     parser.add_argument('-y', '--yesterday', dest='yesterday', action='count', help='load results for yesterday')
     parser.add_argument('-d', '--date', dest='date', type=matcher, help='load results for date=DATE')
     args = parser.parse_args()
-    today = datetime.date.today() + datetime.timedelta(hours = -3)
+    today = datetime.datetime.today() - datetime.timedelta(hours = 3)
 
     if not args.date:
         args.date = today.strftime("%Y-%m-%d")
