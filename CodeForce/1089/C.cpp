@@ -69,16 +69,13 @@ void run()
     {
         int mx = INTMAX;
         int u;
-        fori(n)
+        for (int i: possible)
         {
             int mn = 0;
             for (int w: g[i])
-            {
-                int cnt = 0;
-                for (int v: possible)
-                    cnt += d[v][w] < d[v][i];
-                mn = max(mn, cnt);
-            }
+                mn = max(mn, accumulate(whole(possible), 0, [&](int acc, int v) {
+                    return acc + (d[v][w] < d[v][i]);
+                }));
             if (mn <= mx)
                 mx = mn,
                 u = i;
