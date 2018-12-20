@@ -48,38 +48,32 @@ using namespace __gnu_pbds;
 #define FILENAME "input"
 #define INF 1000000007
 
-#define tthti  template<typename Head, typename... Tail> inline
-#define ttt12i template<typename T1, typename T2> inline
-#define ttti   template<typename T> inline
+#define ttt12i template<class T1, class T2> inline
+#define  tthti template<class H, class...T> inline
+#define  ttta  template<class... Args> inline
+#define  ttti  template<class T> inline
 
 #define    ints(args...)     int args; readln(args)
 #define     lls(args...)      ll args; readln(args)
 #define   vints(args...)      vi args; readln(args)
 #define strings(args...)  string args; readln(args)
 
-//IgorjanWriteln-Readln
-inline void writeln2(){cout<<"\n";}
-inline void writeln() {cout<<"\n";}
-inline void readln()  {}
-ttti void read(T&);
-ttti void priws(T);
-ttti void print(T);
+//Igorjanprinter
+void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
+ttta void readln(Args&... args){(read(args),...);}tthti void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
+ttti void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
+vector<string>split(string&s,string d){vector<string> v;size_t p=0;while((p=s.find(d))!=string::npos)v.pb(s.substr(0,p)),s.erase(0,p+d.length());v.pb(s);return v;}
+ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(writeln(*it++,"=",args),...);}
 
-void err(vector<string>::iterator it){++it;}
-tthti void readln (Head& head,Tail&... tail){read(head); readln  (tail...);}
-tthti void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
-tthti void writeln (Head head, Tail... tail){priws(head);writeln2(tail...);}
-ttti  void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
-tthti void err(vector<string>::iterator it,Head head,Tail...tail){writeln((*it).substr((*it)[0]==' '),"=",head);err(++it, tail...);}
-vector<string>split(const string&s,char c){vector<string>v;stringstream ss(s);string x;while(getline(ss,x,c))v.pb(x);return v;}
-
-ttti   ostream&operator<<(ostream&os,vector<T>&a);
+ttti   ostream&operator<<(ostream&os,vector<T>const&a);
 ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
-ttt12i ostream&operator<<(ostream&os,pair<T1,T2>&a){return os<<a.first<<" "<<a.second;}
-ttti   ostream&operator<<(ostream&os,vector<T>&a){if(a.size())os<<a[0];else os<<"\n";for(int i=1;i<a.size();++i)os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
-ttti   istream&operator>>(istream&is,vector<T>&a){if(a.size()==0){int n;is>>n;a.resize(n);}for(int i=0;i<a.size();++i)is>>a[i];return is;}
-ttti void print(T a){cout<<" "<<a;}
-ttti void priws(T a){cout<<a;}
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
+ttti   ostream&operator<<(ostream&os,valarray<T>const&a){if(a.size())os<<a[0];else os<<"\n";fori1(a.size())os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
+ttti   ostream&operator<<(ostream&os,vector<T>const&a){if(a.size())os<<a[0];else os<<"\n";fori1(a.size())os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
+ttti   istream&operator>>(istream&is,valarray<T>&a){fori(a.size())is>>a[i];return is;}
+ttti   istream&operator>>(istream&is,vector<T>&a){fori(a.size())is>>a[i];return is;}
+ttti void print(T&& a){cout<<" "<<a;}
+ttti void priws(T&& a){cout<<a;}
 ttti void read(T& a){cin>>a;}
 
 //IgorjanbinSearch
@@ -361,7 +355,7 @@ vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParamete
 template<typename T>
 T binpow(T a, ll n)
 {
-    T res = T(1);
+    T res = a; --n;
     while (n > 0)
     {
         if (n & 1)
@@ -376,7 +370,7 @@ T binpow(T a, ll n)
 template<typename T>
 T binpowmod(T a, ll n, T mod)
 {
-    T res = T(1);
+    T res = a; --n;
     while (n > 0)
     {
         if (n & 1)
@@ -467,7 +461,125 @@ pointtt vector<point<T>>convexHull(vector<point<T>>a){sort(a.begin(),a.end());in
     ;a[++j]=a[i];if(!k&&i==n-1)k=j;}a.resize(j);return a;}
 
 //IgorjanprintAns
-ttti void printAnswerAndExit(T a){writeln(a);exit(0);}
+ttta void printAnswerAndExit(Args... args){writeln(args...);exit(0);}
+
+//Igorjanmatrix2
+template<typename T>
+struct matrix
+{
+    valarray<valarray<T>> a;
+    int n, m;
+
+    friend void swap(matrix& lhs, matrix& rhs)
+    {
+        swap(lhs.n, rhs.n);
+        swap(lhs.m, rhs.m);
+        swap(lhs.a, rhs.a);
+    }
+
+    matrix(int n, int m) : n(n), m(m)
+    {
+        a.resize(n, valarray(T(), m));
+        fori(min(n, m)) a[i][i] = T(1);
+    }
+
+    matrix(int n, int m, const T& initial) : n(n), m(m)
+    {
+        a.resize(n, valarray(initial, m));
+    }
+
+    matrix(vector<vector<T>>& rhs)
+    {
+        n = size(rhs);
+        m = size(n == 0 ? 0 : rhs[0]);
+        a.resize(n, valarray(T(), m));
+        fori(n) forj(m) a[i][j] = rhs[i][j];
+    }
+
+    matrix(const matrix<T>& rhs) : n(rhs.n), m(rhs.m), a(rhs.a) {}
+
+    matrix& operator=(const matrix& rhs)
+    {
+        if (&rhs == this)
+            return *this;
+        matrix temp(rhs);
+        swap(*this, temp);
+        return *this;
+    }
+
+    matrix& operator=(const T& rhs)
+    {
+        matrix temp(n, m, rhs);
+        swap(*this, temp);
+        return *this;
+    }
+
+    valarray<T>& operator[](int i) { return a[i]; }
+    const valarray<T>& operator[](int i) const { return a[i]; }
+
+    matrix& operator+=(const matrix& rhs) { a += rhs.a; return *this; }
+    matrix& operator-=(const matrix& rhs) { a -= rhs.a; return *this; }
+    matrix& operator+=(const T& rhs) { fori(n) a[i] += rhs; return *this; }
+    matrix& operator-=(const T& rhs) { fori(n) a[i] -= rhs; return *this; }
+    matrix& operator*=(const T& rhs) { fori(n) a[i] *= rhs; return *this; }
+    matrix& operator/=(const T& rhs) { fori(n) a[i] /= rhs; return *this; }
+    matrix& operator%=(const T& rhs) { fori(n) a[i] %= rhs; return *this; }
+    matrix& operator*=(const matrix& rhs) {
+        assert(m == rhs.n);
+        matrix temp(n, rhs.m, 0);
+        fori(temp.n) forj(temp.m) forn(k, m) temp.a[i][j] += a[i][k] * rhs[k][j];
+        return *this = temp;
+    }
+    matrix& operator^=(ll i) {
+        if (i == 0)
+            return *this = matrix(n, m);
+        //if (i < 0)
+            //*this = invert();
+        return *this = binpow(*this, i);
+    }
+    template<template<typename> typename C>
+    C<T> operator*(const C<T>& rhs) {
+        assert(m == size(rhs));
+        C<T> ans(n);
+        fori(n) forn(k, m) ans[i] += a[i][k] * rhs[k];
+        return ans;
+    }
+    matrix operator-() { return *this *= -1; }
+
+    friend matrix operator+(matrix lhs, const matrix& rhs) { lhs += rhs; return lhs; }
+    friend matrix operator-(matrix lhs, const matrix& rhs) { lhs += rhs; return lhs; }
+    friend matrix operator*(matrix lhs, const matrix& rhs) { lhs *= rhs; return lhs; }
+    friend matrix operator+(matrix lhs, const T& rhs) { lhs += rhs; return lhs; }
+    friend matrix operator-(matrix lhs, const T& rhs) { lhs -= rhs; return lhs; }
+    friend matrix operator*(matrix lhs, const T& rhs) { lhs *= rhs; return lhs; }
+    friend matrix operator/(matrix lhs, const T& rhs) { lhs /= rhs; return lhs; }
+    friend matrix operator%(matrix lhs, const T& rhs) { lhs %= rhs; return lhs; }
+    friend matrix operator^(matrix lhs, const ll& rhs) { lhs ^= rhs; return lhs; }
+    template<template<typename> typename C>
+    friend C<T> operator*=(matrix lhs, const C<T>& rhs) { lhs ^= rhs; return lhs; }
+
+    matrix transpose() {
+        matrix temp(m, n, 0);
+        fori(n) forj(m) temp[i][j] = a[j][i];
+        return temp;
+    }
+
+    //matrix invert();
+
+    //T det();
+    friend ostream& operator<<(ostream& os, matrix rhs) {
+        fori(rhs.n)
+        {
+            os << rhs.a[i];
+            if (i != rhs.n - 1) os << "\n";
+        }
+        return os;
+    }
+    friend istream& operator>>(istream& is, matrix& rhs) {
+        fori(rhs.n) is >> rhs.a[i];
+        return is;
+    }
+};
 
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
