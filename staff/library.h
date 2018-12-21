@@ -43,7 +43,7 @@ using namespace __gnu_pbds;
 
 #define argmax(a)    (max_element(whole(a)) - (a).begin())
 #define argmin(a)    (min_element(whole(a)) - (a).begin())
-#define wr(args...)  err(split(#args,',').begin(),args)
+#define wr(args...)  err(#args, args)
 
 #define FILENAME "input"
 #define INF 1000000007
@@ -62,10 +62,11 @@ using namespace __gnu_pbds;
 void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
 ttta void readln(Args&... args){(read(args),...);}tthti void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
 ttti void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
-vector<string>split(string&s,string d){vector<string> v;size_t p=0;while((p=s.find(d))!=string::npos)v.pb(s.substr(0,p)),s.erase(0,p+d.length());v.pb(s);return v;}
+vector<string>split(string&s,string_view d){vector<string> v;size_t p=0;while((p=s.find(d))!=string::npos)v.pb(s.substr(0,p)),s.erase(0,p+d.length());v.pb(s);return v;}
 ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(writeln(*it++,"=",args),...);}
 
 ttti   ostream&operator<<(ostream&os,vector<T>const&a);
+ttti   ostream&operator<<(ostream&os,valarray<T>const&a);
 ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
 ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
 ttti   ostream&operator<<(ostream&os,valarray<T>const&a){if(a.size())os<<a[0];else os<<"\n";fori1(a.size())os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
@@ -355,6 +356,7 @@ vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParamete
 template<typename T>
 T binpow(T a, ll n)
 {
+    assert(n > 0);
     T res = a; --n;
     while (n > 0)
     {
@@ -370,6 +372,7 @@ T binpow(T a, ll n)
 template<typename T>
 T binpowmod(T a, ll n, T mod)
 {
+    assert(n > 0);
     T res = a; --n;
     while (n > 0)
     {
@@ -463,13 +466,23 @@ pointtt vector<point<T>>convexHull(vector<point<T>>a){sort(a.begin(),a.end());in
 //IgorjanprintAns
 ttta void printAnswerAndExit(Args... args){writeln(args...);exit(0);}
 
-//Igorjanmatrix2
+//Igorjanjoin
+template<typename T, template<typename> typename C>
+string join(C<T> const& a, string_view const& delim = " ")
+{
+    if (size(a) == 0) return "";
+    stringstream ss;
+    auto it = begin(a);
+    for (ss << *it++; it != end(a); ++it)
+        ss << delim << *it;
+    return ss.str();
+}
+
+//Igorjanmatrix
 template<typename T>
 struct matrix
 {
-    valarray<valarray<T>> a;
-    int n, m;
-
+#define vectorOrValarray template<template<typename> typename C, typename = enable_if_t<is_same<vector<T>, C<T>>::value || is_same<valarray<T>, C<T>>::value>>
     friend void swap(matrix& lhs, matrix& rhs)
     {
         swap(lhs.n, rhs.n);
@@ -480,7 +493,7 @@ struct matrix
     matrix(int n, int m) : n(n), m(m)
     {
         a.resize(n, valarray(T(), m));
-        fori(min(n, m)) a[i][i] = T(1);
+        fori(::min(n, m)) a[i][i] = T(1);
     }
 
     matrix(int n, int m, const T& initial) : n(n), m(m)
@@ -488,12 +501,28 @@ struct matrix
         a.resize(n, valarray(initial, m));
     }
 
-    matrix(vector<vector<T>>& rhs)
+    matrix(const vector<vector<T>>& rhs)
     {
         n = size(rhs);
         m = size(n == 0 ? 0 : rhs[0]);
         a.resize(n, valarray(T(), m));
         fori(n) forj(m) a[i][j] = rhs[i][j];
+    }
+    
+    matrix(const vector<T>& rhs)
+    {
+        n = size(rhs);
+        m = 1;
+        a.resize(n, valarray<T>(0, 1));
+        fori(n) a[i] = rhs[i];
+    }
+
+    matrix(const valarray<T>& rhs)
+    {
+        n = size(rhs);
+        m = 1;
+        a.resize(n, valarray<T>(0, 1));
+        fori(n) a[i] = rhs[i];
     }
 
     matrix(const matrix<T>& rhs) : n(rhs.n), m(rhs.m), a(rhs.a) {}
@@ -514,6 +543,14 @@ struct matrix
         return *this;
     }
 
+    vectorOrValarray matrix& operator=(const C<T>& rhs)
+    {
+        matrix temp(size(rhs), 1, 0);
+        fori(temp.n) a[i][0] = rhs[i];
+        swap(*this, temp);
+        return *this;
+    }
+
     valarray<T>& operator[](int i) { return a[i]; }
     const valarray<T>& operator[](int i) const { return a[i]; }
 
@@ -530,15 +567,21 @@ struct matrix
         fori(temp.n) forj(temp.m) forn(k, m) temp.a[i][j] += a[i][k] * rhs[k][j];
         return *this = temp;
     }
-    matrix& operator^=(ll i) {
-        if (i == 0)
-            return *this = matrix(n, m);
-        //if (i < 0)
-            //*this = invert();
-        return *this = binpow(*this, i);
+
+    matrix& operator|=(const matrix& rhs) {
+        assert(n == rhs.n);
+        matrix temp(n, m + rhs.m, 0);
+        fori(n) forj(m) temp[i][j] = a[i][j];
+        fori(n) forj(rhs.m) temp[i][j + m] = rhs[i][j];
+        return *this = temp;
     }
-    template<template<typename> typename C>
-    C<T> operator*(const C<T>& rhs) {
+
+    matrix& operator^=(ll i) {
+        assert(i >= 0);
+        if (i == 0) return *this = matrix(n, m);
+        return *this = binpow(*this, std::abs(i));
+    }
+    vectorOrValarray C<T> operator*(const C<T>& rhs) {
         assert(m == size(rhs));
         C<T> ans(n);
         fori(n) forn(k, m) ans[i] += a[i][k] * rhs[k];
@@ -549,14 +592,17 @@ struct matrix
     friend matrix operator+(matrix lhs, const matrix& rhs) { lhs += rhs; return lhs; }
     friend matrix operator-(matrix lhs, const matrix& rhs) { lhs += rhs; return lhs; }
     friend matrix operator*(matrix lhs, const matrix& rhs) { lhs *= rhs; return lhs; }
+    friend matrix operator|(matrix lhs, const matrix& rhs) { lhs |= rhs; return lhs; }
     friend matrix operator+(matrix lhs, const T& rhs) { lhs += rhs; return lhs; }
     friend matrix operator-(matrix lhs, const T& rhs) { lhs -= rhs; return lhs; }
     friend matrix operator*(matrix lhs, const T& rhs) { lhs *= rhs; return lhs; }
     friend matrix operator/(matrix lhs, const T& rhs) { lhs /= rhs; return lhs; }
     friend matrix operator%(matrix lhs, const T& rhs) { lhs %= rhs; return lhs; }
     friend matrix operator^(matrix lhs, const ll& rhs) { lhs ^= rhs; return lhs; }
-    template<template<typename> typename C>
-    friend C<T> operator*=(matrix lhs, const C<T>& rhs) { lhs ^= rhs; return lhs; }
+    vectorOrValarray matrix operator|=(const C<T>& rhs) { return *this |= matrix(rhs); }
+    T max() { return a.max(); }
+    T min() { return a.min(); }
+    T sum() { return a.sum(); }
 
     matrix transpose() {
         matrix temp(m, n, 0);
@@ -564,9 +610,75 @@ struct matrix
         return temp;
     }
 
-    //matrix invert();
+    T normalize(int index) {
+        T g = 1;
+        bool found = false;
+        for (T& x: a[index])
+            if (x != 0)
+            {
+                if (not found) g = x, found = true;
+                else g = gcd(g, x);
+            }
+        a[index] /= g;
+        return g;
+    }
 
-    //T det();
+    void normalize() {
+        fori(n) normalize(i);
+    }
+
+    T determinant() {
+        matrix temp(*this);
+        T numerator = 1;
+        T denumerator = 1;
+        fori(n)
+        {
+            int nonZero = i;
+            while (nonZero < n && !temp[nonZero][i]) ++nonZero;
+            if (nonZero == n) return 0;
+
+            swap(temp[i], temp[nonZero]);
+            numerator *= temp[i][i];
+
+            FOR(j, i + 1, n)
+                if (temp[j][i])
+                {
+                    T g = gcd(temp[i][i], temp[j][i]);
+                    denumerator *= temp[i][i] / g;
+                    temp[j] = temp[j] * (temp[i][i] / g) - temp[i] * (temp[j][i] / g);
+                }
+        }
+        writeln(temp); writeln();
+        return numerator / denumerator;
+    }
+
+    optional<pair<T, matrix<T>>> invert() {
+        assert(n == m);
+        matrix temp(*this);
+        temp |= matrix(n, n);
+
+        auto det = solve(temp);
+        if (!det.has_value()) return {};
+
+        matrix ret(n, n, 0);
+        auto s = slice(n, n, 1);
+        fori(n) ret[i] = temp[i][s];
+        return pair(det.value(), ret);
+    }
+
+    vectorOrValarray optional<pair<T, C<T>>> solution(const C<T>& b) {
+        assert(n == m);
+        matrix temp(*this);
+        temp |= b;
+
+        auto det = solve(temp);
+        if (!det.has_value()) return {};
+
+        C<T> ret(0, n);
+        fori(n) ret[i] = temp[i][n];
+        return pair(det.value(), ret);
+    }
+
     friend ostream& operator<<(ostream& os, matrix rhs) {
         fori(rhs.n)
         {
@@ -578,6 +690,47 @@ struct matrix
     friend istream& operator>>(istream& is, matrix& rhs) {
         fori(rhs.n) is >> rhs.a[i];
         return is;
+    }
+
+private:
+    valarray<valarray<T>> a;
+    int n, m;
+
+    static optional<T> solve(matrix& temp) {
+        vector<int> permutation(temp.n);
+        iota(whole(permutation), 0);
+
+        auto get = [&](int i, int j) {
+            return temp[permutation[i]][j];
+        };
+        auto findNonZero = [&](int i) {
+            int nonZero = i;
+            while (nonZero < temp.n && !get(nonZero, i)) ++nonZero;
+            return nonZero;
+        };
+        fori(temp.n)
+        {
+            int nonZero = findNonZero(i);
+            if (nonZero == temp.n) return {};
+            swap(permutation[i], permutation[nonZero]);
+            FOR(j, i + 1, temp.n)
+                if (get(j, i))
+                    temp[permutation[j]] = temp[permutation[j]] * get(i, i) - temp[permutation[i]] * get(j, i),
+                    temp.normalize(permutation[j]);
+        }
+        ROF(i, temp.n - 1, 0)
+            ROF(j, i - 1, 0)
+                if (get(j, i))
+                    temp[permutation[j]] = temp[permutation[j]] * get(i, i) - temp[permutation[i]] * get(j, i),
+                    temp.normalize(permutation[j]);
+        fori(temp.n) temp.normalize(i);
+        T mx = 0;
+        fori(temp.n) mx = std::max(mx, abs(get(i, i)));
+        fori(temp.n) temp[permutation[i]] *= mx / get(i, i);
+        matrix ret(temp.n, temp.m, 0);
+        fori(temp.n) ret[i] = temp[permutation[i]];
+        temp = ret;
+        return mx;
     }
 };
 
