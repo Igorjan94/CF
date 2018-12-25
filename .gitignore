@@ -42,3 +42,4 @@ codeforces.stat
 *vk200*
 *.pch
 scripts/A+B/tests
+*__pycache__*
