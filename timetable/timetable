@@ -161,11 +161,19 @@ def parse(directory, fro, to, date, full, collapse, remove, st = getStations()):
             train.time = re.sub('^/', '❤/', train.time)
             train.time = re.sub('/$', '/❤', train.time)
             train.time = re.sub('//', '/❤/', train.time)
+        sameDep, sameDst = True, True
+        for i in range(1, len(trains)):
+            sameDep = sameDep and (trains[i].fro == trains[i - 1].fro)
+            sameDst = sameDst and (trains[i].to  == trains[i - 1].to )
 
     if full:
         fields = ['departure', 'arrival', 'schedule', 'type', 'time', 'fro', 'to', 'change']
     else:
-        fields = ['departure', 'schedule', 'time', 'fro', 'to']
+        fields = ['departure', 'schedule', 'time']
+        if not sameDep:
+            fields.append('fro')
+        if not sameDst:
+            fields.append('to')
 
     resultedFields = []
     for f in fields:
