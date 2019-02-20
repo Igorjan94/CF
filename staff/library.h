@@ -478,6 +478,28 @@ string join(C<T> const& a, string_view const& delim = " ")
     return ss.str();
 }
 
+//Igorjanmodular
+template<typename T = int, T mod = 1000000007>
+struct modular
+{
+    T value = 0;
+
+    modular(){}
+    modular(const modular& other) : value(other.value) {}
+    modular operator=(const modular& other) { value = other.value; return *this; }
+    template<typename T1> modular operator=(const T1& other) { if (other > mod) value = other % mod; else value = other; return *this; }
+    template<typename T1> modular(T1 const& t) { if (t > mod) value = t % mod; else value = t; }
+    inline modular& operator+=(modular const& t)       { value += t.value; if (value > mod) value -= mod; return *this; }
+    inline modular& operator-=(modular const& t)       { value -= t.value; if (value < 0  ) value += mod; return *this; }
+    inline modular& operator*=(modular const& t)       { value = (value * 1ll * t.value) % mod; return *this; }
+    inline modular  operator+ (modular const& t) const { return modular(*this) += t; }
+    inline modular  operator- (modular const& t) const { return modular(*this) -= t; }
+    inline modular  operator* (modular const& t) const { return modular(*this) *= t; }
+
+    inline friend ostream& operator<<(ostream& os, modular const& m) { return os << m.value; }
+    inline friend istream& operator>>(istream& is, modular& m) { return is >> m.value; }
+};
+
 //Igorjanmatrix
 template<typename T>
 struct matrix
@@ -564,7 +586,7 @@ struct matrix
     matrix& operator*=(const matrix& rhs) {
         assert(m == rhs.n);
         matrix temp(n, rhs.m, 0);
-        fori(temp.n) forj(temp.m) forn(k, m) temp.a[i][j] += a[i][k] * rhs[k][j];
+        fori(n) forj(m) forn(k, rhs.m) temp.a[i][k] += a[i][j] * rhs[j][k];
         return *this = temp;
     }
 
@@ -585,6 +607,12 @@ struct matrix
         assert(m == size(rhs));
         C<T> ans(n);
         fori(n) forn(k, m) ans[i] += a[i][k] * rhs[k];
+        return ans;
+    }
+    vectorOrValarray friend C<T> operator*(const C<T>& lhs, const matrix& rhs) {
+        assert(size(lhs) == rhs.n);
+        C<T> ans(rhs.m);
+        forj(rhs.m) forn(k, rhs.n) ans[j] += lhs[k] * rhs[k][j];
         return ans;
     }
     matrix operator-() { return *this *= -1; }

@@ -145,7 +145,7 @@ struct matrix
     matrix& operator*=(const matrix& rhs) {
         assert(m == rhs.n);
         matrix temp(n, rhs.m, 0);
-        fori(temp.n) forj(temp.m) forn(k, m) temp.a[i][j] += a[i][k] * rhs[k][j];
+        fori(n) forj(m) forn(k, rhs.m) temp.a[i][k] += a[i][j] * rhs[j][k];
         return *this = temp;
     }
 
@@ -322,7 +322,7 @@ private:
 };
 //Igorjan
 
-template<typename T = ll, T mod = MOD>
+template<typename T = int, T mod = MOD>
 struct modular
 {
     T value = 0;
@@ -330,11 +330,11 @@ struct modular
     modular(){}
     modular(const modular& other) : value(other.value) {}
     modular operator=(const modular& other) { value = other.value; return *this; }
-    template<typename T1> modular operator=(const T1& other) { value = other % mod; return *this; }
+    template<typename T1> modular operator=(const T1& other) { if (other > mod) value = other % mod; else value = other; return *this; }
     template<typename T1> modular(T1 const& t) { if (t > mod) value = t % mod; else value = t; }
     inline modular& operator+=(modular const& t)       { value += t.value; if (value > mod) value -= mod; return *this; }
     inline modular& operator-=(modular const& t)       { value -= t.value; if (value < 0  ) value += mod; return *this; }
-    inline modular& operator*=(modular const& t)       { value = (value * t.value) % mod; return *this; }
+    inline modular& operator*=(modular const& t)       { value = (value * 1ll * t.value) % mod; return *this; }
     inline modular  operator+ (modular const& t) const { return modular(*this) += t; }
     inline modular  operator- (modular const& t) const { return modular(*this) -= t; }
     inline modular  operator* (modular const& t) const { return modular(*this) *= t; }
@@ -344,13 +344,12 @@ struct modular
 };
 //}}}
 
-typedef modular<ll, MOD> num;
 void run()
 {
     ll n, m;
     readln(n, m);
-    matrix<num> p(m, m, 0);
-    vector<num> v(m--, 1);
+    matrix<modular<>> p(m, m, 0);
+    vector<modular<>> v(m--, 1);
     fori(m) p[i + 1][i] = 1;
     p[m][m] = p[0][m] = 1;
     writeln((v * (p ^ max(0ll, n - m))).back());
