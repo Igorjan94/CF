@@ -23,7 +23,6 @@ typedef    long long      ll;
 #define whole(a) begin(a), end(a)
 #define   next   next__
 #define   prev   prev__
-#define  count   count__
 
 #define ints(a...)  int a; readln(a)
 #define wr(args...) err(#args, args)
@@ -48,11 +47,39 @@ ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(wr
 
 void run()
 {
-    ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+	ints(m, k, n, s);
+	vector<int> a(m), b(s);
+	readln(a, b);
+    map<int, int> need, curr;
+    for (int& x: b) need[x]++;
+    int same = 0;
+    for (int l = 0, r = 0; l < m; ++l)
+    {
+        for ( ; r < m && same < SZ(need); ++r)
+            if (need.count(a[r]))
+                same += ++curr[a[r]] == need[a[r]];
+        int left = l / k;
+        int right = (m - r) / k;
+        if (same == SZ(need) && (left + right + 1 >= n))
+        {
+            vector<int> ans;
+            for (int q = l; q < r; ++q)
+                if (!need.count(a[q]))
+                    ans.pb(q + 1);
+                else if (need[a[q]])
+                    need[a[q]]--;
+                else
+                    ans.pb(q + 1);
+
+            ans.resize(clamp(r - l - k, 0, SZ(ans)));
+            writeln(ans.size());
+            writeln(ans);
+            return;
+        }
+        if (need.count(a[l]))
+            same -= curr[a[l]]-- == need[a[l]];
+    }
+    writeln(-1);
 }
 
 //{{{

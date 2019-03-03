@@ -48,11 +48,22 @@ ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(wr
 
 void run()
 {
-    ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    ints(n, a, b);
+    string s;
+    readln(s);
+    vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
+    vector<int> ans(n + 1, 0);
+    fori(n)
+        forj(n)
+            if (s[i] == s[j])
+                dp[i + 1][j + 1] = dp[i][j] + 1;
+    fori1(n + 1)
+    {
+        ans[i] = ans[i - 1] + a;
+        forj(i)
+            ans[i] = min(ans[i], ans[i - min(i - j, dp[i][j])] + b);
+    }
+    writeln(ans[n]);
 }
 
 //{{{

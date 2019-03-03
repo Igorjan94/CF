@@ -12,7 +12,6 @@ using namespace std;
 #define  forj1(n)    for (int j = 1; j < (int) (n); ++j)
 #define   fori(n)    for (int i = 0; i < (int) (n); ++i)
 #define   forj(n)    for (int j = 0; j < (int) (n); ++j)
-#define     SZ(a)    int(size(a))
 
 typedef  pair<int, int>   pii;
 typedef  valarray<int>    va;
@@ -45,14 +44,48 @@ ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(wr
 
 //Igorjan
 //}}}
+static const int C = 100000;
 
 void run()
 {
-    ints(n);
-    vi a(n);
-    readln(a);
-    sort(whole(a));
-    writeln(a);
+    int n;
+    string s, t, c;
+    readln(n, s, t); c = s;
+    vector<pii> ans;
+    vector<ll> d(n - 1, 0);
+    function<void(int)> dfs = [&](int i) {
+        if (d[i] > 0)
+        {
+            if (s[i + 1] == '9')
+                dfs(i + 1);
+            s[i]++;
+            s[i + 1]++;
+            d[i]--;
+            ans.pb({i + 1, 1});
+        }
+        if (d[i] < 0)
+        {
+            if (s[i + 1] == '0')
+                dfs(i + 1);
+            s[i]--;
+            s[i + 1]--;
+            d[i]++;
+            ans.pb({i + 1, -1});
+        }
+    };
+    ll add = 0;
+    fori(n - 1)
+        d[i] = t[i] - s[i] - (i ? d[i - 1] : 0),
+        add += abs(d[i]);
+    if (d.back() > 10 || s.back() + d.back() != t.back())
+        return writeln(-1);
+    fori(n - 1)
+        while (ans.size() < C && d[i] != 0)
+            dfs(i);
+
+    writeln(add);
+    ans.resize(min(C, int(size(ans))));
+    writeln(ans);
 }
 
 //{{{
