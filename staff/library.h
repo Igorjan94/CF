@@ -23,6 +23,7 @@ using namespace __gnu_pbds;
 #define  forj1(n)    for (int j = 1; j < (int) (n); ++j)
 #define   fori(n)    for (int i = 0; i < (int) (n); ++i)
 #define   forj(n)    for (int j = 0; j < (int) (n); ++j)
+#define     SZ(a)    int(size(a))
 
 #define     fst      first
 #define     snd      second
@@ -151,6 +152,52 @@ struct linearSieve
                     break;
             }
         }
+    }
+
+    vector<pair<int, int>> foldedFactorization(int x)
+    {
+        vector<pair<int, int>> temp;
+        int p = -1;
+        int pp = -1;
+        while (x > 1)
+        {
+            pp = p;
+            p = minPrime[x];
+            if (p != pp)
+                temp.pb({p, 1});
+            else
+                temp.back().second++;
+            x = prev[x];
+        }
+        return temp;
+    }
+
+    vector<int> divisors(int x, bool nonTrivial = true)
+    {
+        vector<int> ans;
+
+        const vector<pair<int, int>>& fold = foldedFactorization(x);
+        function<void(int, int)> gen = [&](int v, int j) {
+            if (j == int(fold.size()))
+            {
+                if (!nonTrivial || (v != 1 && v != x))
+                    ans.pb(v);
+                return;
+            }
+            gen(v, j + 1);
+            fori(fold[j].second)
+                gen(v *= fold[j].first, j + 1);
+        };
+        gen(1, 0);
+
+        return ans;
+    }
+
+    vector<int> sortedDivisors(int x, bool nonTrivial = true)
+    {
+        vector<int> ans = divisors(x, nonTrivial);
+        sort(ans.begin(), ans.end());
+        return ans;
     }
 
     vector<int> factorization(int x)
