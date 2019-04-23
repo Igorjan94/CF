@@ -5,7 +5,7 @@ RADIOLIST=""  # variable where we will keep the list entries for radiolist dialo
 OLD=$IFS
 IFS=$'\n' 
 ar=()
-count=15
+count=25
 minutesBefore=57
 choose="/home/igorjan/new/Санкт-Петербург—Лигово.out"
 gap=7
@@ -40,18 +40,21 @@ for i in $(cat $choose | tail -$count); do
     desc=`sed "s/^\s//g" <<< $desc`
     desc=`sed "s/\s$//g" <<< $desc`
     off=off
-    if [ "$train" == "20:10" ]; then off=on; fi
+    if [ "$train" == "20:12" ]; then off=on; fi
     ar+=($train "$desc" $off)
 done
 IFS=$OLD
 exec 3>&1;
 
-result=$(dialog --title "Choose train" --default-item "20:10" --radiolist "Time" 0 0 $count "${ar[@]}" 2>&1 1>&3);
-exec 3>&-;
-minsWarning=`date +%H:%M --date "$result -GMT+3 -$minutesBefore min"`
-minsCritical=`date +%H:%M --date "$result -GMT+3 -$minutesBeforeCritical min"`
-spaces="                                                                                                                                                                                                        "
-for i in $(atq | cut -f 1); do atrm $i; done
-at "$minsWarning" <<< "DISPLAY=:0 notify-send -u critical -i dialog-information 'Warning!!!' '\n\n\nРаспидорит электричку $result. Осталось $minutesBefore минут до электрички! $spaces'" 1>&2
-at "$minsCritical" <<< "DISPLAY=:0 notify-send -u critical -i dialog-information 'Critical!!!' '\n\n\nУже пидорит электричку $result. Осталось $minutesBeforeCritical минут до электрички! $spaces'" 1>&2
-echo "Notifications are installed to $minsWarning and $minsCritical!"
+result=$(dialog --title "Choose train" --default-item "20:12" --radiolist "Time" 0 0 $count "${ar[@]}" 2>&1 1>&3);
+
+if [ ! -z "$result" ]; then
+    exec 3>&-;
+    minsWarning=`date +%H:%M --date "$result -GMT+3 -$minutesBefore min"`
+    minsCritical=`date +%H:%M --date "$result -GMT+3 -$minutesBeforeCritical min"`
+    spaces="                                                                                                                                                                                                        "
+    for i in $(atq | cut -f 1); do atrm $i; done
+    at "$minsWarning" <<< "DISPLAY=:0 notify-send -u critical -i dialog-information 'Warning!!!' '\n\n\nРаспидорит электричку $result. Осталось $minutesBefore минут до электрички! $spaces'" 1>&2
+    at "$minsCritical" <<< "DISPLAY=:0 notify-send -u critical -i dialog-information 'Critical!!!' '\n\n\nУже пидорит электричку $result. Осталось $minutesBeforeCritical минут до электрички! $spaces'" 1>&2
+    echo "Notifications are installed to $minsWarning and $minsCritical!"
+fi
