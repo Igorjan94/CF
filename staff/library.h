@@ -809,5 +809,22 @@ private:
     }
 };
 
+//IgorjanprefixFunction
+template<typename T>
+vector<int> prefixFunction(T s)
+{
+    int n = SZ(s);
+	vector<int> pi(n);
+    fori1(n)
+    {
+		int j = pi[i - 1];
+		while (j > 0 && s[i] != s[j])
+			j = pi[j - 1];
+		if (s[i] == s[j]) ++j;
+		pi[i] = j;
+	}
+	return pi;
+}
+
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
