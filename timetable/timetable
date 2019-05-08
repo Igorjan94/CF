@@ -22,7 +22,7 @@ def matcher(s, pat=re.compile(r'^all|\d\d\.\d\d\.\d\d\d\d$')):
 
 def getArgs():
     parser = ArgumentParser()
-    parser.add_argument('-o', '--output', dest='directory', default='/home/igorjan/new', help='output directory for timetable files')
+    parser.add_argument('-o', '--output', dest='directory', default='~/.cache/timetable', help='output directory for timetable files')
     parser.add_argument('-t', '--today', dest='today', action='store_true', help='load timetable for today')
     parser.add_argument('-m', '--tomorrow', dest='tomorrow', action='store_true', help='load timetable for tomorrow')
     parser.add_argument('-d', '--date', dest='date', default='all', type=matcher, help='load timetable for date=DATE')
@@ -34,6 +34,8 @@ def getArgs():
 
     if args.directory[-1] != os.sep:
         args.directory += os.sep
+    if args.directory[0] == '~':
+        args.directory = os.path.expanduser('~') + args.directory[1:]
     if args.today:
         args.date = datetime.date.today().strftime("%d.%m.%Y")
     if args.tomorrow:
@@ -42,7 +44,7 @@ def getArgs():
         args.collapse = False
     if len(args.stations) % 2 == 1:
         raise ArgumentTypeError('Count of stations must be even')
-
+    os.makedirs(args.directory, exist_ok = True)
     return args
 
 def getStations():
