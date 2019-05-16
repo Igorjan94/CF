@@ -46,30 +46,62 @@ ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(wr
 //Igorjan
 //}}}
 
-int ask(int i, int j)
-{
-    writeln('?', i, j);
-    cout.flush();
-    ints(x);
-    return x;
-}
-
 void run()
 {
-    set<int> was = {4, 8, 15, 16, 23, 42};
-    vector<int> x(4);
-    fori(4)
-        x[i] = ask(1, i + 2);
-    int g = gcd(gcd(x[0], x[1]), gcd(x[2], x[3]));
-    vector<int> ans(6);
-    if (g == 30 || g == 46) g /= 2;
-    ans[0] = g;
-    was.erase(g);
-    fori(4)
-        ans[i + 1] = x[i] / g,
-        was.erase(ans[i + 1]);
-    ans.back() = *was.begin();
-    writeln('!', ans);
+    ints(n, d);
+    int x;
+    vector<int> a(n);
+    readln(a);
+    ints(m);
+    cout << fixed << setprecision(15);
+    vector<double> answers(d + 1);
+    fori1(d + 1) answers[i] = atan2(1, i);
+    answers[0] = 1.570796326794897;
+    int first = 0;
+    forn(q, m)
+    {
+        readln(x);
+        while (first < n && a[first] < x) ++first;
+        if (first == n)
+        {
+            writeln(answers[x - a.back() - 1]);
+            continue;
+        }
+        if (first == 0)
+        {
+            writeln(answers[0]);
+            continue;
+        }
+        int last = first - 1;
+        auto get = [&](int value) {
+            int temp = 3;
+            while (last >= 0 && a[last] > value) --last;
+            fori(3)
+                if (int j = last - i; j >= 0 && a[j] <= value && a[j] >= value - 2)
+                    temp = min(temp, value - a[j]);
+
+            return temp;
+        };
+        
+        int closest = min(a[first] - x, x - a[first - 1] - 1);
+        if (a[first] == x && a[first - 1] == x - 1)
+        {
+            writeln(3.141592653589793);
+            continue;
+        }
+        if (closest == 0)
+        {
+            writeln(answers[0]);
+            continue;
+        }
+        double ans = answers[closest];
+        bool ok = false;
+        for (int i = first; !ok && i < n && a[i] <= x + closest * 2; ++i)
+            if (int triple = get(2 * x - a[i]); triple != 3)
+                ok = true,
+                ans = max(ans, answers[a[i] - x + (triple == 2)] * 2);
+        writeln(ans);
+    }
 }
 
 //{{{
