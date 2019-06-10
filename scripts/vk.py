@@ -1,9 +1,10 @@
 import requests
 import random
+import json
 
 def vk(method, params):
     if not 'v' in params: params['v'] = '5.92'
-    params['access_token'] = open('/home/igorjan/key.vk').readline()[:-1]
+    params['access_token'] = json.loads('\n'.join(open('/home/igorjan/.config/vk200/vk.json').readlines()))['vk']['access_token']
     ret = requests.get('https://api.vk.com/method/' + method, params = params).json()
     if 'error' in ret:
         print(ret['error']['error_msg'])

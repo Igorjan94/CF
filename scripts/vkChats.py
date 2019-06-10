@@ -1,6 +1,6 @@
 from vk import vk
 
-chats = vk('messages.getChat', {'chat_ids': ','.join(map(str, range(1, 65)))})
+chats = vk('messages.getChat', {'chat_ids': ','.join(map(str, range(1, 73)))})
 names = []
 for chat in chats:
     if 53321 in chat['users']:
