@@ -536,7 +536,9 @@ struct modular
     modular operator=(const modular& other) { value = other.value; return *this; }
     template<typename T1> modular operator=(const T1& other) { if (other > mod) value = other % mod; else value = other; return *this; }
     template<typename T1> modular(T1 const& t) { if (t > mod) value = t % mod; else value = t; }
-    template<typename T1> modular(T1 const& num, T1 const& den) { value = num * 1ll * binpowmod(den, mod - 2, mod) % mod; }
+    template<typename T1> modular(T1 const& num, T1 const& den) { value = num * 1ll * binpowmod<ll>(den, mod - 2, mod) % mod; }
+    template<typename T1> modular& operator^=(T1 const& deg) { value = binpowmod<ll>(value, deg, mod); return *this; }
+    template<typename T1> modular  operator^ (T1 const& deg) const { return modular(*this) ^= deg; }
     inline modular& operator+=(modular const& t)       { value += t.value; if (value > mod) value -= mod; return *this; }
     inline modular& operator-=(modular const& t)       { value -= t.value; if (value < 0  ) value += mod; return *this; }
     inline modular& operator*=(modular const& t)       { value = (value * 1ll * t.value) % mod; return *this; }
@@ -545,7 +547,7 @@ struct modular
     inline modular  operator* (modular const& t) const { return modular(*this) *= t; }
 
     inline friend ostream& operator<<(ostream& os, modular const& m) { return os << m.value; }
-    inline friend istream& operator>>(istream& is, modular& m) { return is >> m.value; }
+    inline friend istream& operator>>(istream& is, modular& m) { return is >> m.value; m.value %= mod; }
 };
 
 //Igorjanmatrix
@@ -574,7 +576,7 @@ struct matrix
     matrix(const vector<vector<T>>& rhs)
     {
         n = size(rhs);
-        m = size(n == 0 ? 0 : rhs[0]);
+        m = n == 0 ? 0 : size(rhs[0]);
         a.resize(n, valarray(T(), m));
         fori(n) forj(m) a[i][j] = rhs[i][j];
     }
