@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+import click
+import click_completion
+import click_completion.core
+
 from collections import defaultdict
 import re
 import sys
@@ -7,55 +11,42 @@ import os
 import getopt
 import requests
 import subprocess
-from argparse import ArgumentParser, ArgumentTypeError
 import datetime
+
+DATE_FORMAT = '%d.%m.%Y'
+PATH = os.path.dirname(os.path.abspath(__file__))
+click_completion.init()
+
+@click.group()
+def completion():
+    pass
+
+@completion.command()
+@click.option('--append/--overwrite', help="Append the completion code to the file", default=None)
+@click.option('-i', '--case-insensitive/--no-case-insensitive', help="Case insensitive completion")
+@click.argument('shell', required=False, type=click_completion.DocumentedChoice(click_completion.core.shells))
+@click.argument('path', required=False)
+def install(append, case_insensitive, shell, path):
+    shell, path = click_completion.core.install(shell=shell, path=path, append=append)
+    click.echo('%s completion installed in %s' % (shell, path))
 
 class dotdict(dict):
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
  
-def matcher(s, pat=re.compile(r'^all|\d\d\.\d\d\.\d\d\d\d$')):
-    if not pat.match(s):
-        raise ArgumentTypeError('Expected date in format "dd.MM.yyyy"')
-    return s
-
-def getArgs():
-    parser = ArgumentParser()
-    parser.add_argument('-o', '--output', dest='directory', default='~/.cache/timetable', help='output directory for timetable files')
-    parser.add_argument('-t', '--today', dest='today', action='store_true', help='load timetable for today')
-    parser.add_argument('-m', '--tomorrow', dest='tomorrow', action='store_true', help='load timetable for tomorrow')
-    parser.add_argument('-d', '--date', dest='date', default='all', type=matcher, help='load timetable for date=DATE')
-    parser.add_argument('-f', '--full', dest='full', action='store_true', help='do not minify')
-    parser.add_argument('-c', '--collapse', dest='collapse', action='store_false', default=True, help='do not collapse trains with same departure time')
-    parser.add_argument('-r', '--remove', dest='remove', action='store_false', default=True, help='remove slow trains and normal lastochkas')
-    parser.add_argument('stations', nargs='+')
-    args = parser.parse_args()
-
-    if args.directory[-1] != os.sep:
-        args.directory += os.sep
-    if args.directory[0] == '~':
-        args.directory = os.path.expanduser('~') + args.directory[1:]
-    if args.today:
-        args.date = datetime.date.today().strftime("%d.%m.%Y")
-    if args.tomorrow:
-        args.date = (datetime.date.today() + datetime.timedelta(days = 1)).strftime("%d.%m.%Y")
-    if args.full:
-        args.collapse = False
-    if len(args.stations) % 2 == 1:
-        raise ArgumentTypeError('Count of stations must be even')
-    os.makedirs(args.directory, exist_ok = True)
-    return args
-
 def getStations():
-    file = open(os.path.dirname(os.path.abspath(__file__)) + '/stations.in', 'r')
+    file = open(os.path.join(PATH, 'stations.in'), 'r')
     stationById = defaultdict(list)
     idByStation = defaultdict(list)
+    all = []
     for string in file:
         l = string[:-1].rsplit(' ', 1)
         stationById[l[1]].append(l[0])
         idByStation[l[0]].append(l[1])
-    return stationById, idByStation
+        all.append(l[0])
+    file.close()
+    return stationById, idByStation, all
 
 def getMins(date):
     return int(date[0:2]) * 60 + int(date[3:5])
@@ -90,7 +81,7 @@ def getTimetable(fro, to, date):
     raise Exception('No route found:(')
 
 def parse(directory, fro, to, date, full, collapse, remove, st = getStations()):
-    stationById, idByStation = st
+    stationById, idByStation, _ = st
     x = getTimetable(idByStation[fro], idByStation[to], date)
 
     filename = directory + stationById[x['dep-st']][0] + '—' + stationById[x['arr-st']][0]
@@ -133,6 +124,7 @@ def parse(directory, fro, to, date, full, collapse, remove, st = getStations()):
 
     if remove: trains = list(filter(lambda train: not train.skip, trains))
 
+    sameDep, sameDst = True, True
     if collapse:
         trains2 = []
         lastTime, lastDep = 0, 0
@@ -163,7 +155,6 @@ def parse(directory, fro, to, date, full, collapse, remove, st = getStations()):
             train.time = re.sub('^/', '❤/', train.time)
             train.time = re.sub('/$', '/❤', train.time)
             train.time = re.sub('//', '/❤/', train.time)
-        sameDep, sameDst = True, True
         for i in range(1, len(trains)):
             sameDep = sameDep and (trains[i].fro == trains[i - 1].fro)
             sameDst = sameDst and (trains[i].to  == trains[i - 1].to )
@@ -191,9 +182,33 @@ def parse(directory, fro, to, date, full, collapse, remove, st = getStations()):
     sys.stdout.close()
     subprocess.Popen(['mousepad', filename + '.out'])
 
-def main():
-    args = getArgs()
-    for i in range(0, len(args.stations), 2):
-        parse(args.directory, args.stations[i], args.stations[i + 1], args.date, args.full, args.collapse, args.remove)
+@completion.command()
+@click.option('-d', '--date',      type=click.DateTime(formats=[DATE_FORMAT]), help='load timetable for date=DATE')
+@click.option('-o', '--directory', type=click.Path(file_okay=False),           help='output directory for timetable files',            default='~/.cache/timetable')
+@click.option('-t', '--today',     is_flag=True,                               help='load timetable for today',                        default=False)
+@click.option('-m', '--tomorrow',  is_flag=True,                               help='load timetable for tomorrow',                     default=False)
+@click.option('-f', '--full',      is_flag=True,                               help='do not minify',                                   default=False)
+@click.option('-c', '--collapse',  is_flag=True,                               help='do not collapse trains with same departure time', default=True)
+@click.option('-r', '--remove',    is_flag=True,                               help='remove slow trains and normal lastochkas',        default=True)
+@click.argument('stations', type=click.Choice(getStations()[2], case_sensitive=False), required=True, nargs=-1)
+def load(stations, directory, today, tomorrow, date, full, collapse, remove):
+    if directory[-1] != os.sep:
+        directory += os.sep
+    if directory[0] == '~':
+        directory = os.path.expanduser('~') + directory[1:]
+    date = 'all' if date is None else date.strftime(DATE_FORMAT)
+    if today:
+        date = datetime.date.today().strftime(DATE_FORMAT)
+    if tomorrow:
+        date = (datetime.date.today() + datetime.timedelta(days = 1)).strftime(DATE_FORMAT)
+    click.echo('Получаю расписание на ' + date)
+    if full:
+        collapse = False
+    if len(stations) % 2 == 1:
+        raise click.ClickException('Count of stations must be even')
+    os.makedirs(directory, exist_ok=True)
+    for i in range(0, len(stations), 2):
+        parse(directory, stations[i], stations[i + 1], date, full, collapse, remove)
 
-main()
+if __name__ == "__main__":
+    completion()
