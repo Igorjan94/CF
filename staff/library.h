@@ -534,8 +534,8 @@ struct modular
     modular(){}
     modular(const modular& other) : value(other.value) {}
     modular operator=(const modular& other) { value = other.value; return *this; }
-    template<typename T1> modular operator=(const T1& other) { if (other > mod) value = other % mod; else value = other; return *this; }
-    template<typename T1> modular(T1 const& t) { if (t > mod) value = t % mod; else value = t; }
+    template<typename T1> modular operator=(const T1& other) { value = other % mod; if (value < 0) value += mod; return *this; }
+    template<typename T1> modular(T1 const& other) { value = other % mod; if (value < 0) value += mod; }
     template<typename T1> modular(T1 const& num, T1 const& den) { value = num * 1ll * binpowmod<ll>(den, mod - 2, mod) % mod; }
     template<typename T1> modular& operator^=(T1 const& deg) { value = binpowmod<ll>(value, deg, mod); return *this; }
     template<typename T1> modular  operator^ (T1 const& deg) const { return modular(*this) ^= deg; }
@@ -547,7 +547,37 @@ struct modular
     inline modular  operator* (modular const& t) const { return modular(*this) *= t; }
 
     inline friend ostream& operator<<(ostream& os, modular const& m) { return os << m.value; }
-    inline friend istream& operator>>(istream& is, modular& m) { return is >> m.value; m.value %= mod; }
+    inline friend istream& operator>>(istream& is, modular& m) { return is >> m.value; m.value %= mod; if (m.value < 0) m.value += mod; }
+};
+
+//Igorjanrational
+template<typename T = long long>
+struct rational
+{
+    T num, den;
+    rational(T n, T d) { if (d == 0) n = 1; else if (n == 0) d = 1; else { T g = gcd(abs(d), abs(n)); d /= g; n /= g; if (d < 0) d *= -1, n *= -1; } den = d; num = n; }
+
+    rational() : num(0), den(1) {}
+    rational(const rational& other) : num(other.num), den(other.den) {}
+    rational operator=(const rational& other) { num = other.num, den = other.den; return *this; }
+    template<typename T1> rational operator=(const T1& other) { num = other; den = 1; return *this; }
+    template<typename T1> rational(T1 const& other) { num = other; den = 1; }
+
+    bool operator<(const rational& b) const { return num * b.den < den * b.num; }
+    bool operator>(const rational& b) const { return num * b.den > den * b.num; }
+    bool operator==(const rational& b) const { return num == b.num && den == b.den; }
+    bool operator<=(const rational& b) const { return *this < b || *this == b; }
+    bool operator>=(const rational& b) const { return *this > b || *this == b; }
+
+    inline rational& operator+=(const rational& t)       { rational temp(num * t.den + t.num * den, den * t.den); num = temp.num; den = temp.den; return *this; }
+    inline rational& operator-=(const rational& t)       { rational temp(num * t.den - t.num * den, den * t.den); num = temp.num; den = temp.den; return *this; }
+    inline rational& operator*=(const rational& t)       { rational temp(num * t.num, den * t.den);               num = temp.num; den = temp.den; return *this; }
+    inline rational  operator+ (const rational& t) const { return rational(*this) += t; }
+    inline rational  operator- (const rational& t) const { return rational(*this) -= t; }
+    inline rational  operator* (const rational& t) const { return rational(*this) *= t; }
+
+    inline friend ostream& operator<<(ostream& os, rational const& m) { os << m.num; if (m.den != 1) os << "/" << m.den; return os; }
+    inline friend istream& operator>>(istream& is, rational& m) { T d, n; is >> n >> d; m = rational(n, d); return is; }
 };
 
 //Igorjanmatrix
