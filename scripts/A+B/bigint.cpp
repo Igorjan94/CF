@@ -15,8 +15,15 @@ T binSearch(T l, T r, F f, T eps)
     return f(l) ? l : r;
 }
 
-
-template<typename T, size_t B = numeric_limits<T>::max()>
+static constexpr int binpow(int x, int d) {
+    int ret = 1;
+    for (int i = 0; i < d; ++i)
+        ret *= x;
+    return ret;
+};
+static const int BASE = 10;
+static const int POW = 9;
+template<typename T = int, size_t B = binpow(BASE, POW)>
 struct bigint;
 
 // Ostream operator << {{{
@@ -58,7 +65,7 @@ private:
     {
         for (int i = 0, carry = 0; i < SZ(y) || carry; ++i)
         {
-            auto [value, currentCarry] = f(getDigit(x, i + index), getDigit(y, i) + carry);
+            const auto& [value, currentCarry] = f(getDigit(x, i + index), getDigit(y, i) + carry);
             setDigit(x, i + index, value);
             carry = currentCarry;
         }
@@ -67,13 +74,13 @@ private:
     template<typename X>
     static vector<X> mulVectorDigit(const vector<X>& x, X y) // {{{
     {
-        vector<X> temp;
+        vector<X> temp(SZ(x));
         X carry = 0;
         for (int i = 0; i < SZ(x) || carry; ++i)
         {
-            auto [value, residue] = mul(getDigit(x, i), y);
-            auto [summ, currentCarry] = add(residue, carry);
-            temp.push_back(summ);
+            const auto& [value, residue] = mul(getDigit(x, i), y);
+            const auto& [summ, currentCarry] = add(residue, carry);
+            setDigit(temp, i, summ);
             carry = value + currentCarry;
         }
         return move(temp);
@@ -82,7 +89,7 @@ private:
     template<typename X>
     static void mulVectors(vector<X>& x, const vector<X>& y) // {{{
     {
-        vector<X> temp;
+        vector<X> temp(SZ(x) + SZ(y) - 1);
         for (int i = 0; i < SZ(y); ++i)
             addVectors(temp, mulVectorDigit<X>(x, y[i]), bigint::add, i);
         x = temp;
@@ -136,25 +143,10 @@ private:
         return {x - y, 0};
     }
 
-    static pair<T, T> addPairs(pair<T, T> x, pair<T, T> y)
-    {
-        auto [summ, carry] = add(x.second, y.second);
-        return {x.first + y.first + carry, summ};
-    }
-
     static pair<T, T> mul(T x, T y)
     {
-        pair<T, T> a = {T(0), x};
-        pair<T, T> res = {T(0), T(0)};
-
-        while (y)
-        {
-            if (y & 1)
-                res = addPairs(res, a);
-            a = addPairs(a, a);
-            y >>= 1;
-        }
-        return res;
+        long long m = x * 1ll * y;
+        return {m / B, m % B};
     }
     // }}}
 
@@ -164,7 +156,8 @@ private:
     template<typename C>
     static T getDigit(C& c, unsigned i)
     {
-        return i >= c.size() || i < 0 ? T(0) : c[i];
+        return c[i];
+        //return i >= c.size() || i < 0 ? T(0) : c[i];
     } // }}}
 
     //Secure set by index {{{
@@ -203,18 +196,18 @@ private:
     void shift(int d)
     {
         int sz = min(size(), ::abs(d));
-        for (int i = 0; i < sz; ++i)
-            if (d > 0)
-                a.pop_back();
-            else
-                a.erase(a.begin());
+        if (d > 0)
+            a.erase(a.begin() + size() - sz, a.end());
+        else
+            a.erase(a.begin(), a.begin() + sz);
         trimZeroes();
     }
 
     void unshift(int d)
     {
-        for (int i = 0; i < d; ++i)
-            a.insert(a.begin(), 0);
+        vector<T> temp(d, 0);
+        copy(a.begin(), a.end(), back_inserter(temp));
+        a = temp;
     }
     // }}}
 
@@ -223,8 +216,7 @@ private:
     {
         int xs = size();
         int ys = y.size();
-        int n = max(xs, ys);
-        int m = n / 2;
+        int m = max(xs, ys) / 2;
         bigint a0(*this);
         bigint a1(*this);
         bigint b0(y);
@@ -247,12 +239,16 @@ private:
 
     string toString() // {{{
     {
-        bigint<unsigned long long, 10> temp(*this);
         stringstream os;
-        if (sign == -1 && (a.size() != 1 || a[0]))
+        int l = a.size();
+        if (sign == -1 && (l != 1 || a[0]))
             os << '-';
-        for (auto&& x : temp)
-            os << x;
+        for (int i = 0; i < a.size(); ++i)
+        {
+            string temp = to_string(a[l - i - 1]);
+            if (i && temp.size() != POW) os << string(POW - temp.size(), '0');
+            os << temp;
+        }
         return os.str();
     } // }}}
 
@@ -273,17 +269,16 @@ public:
         trimZeroes();
     }
 
-    bigint(string s)
+    bigint(const string& s)
     {
-        bool ok = false;
-        if (s[0] == '-')
-            ok = true,
-            s.erase(s.begin());
-        bigint ten(10);
-
-        for (char& c : s)
-            *this *= ten,
-            *this += bigint(c - 48);
+        a.resize(SZ(s) / POW, 0);
+        bool ok = s[0] == '-';
+        int exs = (SZ(s) - ok) % POW;
+        if (exs)
+            a.push_back(stoi(s.substr(ok, exs)));
+        for (int i = exs + ok; i < SZ(s); i += POW)
+            a.push_back(stoi(s.substr(i, POW).c_str()));
+        reverse(a.begin(), a.end());
         if (ok) sign = -1;
         trimZeroes();
     }
@@ -293,6 +288,11 @@ public:
         sign = v.sign;
         a = v.a;
     } // }}}
+
+    template<typename T1>
+    void operator=(const T1& v) {
+        *this = bigint(v);
+    };
 
     T operator[](int i) { return a[i]; }
 
@@ -332,7 +332,7 @@ public:
     {
         int resSign = sign * x.sign;
         sign = 1;
-        if (x.size() * size() <= 1000)
+        if (x.size() * size() <= 3000)
             mulVectors(a, x.a);
         else
             fastMul(x);
@@ -357,43 +357,13 @@ public:
     // }}}
 
     // Binary operators {{{
-    bigint operator+(const bigint& v)
-    {
-        bigint sum = *this;
-        return sum += v;
-    }
-
-    bigint operator-(const bigint& v)
-    {
-        bigint sum = *this;
-        return sum -= v;
-    }
-
-    bigint operator/(const bigint& v)
-    {
-        bigint div = *this;
-        return div /= v;
-    }
-
-    bigint operator%(const bigint& v)
-    {
-        bigint mod = *this;
-        return mod %= v;
-    }
-
-    bigint operator*(const bigint& v)
-    {
-        bigint prod = *this;
-        return prod *= v;
-    }
+    bigint operator+(const bigint& v) const { return bigint(*this) += v; }
+    bigint operator-(const bigint& v) const { return bigint(*this) -= v; }
+    bigint operator/(const bigint& v) const { return bigint(*this) /= v; }
+    bigint operator%(const bigint& v) const { return bigint(*this) %= v; }
+    bigint operator*(const bigint& v) const { return bigint(*this) *= v; }
+    bigint operator-() const { bigint res = *this; res.sign = -sign; return res; }
     // }}}
-    
-    bigint operator-() const // {{{
-    {
-        bigint res = *this;
-        res.sign = -sign;
-        return res;
-    } // }}}
 
     // Compare operators {{{
     bool operator<(const bigint &v) const
@@ -417,7 +387,7 @@ public:
 
     // Cast {{{
     template<typename T2, size_t B2>
-    explicit operator bigint<T2, B2>() {
+    operator bigint<T2, B2>() {
         typedef bigint<T2, B2> bigint2;
         bigint2 temp(0);
         bigint2 deg(1);
@@ -431,7 +401,7 @@ public:
     }
     // }}}
 
-    void write()
+    void write() const
     {
         for (auto&& x : *this)
             cout << x << " ";
@@ -441,14 +411,11 @@ public:
 
 int main()
 {
-    bigint<long long> a, b;
-    readln(a, b);
-    bigint<unsigned char, 2> x(a), y(b);
-    bigint<int> u(x), v(y);
-    bigint<short, 229> c(u), d(v);
+    bigint c, d;
+    readln(c, d);
     writeln(c + d);
     writeln(c - d);
     writeln(c * d);
-    //writeln(c / d, c % d);
+    writeln(c / d, c % d);
     return 0;
 }
