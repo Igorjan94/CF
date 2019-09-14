@@ -1,9 +1,7 @@
-// Igorjan94, template version from 13 October 2017. C++17 version, modified 07 August 2018 (&&, whole) {{{
+// Igorjan94, template version from 13 October 2017. C++17 version, modified 14 september 2019 (writeln<T>, main) {{{
 #include <bits/stdc++.h>
 
 using namespace std;
-
-#define FILENAME "input"
 
 #define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
 #define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
@@ -15,7 +13,6 @@ using namespace std;
 #define     SZ(a)    int(size(a))
 
 typedef  pair<int, int>   pii;
-typedef  valarray<int>    va;
 typedef   vector<int>     vi;
 typedef    long long      ll;
 
@@ -35,11 +32,9 @@ typedef    long long      ll;
 
 const int MOD = 1000000007;
 const int INTMAX = numeric_limits<int>::max();
-const ll LLMAX = numeric_limits<ll>::max();
 
 void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
 ttta void readln(Args&... args){(read(args),...);}tthti void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
-ttti void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 vector<string>split(string&s,string d){vector<string>v;size_t p=0;while((p=s.find(d))!=string::npos)v.pb(s.substr(0,p)),s.erase(0,p+d.length());v.pb(s);return v;}
 ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(writeln(*it++,"=",args),...);}
 
@@ -58,28 +53,20 @@ void run()
 //{{{
 int main()
 {
-#ifndef ONLINE_JUDGE
-    double time = clock();
-#endif
     ios_base::sync_with_stdio(false);
-//    freopen(FILENAME".in", "r", stdin);
-//    freopen(FILENAME".out", "w", stdout);
     run();
-#ifndef ONLINE_JUDGE
-    writeln("execution time =", (clock() - time) / CLOCKS_PER_SEC);
-#endif
+    cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
     return 0;
 }
 
 #define a _a
 #define n _n
-ttti   ostream&operator<<(ostream&os,vector<T>const&a);
-ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a);
+template<typename T,typename D=decltype(*begin(declval<T>())),typename enable_if<!is_same<T,basic_string<char>>::value>::type* =nullptr>
+ostream&operator<<(ostream&os,T const&a){auto it=begin(a);if(it!=end(a))os<<*it++;while(it!=end(a))os<<"\n "[is_fundamental<typename T::value_type>::value]<<*it++;return os;}
 ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
-ttti   ostream&operator<<(ostream&os,vector<T>const&a){if(a.size())os<<a[0];else os<<"\n";fori1(a.size())os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
-ttti   ostream&operator<<(ostream&os,valarray<T>const&a){if(a.size())os<<a[0];else os<<"\n";fori1(a.size())os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
+ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
 ttti   istream&operator>>(istream&is,vector<T>&a){fori(a.size())is>>a[i];return is;}
-ttti   istream&operator>>(istream&is,valarray<T>&a){fori(a.size())is>>a[i];return is;}
 ttti void print(T&&a){cout<<" "<<a;}
 ttti void priws(T&&a){cout<<a;}
 ttti void read(T&a){cin>>a;} //}}}
