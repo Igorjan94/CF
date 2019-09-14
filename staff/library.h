@@ -859,5 +859,19 @@ vector<int> prefixFunction(T s)
 	return pi;
 }
 
+//Igorjanumax
+template<typename T1, typename T2>
+T1 umax(T1& a, T2 b)
+{
+    return a < T2(b) ? a = b : a;
+}
+
+//Igorjanumin
+template<typename T1, typename T2>
+T1 umin(T1& a, T2 b)
+{
+    return a > T2(b) ? a = b : a;
+}
+
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
