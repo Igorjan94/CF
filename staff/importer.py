@@ -33,7 +33,8 @@ def main(i):
         if len(library[i]) == 2 and library[i][0] in source and not (comment + library[i][0] in source):
             toAppend.append(''.join(['\n', comment, library[i][0], '\n', library[i][1][:-1]]))
     source = source.replace(libr, '').split(pattern, 1)
-    open(sys.argv[1], 'w').write(source[0] + ''.join(toAppend) + pattern + source[1])
+    if len(source) == 2:
+        open(sys.argv[1], 'w').write(source[0] + pattern + ''.join(toAppend) + source[1])
 
 if __name__ == '__main__':
     if len(sys.argv) <= 2:
