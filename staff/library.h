@@ -529,9 +529,9 @@ string join(C<T> const& a, string_view const& delim = " ")
 template<typename T = int, T mod = 1000000007>
 struct modular
 {
-    T value = 0;
+    T value;
 
-    modular(){}
+    modular() : value(0) {}
     modular(const modular& other) : value(other.value) {}
     modular operator=(const modular& other) { value = other.value; return *this; }
     template<typename T1> modular operator=(const T1& other) { value = other % mod; if (value < 0) value += mod; return *this; }
@@ -542,9 +542,14 @@ struct modular
     inline modular& operator+=(modular const& t)       { value += t.value; if (value > mod) value -= mod; return *this; }
     inline modular& operator-=(modular const& t)       { value -= t.value; if (value < 0  ) value += mod; return *this; }
     inline modular& operator*=(modular const& t)       { value = (value * 1ll * t.value) % mod; return *this; }
+    inline modular& operator/=(modular const& t)       { return *this *= ~t; }
     inline modular  operator+ (modular const& t) const { return modular(*this) += t; }
     inline modular  operator- (modular const& t) const { return modular(*this) -= t; }
     inline modular  operator* (modular const& t) const { return modular(*this) *= t; }
+    inline modular  operator/ (modular const& t) const { return modular(*this) /= t; }
+    inline modular  operator~ (                ) const { return modular(T(1), value); }
+    inline bool     operator==(modular const& t) const { return value == t.value; }
+    inline bool     operator!=(modular const& t) const { return value != t.value; }
 
     inline friend ostream& operator<<(ostream& os, modular const& m) { return os << m.value; }
     inline friend istream& operator>>(istream& is, modular& m) { return is >> m.value; m.value %= mod; if (m.value < 0) m.value += mod; }
