@@ -1,3 +1,6 @@
 [submodule "vk200"]
 	path = vk200
 	url = https://bitbucket.org/Igorjan94/vk200.git
+[submodule "staff/geodeb"]
+	path = staff/geodeb
+	url = https://github.com/Igorjan94/geodeb
