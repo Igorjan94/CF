@@ -93,11 +93,12 @@ T binSearch(T l, T r, F f, T eps = 1)
 //Igorjandsu
 struct dsu
 {
-    vector<int> a;
+    vector<int> a, size;
 
     dsu(int n)
     {
         a.resize(n);
+        size.resize(n, 1);
         iota(a.begin(), a.end(), 0);
     }
 
@@ -110,8 +111,11 @@ struct dsu
     {
         i = get(i);
         j = get(j);
-        if (i != j)
-            a[i] = j;
+        if (i == j) return;
+        if (size[i] > size[j])
+            swap(i, j);
+        a[i] = j;
+        size[j] += size[i];
     }
 };
 
