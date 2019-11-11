@@ -884,5 +884,110 @@ T1 umin(T1& a, T2 b)
     return a > T2(b) ? a = b : a;
 }
 
+//Igorjanhungarian
+pair<int, vector<int>> hungarian(const vector<vector<int>>& a)
+{
+    int n = a.size() + 1;
+    int m = a[0].size() + 1;
+    vector<int> u(n), v(m), p(m), way(m);
+    fori1(n)
+    {
+        p[0] = i;
+        int j0 = 0;
+        vector<int> minv(m, INF);
+        vector<bool> used(m, false);
+        do 
+        {
+            used[j0] = true;
+            int i0 = p[j0];
+            int delta = INF;
+            int j1;
+            forj1(m)
+                if (!used[j]) 
+                {
+                    int cur = a[i0 - 1][j - 1] - u[i0] - v[j];
+                    if (cur < minv[j])
+                        minv[j] = cur,
+                        way[j] = j0;
+                    if (minv[j] < delta)
+                        delta = minv[j],
+                        j1 = j;
+                }
+            forj(m)
+                if (used[j])
+                    u[p[j]] += delta,
+                    v[j] -= delta;
+                else
+                    minv[j] -= delta;
+            j0 = j1;
+        } 
+        while (p[j0] != 0);
+        do 
+        {
+            int j1 = way[j0];
+            p[j0] = p[j1];
+            j0 = j1;
+        } 
+        while (j0);
+    }
+    vector<int> ans(n + 1);
+    forj1(m)
+        ans[p[j] - 1] = j - 1;
+    return {-v[0], ans};
+}
+
+//Igorjankhun
+vector<pii> khun(const vector<vector<int>>& g, int n)
+{
+    vector<int> mt(n, -1);
+    vector<int> used(n, false);
+    int counter = 0;
+
+    function<bool(int)> dfs = [&](int u) {
+        used[u] = counter;
+        for (const int& v: g[u])
+            if (mt[v] == -1 || (used[mt[v]] != counter && dfs(mt[v])))
+                return mt[v] = u, mt[u] = v, true;
+        return false;
+    };
+
+    for (bool run = 1; run; )
+    {
+        run = 0;
+        counter++;
+        fori(n)
+            if (mt[i] == -1 && dfs(i))
+                run = 1;
+    }
+    vector<pii> ans;
+    fori(n)
+        if (mt[i] != -1)
+            ans.pb({mt[i], i});
+    return ans;
+}
+
+//Igorjantopsort
+vector<int> topsort(const vector<vector<int>>& edges, bool reversed = false)
+{
+    int n = edges.size();
+    vector<int> ans;
+    vector<bool> used(n, false);
+    
+    function<void(int)> dfs = [&](int u) {
+        used[u] = true;
+        for (const int& v: edges[u])
+            if (!used[v])
+                dfs(v);
+        ans.pb(u);
+    };
+
+    fori(n)
+        if (!used[i])
+            dfs(i);
+    if (!reversed)
+        reverse(ans.begin(), ans.end());
+    return ans;
+}
+
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
