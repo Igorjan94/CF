@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 
+source /etc/os-release
+
 ensureCommandExists () {
+    pack=$2
+    if [ ! "$pack" ]; then
+        pack=$1
+    fi
+
     echo "Installing $1..."
     if ! [ -x "$(command -v $1)" ]; then
-        $installer $1
+        $installer $pack
     else
         echo "Found $1"
     fi
@@ -80,6 +87,8 @@ if [ "$minimal" ]; then
     ensureCommandExists "sudo"
     ensureCommandExists "vim"
     ensureCommandExists "git"
+    ensureCommandExists "htop"
+    ensureCommandExists "ifconfig" "net-tools"
 fi
 
 if [ ! `getent group sudo 2>/dev/null` ]; then
@@ -113,7 +122,7 @@ if [ "$user" ]; then
         echo "Downloading .zshrc (Prompt: '$server')..."
         curl https://raw.githubusercontent.com/Igorjan94/x/master/.zshrcMinimal 2>/dev/null | sed "s/Server 79: /$server/g" | sed "s:/usr/bin/vim:`which vim`:g" > $zshrc
         echo "alias sudo='sudo -S'" >> $zshrc
-        echo "alias magic='curl igorjan94.ru 2&>/dev/null | bash -s -- '" >> $zshrc
+        echo "alias magic='curl \"https://igorjan94.ru/adduser.sh\" 2&>/dev/null | bash -s -- '" >> $zshrc
     fi
 
     if [ "$sshkey" ]; then
@@ -151,14 +160,14 @@ if [ "$needsDocker" ]; then
         else
             apt-get update
             apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common
-            curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+            curl -fsSL https://download.docker.com/linux/$ID/gpg | apt-key add -
             add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   "deb [arch=amd64] https://download.docker.com/linux/$ID \
    $(lsb_release -cs) \
    stable"
             apt-get update
             apt-get install -y docker-ce
-            curl -L https://github.com/docker/compose/releases/download/1.17.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+            curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
         fi
         if [ "$user" ]; then
