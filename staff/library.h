@@ -989,5 +989,33 @@ vector<int> topsort(const vector<vector<int>>& edges, bool reversed = false)
     return ans;
 }
 
+//Igorjanlis
+vector<int> lis(const vector<int>& a)
+{
+    int n = a.size();
+    vector<int> d(n + 1, INF), p(n + 1, -1), x(n + 1, -1);
+    d[0] = -INF;
+ 
+    fori(n)
+    {
+        int j = upper_bound(d.begin(), d.end(), a[i]) - d.begin();
+        if (d[j - 1] < a[i] && a[i] < d[j])
+    		d[j] = a[i],
+            x[j] = i,
+            p[i] = x[j - 1];
+    }
+    int index = 0;
+    while (index < n && d[index] < INF) ++index;
+    index = x[--index];
+
+    vector<int> ans;
+    while (index != -1)
+        ans.pb(a[index]),
+        index = p[index];
+
+    reverse(whole(ans));
+    return ans;
+}
+
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
