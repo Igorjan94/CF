@@ -107,6 +107,11 @@ struct dsu
         return a[i] == i ? i : a[i] = get(a[i]);
     }
 
+    int operator[](int i)
+    {
+        return get(i);
+    }
+
     void uni(int i, int j)
     {
         i = get(i);
