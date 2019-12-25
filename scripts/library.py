@@ -45,5 +45,26 @@ def decorateFunction(original):
     def decorated(*args, **kwargs): return dotdict(original(*args, **kwargs))
     return decorated
 
+def unlimited(f, field, max_count, verbose = False, count_field = 'count', offset_field = 'offset', starting_offset = 0, **kwargs):
+    kwargs[count_field] = max_count
+    offset = starting_offset
+    res = []
+    while True:
+        if verbose:
+            print(f'Getting {max_count}, offset {offset}')
+        kwargs[offset_field] = offset
+        temp = f(**kwargs)
+        if not field in temp:
+            time.sleep(2)
+            continue
+        temp = temp[field]
+        if not temp: break
+
+        res += temp
+        # break
+        offset += max_count
+        time.sleep(1 / 3)
+    return res
+
 json.loads = decorateFunction(json.loads)
 requests.Response.json = decorateFunction(requests.Response.json)

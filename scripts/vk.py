@@ -13,25 +13,9 @@ def vk(method, **kwargs):
     return ret.response
 
 def unlimitedVk(method, field, max_count, verbose = False, **kwargs):
-    kwargs['count'] = max_count
-    offset = 0
-    res = []
-    while True:
-        if verbose:
-            print(f'Getting {method}, offset {offset}')
-        kwargs['offset'] = offset
-        temp = vk(method, **kwargs)
-        if not field in temp:
-            time.sleep(2)
-            continue
-        temp = temp[field]
-        if not temp: break
-
-        res += temp
-        # break
-        offset += max_count
-        time.sleep(1 / 3)
-    return res
+    def getter(**kwargs):
+        return vk(method, **kwargs);
+    return unlimited(getter, field, max_count, verbose = verbose, **kwargs)
 
 def getPhoto(url, path, peer_id):
     files = {'photo': open(path, 'rb')}
@@ -43,7 +27,6 @@ def sendPhoto(paths, peer_id):
     photos = [getPhoto(url, path, peer_id) for path in paths.split(' ')]
     strings = ['photo' + str(photo['owner_id']) + '_' + str(photo['id']) for photo in photos]
     vk('messages.send', {'attachment': ','.join(strings), 'random_id': random.randint(0, 2 ** 31), 'peer_id': peer_id})
-
 
 def getMe():
     return vk('users.get')[0]
@@ -64,7 +47,7 @@ def getConversations():
     return {**getChatsDict(), **getFriendsDict()}
 
 @completion.command()
-@click.argument('peer_ids', required=True, type=click_completion.DocumentedChoice(getConversations()), nargs=-1)
+# @click.argument('peer_ids', required=True, type=click_completion.DocumentedChoice(getConversations()), nargs=-1)
 @click.option('-s', '--stacked', is_flag=True, help='Stacked mode', default=True)
 @click.option('-d', '--separated', is_flag=True, help='Stat for one dialog', default=False)
 def histogramMessagesByDate(peer_ids, stacked, separated):
