@@ -38,39 +38,6 @@ ttta void readln(Args&... args){(read(args),...);}tthti void writeln(H&& h,T&&..
 vector<string>split(string&s,string d){vector<string>v;size_t p=0;while((p=s.find(d))!=string::npos)v.pb(s.substr(0,p)),s.erase(0,p+d.length());v.pb(s);return v;}
 ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(writeln(*it++,"=",args),...);}
 
-//Igorjan
-//binpow
-template<typename T>
-T binpow(T a, ll n)
-{
-    assert(n > 0);
-    T res = a; --n;
-    while (n > 0)
-    {
-        if (n & 1)
-            res *= a;
-        a *= a;
-        n >>= 1;
-    }
-    return res;
-}
-
-//binpowmod
-template<typename T>
-T binpowmod(T a, ll n, T mod)
-{
-    assert(n > 0);
-    T res = a; --n;
-    while (n > 0)
-    {
-        if (n & 1)
-            res = (res * a) % mod;
-        a = (a * a) % mod;
-        n >>= 1;
-    }
-    return res;
-}
-
 //modular
 template<typename T = int, T mod = 1000000007>
 struct modular
@@ -82,8 +49,8 @@ struct modular
     modular operator=(const modular& other) { value = other.value; return *this; }
     template<typename T1> modular operator=(const T1& other) { value = other % mod; if (value < 0) value += mod; return *this; }
     template<typename T1> modular(T1 const& other) { value = other % mod; if (value < 0) value += mod; }
-    template<typename T1> modular(T1 const& num, T1 const& den) { value = num * 1ll * binpowmod<ll>(den, mod - 2, mod) % mod; }
-    template<typename T1> modular& operator^=(T1 const& deg) { value = binpowmod<ll>(value, deg, mod); return *this; }
+    template<typename T1> modular(T1 const& num, T1 const& den) { *this = modular(den) ^ (mod - 2) * num; }
+    template<typename T1> modular& operator^=(T1 const& deg) { modular a = value; for (T1 n = deg - 1; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
     template<typename T1> modular  operator^ (T1 const& deg) const { return modular(*this) ^= deg; }
     inline modular& operator+=(modular const& t)       { value += t.value; if (value > mod) value -= mod; return *this; }
     inline modular& operator-=(modular const& t)       { value -= t.value; if (value < 0  ) value += mod; return *this; }
@@ -100,11 +67,11 @@ struct modular
     inline friend ostream& operator<<(ostream& os, modular const& m) { return os << m.value; }
     inline friend istream& operator>>(istream& is, modular& m) { return is >> m.value; m.value %= mod; if (m.value < 0) m.value += mod; }
 };
-
+//Igorjan
 //}}}
 
 static const int N = 1000001;
-typedef modular<ll, 998244353> mod;
+typedef modular<int, 998244353> mod;
 
 void run()
 {
@@ -122,13 +89,12 @@ void run()
     mod ans;
     fori(n)
     {
-        mod all, correct;
+        mod correct;
         for (int& x: gifts[i])
-            all += n,
             correct += a[x];
-        ans += correct / all / n;
+        ans += correct / SZ(gifts[i]);
     }
-    writeln(ans);
+    writeln(ans / n / n);
 }
 
 //{{{

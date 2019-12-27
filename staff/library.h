@@ -547,8 +547,8 @@ struct modular
     modular operator=(const modular& other) { value = other.value; return *this; }
     template<typename T1> modular operator=(const T1& other) { value = other % mod; if (value < 0) value += mod; return *this; }
     template<typename T1> modular(T1 const& other) { value = other % mod; if (value < 0) value += mod; }
-    template<typename T1> modular(T1 const& num, T1 const& den) { value = num * 1ll * binpowmod<ll>(den, mod - 2, mod) % mod; }
-    template<typename T1> modular& operator^=(T1 const& deg) { value = binpowmod<ll>(value, deg, mod); return *this; }
+    template<typename T1> modular(T1 const& num, T1 const& den) { *this = modular(den) ^ (mod - 2) * num; }
+    template<typename T1> modular& operator^=(T1 const& deg) { modular a = value; for (T1 n = deg - 1; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
     template<typename T1> modular  operator^ (T1 const& deg) const { return modular(*this) ^= deg; }
     inline modular& operator+=(modular const& t)       { value += t.value; if (value > mod) value -= mod; return *this; }
     inline modular& operator-=(modular const& t)       { value -= t.value; if (value < 0  ) value += mod; return *this; }
