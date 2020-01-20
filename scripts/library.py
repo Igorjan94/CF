@@ -2,6 +2,7 @@ import requests
 import random
 import json
 import time
+import os
 
 import click
 import click_completion
@@ -47,9 +48,16 @@ def decorateFunction(original):
 
 def unlimited(f, field, max_count, verbose = False, count_field = 'count', offset_field = 'offset', starting_offset = 0, **kwargs):
     kwargs[count_field] = max_count
+    if not 'max_iterations' in kwargs:
+        max_iterations = -1
+    else:
+        max_iterations = kwargs['max_iterations']
+
     offset = starting_offset
     res = []
+    iterations = 0
     while True:
+        iterations += 1
         if verbose:
             print(f'Getting {max_count}, offset {offset}')
         kwargs[offset_field] = offset
@@ -61,10 +69,37 @@ def unlimited(f, field, max_count, verbose = False, count_field = 'count', offse
         if not temp: break
 
         res += temp
-        # break
         offset += max_count
+        if max_iterations != -1 and iterations >= max_iterations:
+            break
         time.sleep(1 / 3)
     return res
 
 json.loads = decorateFunction(json.loads)
 requests.Response.json = decorateFunction(requests.Response.json)
+
+def getFilename(filename):
+    if filename.startswith('~'):
+        filename = os.path.expanduser('~') + filename[1:]
+    if not filename.startswith('.') and not filename.startswith('/'):
+        filename = './' + filename
+    return filename
+
+def saveJsonInFile(j, filename):
+    if type(filename) == str:
+        filename = getFilename(filename)
+        if not os.path.exists(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
+        filename = open(filename, 'w')
+    filename.write(json.dumps(j, ensure_ascii=False))
+    filename.close()
+
+def loadJsonFromFile(filename):
+    if type(filename) == str:
+        filename = getFilename(filename)
+        if not os.path.exists(filename):
+            return None
+        filename = open(filename, 'r')
+    j = json.loads(''.join(filename.readlines()))
+    filename.close()
+    return j

@@ -5,7 +5,7 @@ from library import *
 def vk(method, **kwargs):
     params = dotdict(kwargs)
     if not 'v' in params: params.v = '5.92'
-    params.access_token = json.loads('\n'.join(open('/home/igorjan/.config/vk200/vk.json').readlines())).vk.access_token
+    params.access_token = loadJsonFromFile('~/.config/vk200/vk.json').vk.access_token
     ret = requests.get('https://api.vk.com/method/' + method, params = params).json()
     if 'error' in ret:
         print(f'Error in {method}: {ret.error.error_msg}', kwargs)
@@ -44,10 +44,39 @@ def getChatsDict():
     return dict(map(lambda chat: (str(chat.conversation.peer.id), chat.conversation.chat_settings.title), getChats()))
 
 def getConversations():
-    return {**getChatsDict(), **getFriendsDict()}
+    cacheFriends = '~/.cache/vk200/friends.json'
+    friends = loadJsonFromFile(cacheFriends)
+    if friends is None:
+        friends = {**getChatsDict(), **getFriendsDict()}
+        saveJsonInFile(friends, cacheFriends)
+    return friends
 
 @completion.command()
-# @click.argument('peer_ids', required=True, type=click_completion.DocumentedChoice(getConversations()), nargs=-1)
+@click.option('-f', '--filename', help='output file', type=click.File('w'), default='./corpuses/corpus.txt')
+@click.option('-o', '--out', is_flag=True, help='inbox/outbox messages', default=True)
+@click.option('-m', '--max_iterations', type=int, help='count of pages of messages', default=-1)
+@click.argument('peer_id', required=True, type=click_completion.DocumentedChoice(getConversations()), nargs=1)
+def getMessagesCorpus(peer_id, out, filename, max_iterations):
+    import re
+    MAX_COUNT = 200
+    messages = unlimitedVk('messages.getHistory', 'items', MAX_COUNT, True, peer_id = peer_id, max_iterations = max_iterations)
+    messages = list(map(lambda message: message.text.lower(), filter(lambda message: not (message.out ^ out), messages)))
+    words = []
+    for message in messages:
+        words += re.split(r'[^\w\s\d-]|\n', message)
+    words = list(filter(len, words))
+    corpus = {}
+    for word in words:
+        word = word.split()
+        for j in range(1, 4):
+            for i in range(len(word) - j + 1):
+                temp = ' '.join(word[i + k] for k in range(j))
+                corpus[temp] = corpus.get(temp, 0) + 1
+    c = []
+    saveJsonInFile(corpus, filename)
+
+@completion.command()
+@click.argument('peer_ids', required=True, type=click_completion.DocumentedChoice(getConversations()), nargs=-1)
 @click.option('-s', '--stacked', is_flag=True, help='Stacked mode', default=True)
 @click.option('-d', '--separated', is_flag=True, help='Stat for one dialog', default=False)
 def histogramMessagesByDate(peer_ids, stacked, separated):
