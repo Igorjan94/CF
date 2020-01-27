@@ -52,7 +52,16 @@ def getConversations():
     return friends
 
 @completion.command()
-@click.option('-f', '--filename', help='output file', type=click.File('w'), default='./corpuses/corpus.txt')
+@click.option('-f', '--filename', help='input file', type=click.File('r'), default='./corpuses/corpus.json')
+@click.option('-o', '--output', help='output file', type=click.File('w'), default='./corpuses/corpus.txt')
+def jsonCorpusToTxt(filename, output):
+    j = loadJsonFromFile(filename)
+    for k, v in j.items():
+        output.write(str(v) + ' ' + k + '\n')
+    output.close()
+
+@completion.command()
+@click.option('-f', '--filename', help='output file', type=click.File('w'), default='./corpuses/corpus.json')
 @click.option('-o', '--out', is_flag=True, help='inbox/outbox messages', default=True)
 @click.option('-m', '--max_iterations', type=int, help='count of pages of messages', default=-1)
 @click.argument('peer_id', required=True, type=click_completion.DocumentedChoice(getConversations()), nargs=1)

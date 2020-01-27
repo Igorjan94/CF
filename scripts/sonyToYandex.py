@@ -1,3 +1,5 @@
+import xmltodict
+import re
 import os
 import time
 import datetime
@@ -21,22 +23,39 @@ def getTimeFromString(s, format):
 
 def gpsToHtml(filename, yandex, output):
     rl = filename.readlines()
-    start = rl[0].split('/')[3][:-4]
-    start = getTimeFromString(start, '%Y%m%d%H%M%S')
-    title = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
-    lines = list(map(lambda line: line[:-1].split(','), filter(lambda line: line.startswith('$GPRMC'), rl)))
     coords = []
-    for line in lines:
-        t = line[9][:4] + '20' + line[9][4:] + line[1].split('.')[0]
-        t = getTimeFromString(t, '%d%m%Y%H%M%S') + int(line[1][7:]) / 1000
-        coords.append([t, degsToDegs(line[3]), degsToDegs(line[5]), float(line[7]) * 1.852])
+    if filename.name.endswith('.gpx'):
+        parsed = xmltodict.parse(''.join(rl))['gpx']
+        title = parsed['metadata']['name']
+        lines = parsed['trk']
+        if not 'trkseg' in lines:
+            return
+        else:
+            lines = lines['trkseg']
+        if type(lines) != list: lines = [lines]
+        for segment in lines:
+            ps = segment['trkpt']
+            if type(ps) != list: ps = [ps]
+            for line in ps:
+                t = getTimeFromString(line['time'][:-1] + '000', '%Y-%m-%dT%H:%M:%S.%f')
+                coords.append([t, line['@lat'], line['@lon'], float(line.get('extensions', {'geotracker:meta': {}}).get('geotracker:meta').get('@s', 0)), line['ele']])
+        start = coords[0][0]
+    else:
+        start = rl[0].split('/')[3][:-4]
+        start = getTimeFromString(start, '%Y%m%d%H%M%S')
+        title = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
+        lines = list(map(lambda line: line[:-1].split(','), filter(lambda line: line.startswith('$GPRMC'), rl)))
+        for line in lines:
+            t = line[9][:4] + '20' + line[9][4:] + line[1].split('.')[0]
+            t = getTimeFromString(t, '%d%m%Y%H%M%S') + int(line[1][7:]) / 1000
+            coords.append([t, degsToDegs(line[3]), degsToDegs(line[5]), float(line[7]) * 1.852])
 
     points = []
     speeds = []
     commands = []
     last = 0
     lastTime = start
-    for t, x, y, s in coords:
+    for t, x, y, s, _ in coords:
         points.append([str(x)[:9], str(y)[:9]])
         speeds.append(int(s))
         commands.append(f"drawtext=text='{int(last)} km/h':enable='between(t,{lastTime - start:.2f},{t - start:.2f})':x=10:y=H-th-10:fontsize=40:fontcolor=red")
@@ -50,7 +69,7 @@ def gpsToHtml(filename, yandex, output):
     else:
         os.unlink(output.name)
     filename.close()
-    print(', \\\n'.join(commands))
+    # print(', \\\n'.join(commands))
 
 
 @completion.command()
@@ -66,7 +85,7 @@ def getMaps(dir, yandex):
     html = yandex.readlines()
     for f in listdir(dir):
         filename = join(dir, f)
-        if isfile(filename) and filename.endswith('.LOG'):
+        if isfile(filename) and (filename.endswith('.LOG') or filename.endswith('.gpx')):
             gpsToHtml(open(filename, 'r'), html, open(filename.rsplit('.', 1)[0] + '.html', 'w'))
     yandex.close()
 
