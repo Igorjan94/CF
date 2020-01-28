@@ -1,5 +1,4 @@
 // Igorjan94, template version from 13 October 2017. C++17 version, modified 14 september 2019 (writeln<T>, main) {{{
-#include "geodeb/lib/geodeb.h"
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -15,7 +14,7 @@ using namespace std;
 
 typedef  pair<int, int>   pii;
 typedef   vector<int>     vi;
-typedef    long double    ll;
+typedef    double    ll;
 
 #define    pb    push_back
 #define whole(a) begin(a), end(a)
@@ -71,6 +70,7 @@ pointtt int orientation(const point<T>&a,const point<T>&b,const point<T>&c){T q=
 //convexHull
 pointtt void convexHull(vector<point<T>>&a){sort(a.begin(),a.end());int n=a.size(),j=-1,k=0;ROF(i,n-2,0)a.push_back(a[i]);fori(a.size()){for(;j>k&&orientation(a[j-1],a[j],a[i])!=1;--j)
     ;a[++j]=a[i];if(!k&&i==n-1)k=j;}a.resize(j);}
+//reflect point C from line AB
 pointtt point<T> reflect(const point<T>&a,const point<T>&b,const point<T>&c){
     T A = a.y - b.y;
     T B = b.x - a.x;
@@ -83,8 +83,6 @@ pointtt point<T> reflect(const point<T>&a,const point<T>&b,const point<T>&c){
 
 void run()
 {
-    GD_INIT("kek.html");
-    GD_SET_PRECISION(0);
     ints(n);
     auto nxt = [&](int i) { return (i + 1) % n; };
     vector<double> coeffs(n);
@@ -96,10 +94,6 @@ void run()
     point<ll> w = {0, 0};
     double k = 1;
     int cc = 0;
-
-        for (auto& p: a) GD_POINT(p);
-        fori(n) GD_SEGMENT(a[i], a[nxt(i)]);
-        GD_PAUSE();
 
     int last = -1;
 
@@ -126,21 +120,8 @@ void run()
             if (o1 != o2)
             {
                 last = i;
-                //auto z = x - y;
-                //auto q = w - v;
-                //auto d = z ^ q;
-                //auto xy = x ^ y;
-                //auto wv = w ^ v;
-                //point<ll> p = {xy * q.x - z.x * wv, xy * q.y - z.y * wv};
-                //p.x /= d;
-                //p.y /= d;
-                GD_LAYER();
-                GD_SEGMENT(w, v, "red bold");
                 w = reflect(x, y, w);
                 v = reflect(x, y, v);
-                GD_LINE(x, y, "red bold");
-                GD_SEGMENT(w, v, "red bold");
-                GD_PAUSE();
                 k *= coeffs[i];
                 break;
             }
