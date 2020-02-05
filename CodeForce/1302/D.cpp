@@ -47,18 +47,20 @@ vector<T> dijkstra(const vector<vector<pair<int, T>>> g, const int start)
     int n = SZ(g);
     vector<T> d(n, numeric_limits<T>::max());
     priority_queue<pair<T, int>> q;
+    vector<bool> used(n, false);
 
     q.push({d[start] = 0, start});
     while (!q.empty())
     {
-        auto [curd, u] = q.top();
+        auto [_, u] = q.top();
         q.pop();
-        if (-curd > d[u])
+        if (used[u])
             continue;
+        used[u] = true;
         for (const auto& [v, w]: g[u])
             if (T temp = d[u] + w; d[v] > temp)
                 d[v] = temp,
-                q.push({-d[v], v});
+                q.push({d[v], v});
     }
     return d;
 }

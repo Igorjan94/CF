@@ -45,9 +45,8 @@ void run()
 {
     ints(n);
     vector<vector<pii>> g(n);
-    vector<bitset<5001>> labels(n);
     vector<int> ans(n - 1);
-    vector<vector<int>> here(n - 1);
+    vector<int> h(n);
     vector<pii> back(n);
     fori(n - 1)
     {
@@ -55,65 +54,38 @@ void run()
         g[--u].pb({--v, i});
         g[v].pb({u, i});
     }
-    function<void(int, int)> relabel = [&](int u, int p = -1) {
-        labels[u][u] = true;
+    function<void(int, int, int)> relabel = [&](int u, int d, int p = -1) {
+        h[u] = d;
         for (auto [v, i]: g[u])
             if (v != p)
-                relabel(v, u),
-                labels[u] |= labels[v];
+                relabel(v, d + 1, u);
             else
                 back[u] = {v, i};
     };
-    relabel(0, -1);
+    relabel(0, 0, -1);
 
     ints(q);
     vector<int> pass(q);
-    function<void(int, int, int, int, int)> setBeauty = [&](int u, int to, int value, int p, int parent = -1) {
-        if (u == to) return;
-        for (auto [v, i]: g[u])
-            if (v != parent && v != back[u].first)
-                if (labels[v][to])
-                {
-                    if (ans[i] == 0 || ans[i] == value)
-                    {
-                        ans[i] = value;
-                        pass[p]++;
-                        here[i].pb(p);
-                    }
-                    else if (ans[i] < value)
-                    {
-                        ans[i] = value;
-                        for (int pp: here[i])
-                            pass[pp]--;
-                        pass[p]++;
-                        here[i] = {p};
-                    }
-                    setBeauty(v, to, value, p, u);
-                    return;
-                }
-        auto [v, i] = back[u];
+    function<void(int, int, int, int)> setBeauty = [&](int u, int v, int value, int p) {
+        if (u == v) return;
+        if (h[u] < h[v])
+            swap(u, v);
+        auto [to, i] = back[u];
         if (ans[i] == 0 || ans[i] == value)
-        {
-            ans[i] = value;
+            ans[i] = value,
             pass[p]++;
-            here[i].pb(p);
-        }
-        else if (ans[i] < value)
-        {
-            ans[i] = value;
-            for (int pp: here[i])
-                pass[pp]--;
-            pass[p]++;
-            here[i] = {p};
-        }
-        setBeauty(v, to, value, p, u);
+        setBeauty(v, to, value, p);
     };
+    vector<tuple<int, int, int, int>> r;
     fori(q)
     {
         ints(u, v, w);
         --u; --v;
-        setBeauty(u, v, w, i, -1);
+        r.emplace_back(-w, u, v, i);
     }
+    sort(whole(r));
+    for (auto [w, u, v, i]: r)
+        setBeauty(u, v, -w, i);
     for (int x: pass)
         if (x == 0)
             return writeln(-1);
