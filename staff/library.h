@@ -325,12 +325,12 @@ struct segmentTree
         return f(get(v * 2, tl, tm, l, min(r, tm)), get(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r));
     }
 
-    void update(int position, int value)
+    void update(int position, T value)
     {
         update(1, 0, n - 1, position, value);
     }
 
-    void update(int v, int tl, int tr, int position, int value) 
+    void update(int v, int tl, int tr, int position, T value) 
     {
         if (tl == tr)
             t[v] = value;
@@ -381,31 +381,51 @@ struct sparseTable
     }
 };
 
-//Igorjanbfs
-template<typename S, typename T, typename F1, typename F2>
-vector<T> bfs(vector<vector<S>>& a, int start, F1 get, F2 dist, T unusedParameter)
+//Igorjandijkstra
+template<typename T>
+vector<T> dijkstra(const vector<vector<pair<int, T>>> g, const int start)
 {
-    int n = a.size();
+    int n = SZ(g);
+    vector<T> d(n, numeric_limits<T>::max());
+    priority_queue<pair<T, int>> q;
+
+    q.push({d[start] = 0, start});
+    while (!q.empty())
+    {
+        auto [curd, u] = q.top();
+        q.pop();
+        if (-curd > d[u])
+            continue;
+        for (const auto& [v, w]: g[u])
+            if (T temp = d[u] + w; d[v] > temp)
+                d[v] = temp,
+                q.push({-d[v], v});
+    }
+    return d;
+}
+
+//Igorjanbfs
+template<typename T>
+vector<T> bfs(const vector<vector<T>>& g, int start)
+{
+    int n = SZ(g);
     vector<T> d(n, numeric_limits<T>::max());
     vector<bool> used(n, false);
     d[start] = T(0);
     used[start] = true;
     queue<int> q;
     q.push(start);
-    while (q.size())
+    while (!q.empty())
     {
         int u = q.front();
         q.pop();
-        for (S x : a[u])
-        {
-            int to = get(x);
-            if (!used[to])
-                q.push(to),
-                d[to] = d[u] + dist(x),
-                used[to] = true;
-        }
+        for (int& v: g[u])
+            if (!used[v])
+                q.push(v),
+                d[v] = d[u] + 1,
+                used[v] = true;
     }
-    return move(d);
+    return d;
 }
 
 //Igorjanbinpow
@@ -536,6 +556,39 @@ string join(C<T> const& a, string_view const& delim = " ")
     return ss.str();
 }
 
+//IgorjanmodularR
+template<typename T = int>
+struct modularR
+{
+    T value;
+    T mod;
+
+    modularR() : value(0) {}
+    modularR(T mod) : value(0), mod(mod) {}
+    modularR(const modularR& other) : value(other.value), mod(other.mod) {}
+    modularR operator=(const modularR& other) { value = other.value; mod = other.mod; return *this; }
+    template<typename T1> modularR operator=(const T1& other) { assert(mod); value = other % mod; if (value < 0) value += mod; return *this; }
+    template<typename T1> modularR(T1 const& other, T1 const& mod) { this->mod = mod; value = other % mod; if (value < 0) value += mod; }
+    template<typename T1> modularR(T1 const& num, T1 const& den, T1 const& mod) { *this = modularR(den, mod) ^ (mod - 2) * num; }
+    template<typename T1> modularR& operator^=(T1 const& deg) { modularR a(*this); for (T1 n = deg - 1; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
+    template<typename T1> modularR  operator^ (T1 const& deg) const { return modularR(*this) ^= deg; }
+    template<typename T1> inline modularR& operator+=(T1 const& t)       { value += t; if (value > mod) value -= mod; return *this; }
+    template<typename T1> inline modularR& operator-=(T1 const& t)       { value -= t; if (value < 0  ) value += mod; return *this; }
+    template<typename T1> inline modularR& operator*=(T1 const& t)       { value = (value * 1ll * t) % mod; return *this; }
+    template<typename T1> inline modularR& operator/=(T1 const& t)       { return *this *= ~modularR(t, mod); }
+    template<typename T1> inline modularR  operator+ (T1 const& t) const { return modularR(*this) += t; }
+    template<typename T1> inline modularR  operator- (T1 const& t) const { return modularR(*this) -= t; }
+    template<typename T1> inline modularR  operator* (T1 const& t) const { return modularR(*this) *= t; }
+    template<typename T1> inline modularR  operator/ (T1 const& t) const { return modularR(*this) /= t; }
+    inline modularR  operator~ (                ) const { return modularR(T(1), value, mod); }
+    inline bool     operator==(modularR const& t) const { return value == t.value; }
+    inline bool     operator!=(modularR const& t) const { return value != t.value; }
+    operator T() const { return value; }
+
+    inline friend ostream& operator<<(ostream& os, modularR const& m) { return os << m.value; }
+    inline friend istream& operator>>(istream& is, modularR& m) { return is >> m.value >> m.mod; m.value %= m.mod; if (m.value < 0) m.value += m.mod; }
+};
+
 //Igorjanmodular
 template<typename T = int, T mod = 1000000007>
 struct modular
@@ -548,7 +601,7 @@ struct modular
     template<typename T1> modular operator=(const T1& other) { value = other % mod; if (value < 0) value += mod; return *this; }
     template<typename T1> modular(T1 const& other) { value = other % mod; if (value < 0) value += mod; }
     template<typename T1> modular(T1 const& num, T1 const& den) { *this = modular(den) ^ (mod - 2) * num; }
-    template<typename T1> modular& operator^=(T1 const& deg) { modular a = value; for (T1 n = deg - 1; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
+    template<typename T1> modular& operator^=(T1 const& deg) { modular a(*this); for (T1 n = deg - 1; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
     template<typename T1> modular  operator^ (T1 const& deg) const { return modular(*this) ^= deg; }
     inline modular& operator+=(modular const& t)       { value += t.value; if (value > mod) value -= mod; return *this; }
     inline modular& operator-=(modular const& t)       { value -= t.value; if (value < 0  ) value += mod; return *this; }
@@ -561,6 +614,7 @@ struct modular
     inline modular  operator~ (                ) const { return modular(T(1), value); }
     inline bool     operator==(modular const& t) const { return value == t.value; }
     inline bool     operator!=(modular const& t) const { return value != t.value; }
+    operator T() const { return value; }
 
     inline friend ostream& operator<<(ostream& os, modular const& m) { return os << m.value; }
     inline friend istream& operator>>(istream& is, modular& m) { return is >> m.value; m.value %= mod; if (m.value < 0) m.value += mod; }
@@ -1020,6 +1074,30 @@ vector<int> lis(const vector<int>& a)
 
     reverse(whole(ans));
     return ans;
+}
+
+//IgorjanKTO
+template<typename T, typename R = T>
+T KTO(const vector<T>& a, const vector<T>& p)
+{
+    assert(SZ(a) == SZ(p));
+    int n = SZ(a);
+    vector<vector<modularR<T>>> r(n, vector<modularR<T>>(n));
+    fori(n) forj(n) r[i][j] = ~modularR<T>(p[i], p[j]);
+    vector<modularR<T>> x(n);
+    fori(n)
+        x[i] = modularR(a[i], p[i]);
+
+    R result = 0;
+    R mult = 1;
+    fori(n)
+    {
+        forj(i)
+            x[i] = (x[i] - x[j]) * r[j][i];
+        result += mult * x[i];
+        mult *= p[i];
+    }
+    return result;
 }
 
 //IgorjanEndIfIgorjan
