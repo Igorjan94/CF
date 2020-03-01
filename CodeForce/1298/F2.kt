@@ -1,7 +1,27 @@
 import java.io.*
-import java.util.*
 import kotlin.math.*
 import kotlin.collections.*
+
+private val MAX_N = 200_000
+private val t = IntArray(MAX_N * 2 + 1)
+ 
+private fun update(index: Int) {
+    var i = index + MAX_N
+    while (i < MAX_N * 2) {
+        t[i]++
+        i = i or (i + 1)
+    }
+}
+
+private fun get(index: Int): Int {
+    var i = index + MAX_N
+    var res = 0
+    while (i >= 0) {
+        res += t[i]
+        i = (i and (i + 1)) - 1
+    }
+    return res
+}
 
 fun main() = bufferOut { readSolveWrite() }
 
@@ -9,27 +29,25 @@ private fun PrintWriter.readSolveWrite() {
     fun writeln(vararg strings: Any) {
         println(strings.map{if (it is IntArray) it.joinToString(" ") else it}.joinToString(" "))
     }
-    val (t) = getIntArray()
-    for (q in 1..t) {
-        val (n) = getIntArray()
-        var a = ArrayList<Pt>(n)
-        for (i in 1..n) {
-            val (x, y) = getIntArray()
-            a.add(Pt(x, y, i, 2))
+    val (n, e) = getIntArray()
+    val p = getIntArray()
+    fun solve(e: Int): Long {
+        t.fill(0, 0, MAX_N * 2)
+        update(0)
+
+        var ans = 0L
+        var cur = 0
+        for (i in 0 .. n - 1) {
+            if (p[i] <= e)
+                cur--
+            else
+                cur++
+            ans += get(-cur)
+            update(-cur)
         }
-        a.sortBy{it.x}
-        var i = 0
-        var r = a[0].x
-        while (i < n && a[i].x <= r) {
-            a[i].ans = 1
-            r = max(r, a[i++].y)
-        }
-        a.sortBy{it.i}
-        if (i == n)
-            println(-1)
-        else
-            println(a.map{it.ans}.joinToString(" "))
+        return ans
     }
+    writeln(solve(e) - solve(e - 1))
 }
 
 private fun ok(x: Boolean) = if (x) 1 else 0// {{{
@@ -37,11 +55,6 @@ private fun ok(x: Boolean) = if (x) 1 else 0// {{{
 private fun getIntArray() = readLine()!!.splitToIntArray()
 
 private fun bufferOut(block: PrintWriter.() -> Unit) = PrintWriter(System.out).use { block(it) }
-
-class CMap<K,V>(val m: HashMap<K,V> = HashMap<K,V>(), val def: () -> V) {
-    operator fun get(k: K): V = m.getOrPut(k, def)
-    operator fun set(k: K, v: V) = m.put(k, v)
-}
 
 data class Pt(val x: Int, val y: Int, val i: Int, var ans: Int)
 

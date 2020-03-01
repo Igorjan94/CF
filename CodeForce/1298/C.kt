@@ -1,5 +1,4 @@
 import java.io.*
-import java.util.*
 import kotlin.math.*
 import kotlin.collections.*
 
@@ -9,27 +8,8 @@ private fun PrintWriter.readSolveWrite() {
     fun writeln(vararg strings: Any) {
         println(strings.map{if (it is IntArray) it.joinToString(" ") else it}.joinToString(" "))
     }
-    val (t) = getIntArray()
-    for (q in 1..t) {
-        val (n) = getIntArray()
-        var a = ArrayList<Pt>(n)
-        for (i in 1..n) {
-            val (x, y) = getIntArray()
-            a.add(Pt(x, y, i, 2))
-        }
-        a.sortBy{it.x}
-        var i = 0
-        var r = a[0].x
-        while (i < n && a[i].x <= r) {
-            a[i].ans = 1
-            r = max(r, a[i++].y)
-        }
-        a.sortBy{it.i}
-        if (i == n)
-            println(-1)
-        else
-            println(a.map{it.ans}.joinToString(" "))
-    }
+    val (n) = getIntArray()
+    writeln(n - (readLine()!!).replace(Regex("xxx+"), "xx").length);
 }
 
 private fun ok(x: Boolean) = if (x) 1 else 0// {{{
@@ -37,11 +17,6 @@ private fun ok(x: Boolean) = if (x) 1 else 0// {{{
 private fun getIntArray() = readLine()!!.splitToIntArray()
 
 private fun bufferOut(block: PrintWriter.() -> Unit) = PrintWriter(System.out).use { block(it) }
-
-class CMap<K,V>(val m: HashMap<K,V> = HashMap<K,V>(), val def: () -> V) {
-    operator fun get(k: K): V = m.getOrPut(k, def)
-    operator fun set(k: K, v: V) = m.put(k, v)
-}
 
 data class Pt(val x: Int, val y: Int, val i: Int, var ans: Int)
 

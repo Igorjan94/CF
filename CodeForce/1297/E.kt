@@ -1,5 +1,4 @@
 import java.io.*
-import java.util.*
 import kotlin.math.*
 import kotlin.collections.*
 
@@ -11,24 +10,52 @@ private fun PrintWriter.readSolveWrite() {
     }
     val (t) = getIntArray()
     for (q in 1..t) {
-        val (n) = getIntArray()
-        var a = ArrayList<Pt>(n)
-        for (i in 1..n) {
-            val (x, y) = getIntArray()
-            a.add(Pt(x, y, i, 2))
+        var (n, k) = getIntArray()
+        val g = Array<ArrayList<Int>>(n, {ArrayList<Int>()})
+        val d = IntArray(n, {0})
+        val used = IntArray(n, {0})
+        repeat(n - 1) {
+            var (u, v) = getIntArray()
+            --u; --v
+            d[u]++
+            d[v]++
+            g[u].add(v)
+            g[v].add(u)
         }
-        a.sortBy{it.x}
-        var i = 0
-        var r = a[0].x
-        while (i < n && a[i].x <= r) {
-            a[i].ans = 1
-            r = max(r, a[i++].y)
+        val ans = ArrayList<Int>()
+        fun dfs(u: Int) {
+            ans.add(u + 1)
+            used[u] = 1
+            for (v in g[u])
+                if (used[v] == 0) {
+                    dfs(v)
+                    break
+                }
+            for (v in g[u])
+                if ((k > 0) and (used[v] == 0)) {
+                    --k
+                    dfs(v)
+                }
         }
-        a.sortBy{it.i}
-        if (i == n)
-            println(-1)
-        else
-            println(a.map{it.ans}.joinToString(" "))
+        if (k == 1) {
+            writeln("Yes")
+            writeln(1)
+            writeln(1)
+            continue
+        }
+        for (i in 0 .. n - 1)
+            if (d[i] == 1) {
+                --k
+                --k
+                dfs(i)
+                break
+            }
+        if (k <= 0) {
+            writeln("Yes")
+            writeln(ans.size)
+            writeln(ans.joinToString(" "))
+        } else
+            writeln("No")
     }
 }
 

@@ -1,5 +1,4 @@
 import java.io.*
-import java.util.*
 import kotlin.math.*
 import kotlin.collections.*
 
@@ -12,23 +11,12 @@ private fun PrintWriter.readSolveWrite() {
     val (t) = getIntArray()
     for (q in 1..t) {
         val (n) = getIntArray()
-        var a = ArrayList<Pt>(n)
-        for (i in 1..n) {
-            val (x, y) = getIntArray()
-            a.add(Pt(x, y, i, 2))
-        }
-        a.sortBy{it.x}
-        var i = 0
-        var r = a[0].x
-        while (i < n && a[i].x <= r) {
-            a[i].ans = 1
-            r = max(r, a[i++].y)
-        }
-        a.sortBy{it.i}
-        if (i == n)
-            println(-1)
+        if (n <= 999)
+            writeln(n)
+        else if (n < 999500)
+            writeln("${(n + 500) / 1000}K")
         else
-            println(a.map{it.ans}.joinToString(" "))
+            writeln("${(n + 500000) / 1000000}M")
     }
 }
 

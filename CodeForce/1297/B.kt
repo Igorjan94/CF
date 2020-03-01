@@ -1,5 +1,4 @@
 import java.io.*
-import java.util.*
 import kotlin.math.*
 import kotlin.collections.*
 
@@ -10,25 +9,31 @@ private fun PrintWriter.readSolveWrite() {
         println(strings.map{if (it is IntArray) it.joinToString(" ") else it}.joinToString(" "))
     }
     val (t) = getIntArray()
-    for (q in 1..t) {
+    test@for (q in 1..t) {
         val (n) = getIntArray()
-        var a = ArrayList<Pt>(n)
-        for (i in 1..n) {
-            val (x, y) = getIntArray()
-            a.add(Pt(x, y, i, 2))
+        val m = ArrayList<Pair<Int, Int>>()
+        val c = ArrayList<Int>()
+        repeat (n) {
+            val (a, b) = getIntArray()
+            m.add(Pair(a, b))
+            c.add(a - 1)
+            c.add(a)
+            c.add(a + 1)
+            c.add(b - 1)
+            c.add(b)
+            c.add(b + 1)
         }
-        a.sortBy{it.x}
-        var i = 0
-        var r = a[0].x
-        while (i < n && a[i].x <= r) {
-            a[i].ans = 1
-            r = max(r, a[i++].y)
+        for (x in c) {
+            var count = 0
+            for (i in 0 .. n - 1)
+                if ((m[i].first <= x) and (x <= m[i].second))
+                    count++
+            if (count == 1) {
+                writeln(x)
+                continue@test
+            }
         }
-        a.sortBy{it.i}
-        if (i == n)
-            println(-1)
-        else
-            println(a.map{it.ans}.joinToString(" "))
+        writeln(-1)
     }
 }
 

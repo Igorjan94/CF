@@ -10,25 +10,39 @@ private fun PrintWriter.readSolveWrite() {
         println(strings.map{if (it is IntArray) it.joinToString(" ") else it}.joinToString(" "))
     }
     val (t) = getIntArray()
-    for (q in 1..t) {
-        val (n) = getIntArray()
-        var a = ArrayList<Pt>(n)
-        for (i in 1..n) {
+    test@for (q in 1..t) {
+        val (n, m) = getIntArray()
+        val a = CMap<Int, ArrayList<Pair<Int, Int>>>{ArrayList<Pair<Int, Int>>()}
+        var c = IntArray(n, {0})
+        val ans = IntArray(n, {0})
+        for (i in 0..n - 1) {
             val (x, y) = getIntArray()
-            a.add(Pt(x, y, i, 2))
+            a[x].add(Pair(y, i))
+            c[i] = x
         }
-        a.sortBy{it.x}
-        var i = 0
-        var r = a[0].x
-        while (i < n && a[i].x <= r) {
-            a[i].ans = 1
-            r = max(r, a[i++].y)
+        c.sort()
+        val positions = c.distinct()
+        var time = 0
+        var opened = TreeSet<Pair<Int, Int>>(compareBy({it.first}, {it.second}))
+        var answer = 0
+
+        for (position in positions) {
+            if (time > position)
+                continue
+            time = position
+            opened.addAll(a[position])
+            var counter = 0
+            while (opened.size > 0) {
+                val o = opened.firstOrNull()!!
+                ans[o.second] = time
+                answer = Math.max(answer, time - o.first)
+                opened.remove(o)
+                if (++counter % m == 0)
+                    opened.addAll(a[++time])
+            }
         }
-        a.sortBy{it.i}
-        if (i == n)
-            println(-1)
-        else
-            println(a.map{it.ans}.joinToString(" "))
+        writeln(answer)
+        writeln(ans)
     }
 }
 
