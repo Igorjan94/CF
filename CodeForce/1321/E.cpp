@@ -48,10 +48,10 @@ struct segmentTree
     vector<T> t;
     vector<T> add;
  
-    void build(vector<T>& a, int v, int l, int r)
+    void build(vector<pair<int, int>>& a, int v, int l, int r)
     {
         if (l == r)
-            t[v] = a[l];
+            t[v] = -a[l].second;
         else 
         {
             int m = (l + r) / 2;
@@ -61,7 +61,7 @@ struct segmentTree
         }
     };
  
-    segmentTree(vector<T>& a)
+    segmentTree(vector<pair<int, int>>& a)
     {
         n = a.size();
         t.resize(n * 4 + 10);
@@ -107,13 +107,15 @@ struct segmentTree
  
 struct enemy {
     enemy() {}
-    int x, y;
-    ll z;
+    int x, y, z;
     friend istream& operator>>(istream& is, enemy& e) {
         return is >> e.x >> e.y >> e.z;
     }
     friend ostream& operator<<(ostream& os, const enemy& e) {
         return os << e.x << " " << e.y << " " << e.z;
+    }
+    bool operator<(const enemy& other) {
+        return x < other.x;
     }
 };
  
@@ -123,38 +125,20 @@ void run()
     vector<pii> a(n), b(m);
     vector<enemy> e(p);
     readln(a, b, e);
+    sort(whole(a));
     sort(whole(b));
-    map<int, int> collapse;
-    for (auto [x, y]: b)
-        if (collapse.find(x) == collapse.end())
-            collapse[x] = y;
-        else
-            collapse[x] = min(collapse[x], y);
-    map<int, int> coords;
-    int q = 0;
-    m = SZ(collapse);
-    vector<ll> v(m);
-    for (auto [x, y]: collapse)
-        v[q] = -y,
-        coords[x] = q++;
+    sort(whole(e));
  
-    ll ans = numeric_limits<ll>::min();
+    segmentTree<int> s(b);
+
+    int ans = numeric_limits<int>::min();
+    int j = 0;
+
+    for (auto& [damage, cost]: a) 
     {
-        sort(whole(e), [](const enemy& x, const enemy& y) { return tuple(x.x, x.y, x.z) < tuple(y.x, y.y, y.z);} );
-        sort(whole(a));
-        segmentTree<ll> s(v);
-        int j = 0;
- 
-        for (auto& [damage, cost]: a) 
-        {
-            while (j < p && damage > e[j].x)
-            {
-                int c = coords.upper_bound(e[j].y)->second;
-                s.update(c, m - 1, e[j].z);
-                ++j;
-            }
-            ans = max(ans, s.t[1] - cost);
-        }
+        for ( ; j < p && damage > e[j].x; ++j)
+            s.update(upper_bound(whole(b), e[j].y, [](const int& x, const pii& y) { return x < y.first; }) - b.begin(), m - 1, e[j].z);
+        ans = max(ans, s.t[1] - cost);
     }
     writeln(ans);
 }
