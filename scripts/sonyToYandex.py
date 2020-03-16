@@ -38,7 +38,7 @@ def gpsToHtml(filename, yandex, output):
             if type(ps) != list: ps = [ps]
             for line in ps:
                 t = getTimeFromString(line['time'][:-1] + '000', '%Y-%m-%dT%H:%M:%S.%f')
-                coords.append([t, line['@lat'], line['@lon'], float(line.get('extensions', {'geotracker:meta': {}}).get('geotracker:meta').get('@s', 0)), line['ele']])
+                coords.append([t, line['@lat'], line['@lon'], float(line.get('extensions', {'geotracker:meta': {}}).get('geotracker:meta').get('@s', 0)) * 3.6, line['ele']])
         start = coords[0][0]
     else:
         start = rl[0].split('/')[3][:-4]
@@ -53,12 +53,15 @@ def gpsToHtml(filename, yandex, output):
     points = []
     speeds = []
     commands = []
+    hs = []
     last = 0
     lastTime = start
-    for t, x, y, s, _ in coords:
+    for t, x, y, s, *h in coords:
+        if h: hs.append(int(h[0]))
         points.append([str(x)[:9], str(y)[:9]])
         speeds.append(int(s))
-        commands.append(f"drawtext=text='{int(last)} km/h':enable='between(t,{lastTime - start:.2f},{t - start:.2f})':x=10:y=H-th-10:fontsize=40:fontcolor=red")
+        shift = 2
+        commands.append(f"drawtext=text='{int(last)} km/h':enable='between(t,{max(0, lastTime - start - shift):.2f},{max(0, t - start - shift):.2f})':x=10:y=H-th-10:fontsize=40:fontcolor=red")
         last = s
         lastTime = t
 
@@ -69,7 +72,30 @@ def gpsToHtml(filename, yandex, output):
     else:
         os.unlink(output.name)
     filename.close()
-    # print(', \\\n'.join(commands))
+    print(', \\\n'.join(commands))
+
+    title = output.name.rsplit('/', 1)[-1]
+    import matplotlib.pyplot as plt
+
+    fig, ax1 = plt.subplots()
+
+    color = 'tab:blue'
+    ax1.plot(speeds, color = color)
+    ax1.set_title(title)
+    ax1.set_xlabel('Dist')
+    ax1.set_ylabel('Speed', color = color)
+    ax1.tick_params(axis = 'y', labelcolor = color)
+
+    if hs:
+        color = 'tab:red'
+        ax2 = ax1.twinx()
+        ax2.plot(hs, color = color)
+        ax2.set_ylabel('Height', color = color)
+        ax2.tick_params(axis = 'y', labelcolor = color)
+
+    fig.tight_layout()
+    plt.savefig(output.name.replace(r'\s', '') + '.png', dpi=900);
+    plt.show()
 
 
 @completion.command()
