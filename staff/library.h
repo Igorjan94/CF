@@ -36,47 +36,57 @@ using namespace __gnu_pbds;
 #define     vll      vector<long long>
 #define     vvi      vector<vector<int>>
 #define     pll      pair<long long, long long>
-#define   elohw(a)   a.rbegin(), a.rend()
-#define   whole(a)   a.begin(), a.end()
+#define   rall(a)    a.rbegin(), a.rend()
+#define   all(a)     a.begin(), a.end()
 #define    next      next__
 #define    prev      prev__
 #define   union      union__
 
 #define argmax(a)    (max_element(whole(a)) - (a).begin())
 #define argmin(a)    (min_element(whole(a)) - (a).begin())
-#define wr(args...)  err(#args, args)
 
 #define FILENAME "input"
 #define INF 1000000007
-
-#define ttt12i template<class T1, class T2> inline
-#define  tthti template<class H, class...T> inline
-#define  ttta  template<class... Args> inline
-#define  ttti  template<class T> inline
 
 #define    ints(args...)     int args; readln(args)
 #define     lls(args...)      ll args; readln(args)
 #define   vints(args...)      vi args; readln(args)
 #define strings(args...)  string args; readln(args)
 
+//IgorjanprintTuple
+template<class Tuple, size_t... Is> ostream& print_tuple(ostream& os, const Tuple& t, index_sequence<Is...>) { ((os << (Is == 0 ? "" : " ") << get<Is>(t)), ...); return os; }
+template<class Tuple, size_t... Is> istream& read_tuple(istream& is, Tuple& t, index_sequence<Is...>) { ((is >> get<Is>(t)), ...); return is; }
+template<class... Args> inline ostream& operator<<(ostream& os, const tuple<Args...>& t) { return print_tuple(os, t, index_sequence_for<Args...>{}); }
+template<class... Args> inline istream& operator>>(istream& is, tuple<Args...>& t) { return read_tuple(is, t, index_sequence_for<Args...>{}); }
+
 //Igorjanprinter
+#define ttt12i template<class T1, class T2> inline
+#define  ttti  template<class T> inline
+#define  ttta  template<class... Args> inline
+
 void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
-ttta void readln(Args&... args){(read(args),...);}tthti void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
-ttti void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
+ttta void readln(Args&... args){(read(args),...);}
+template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
+
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a);
+template<typename T,typename D=decltype(*begin(declval<T>())),typename enable_if<!is_same<T,basic_string<char>>::value>::type* =nullptr>
+ostream&operator<<(ostream&os,T const&a){auto it=begin(a);if(it!=end(a))os<<*it++;while(it!=end(a))os<<"\n "[is_fundamental<typename T::value_type>::value]<<*it++;return os;}
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
+ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
+ttti   istream&operator>>(istream&is,vector<T>&a){fori(a.size())is>>a[i];return is;}
+ttti void print(T&&a){cout<<" "<<a;}
+ttti void priws(T&&a){cout<<a;}
+ttti void read(T&a){cin>>a;}
+
+//Igorjandebug
+#ifndef ONLINE_JUDGE
+#define wr(args...)  err(#args, args)
+#define _GLIBCXX_DEBUG
 vector<string>split(string&s,string_view d){vector<string> v;size_t p=0;while((p=s.find(d))!=string::npos)v.pb(s.substr(0,p)),s.erase(0,p+d.length());v.pb(s);return v;}
 ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(writeln(*it++,"=",args),...);}
-
-ttti   ostream&operator<<(ostream&os,vector<T>const&a);
-ttti   ostream&operator<<(ostream&os,valarray<T>const&a);
-ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
-ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
-ttti   ostream&operator<<(ostream&os,valarray<T>const&a){if(a.size())os<<a[0];else os<<"\n";fori1(a.size())os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
-ttti   ostream&operator<<(ostream&os,vector<T>const&a){if(a.size())os<<a[0];else os<<"\n";fori1(a.size())os<<"\n "[is_fundamental<T>::value]<<a[i];return os;}
-ttti   istream&operator>>(istream&is,valarray<T>&a){fori(a.size())is>>a[i];return is;}
-ttti   istream&operator>>(istream&is,vector<T>&a){fori(a.size())is>>a[i];return is;}
-ttti void print(T&& a){cout<<" "<<a;}
-ttti void priws(T&& a){cout<<a;}
-ttti void read(T& a){cin>>a;}
+#else
+#define wr(args...) 42
+#endif
 
 //IgorjanbinSearch
 //x -> min, f(x) == true
@@ -556,7 +566,7 @@ ttta void printAnswerAndExit(Args... args){writeln(args...);exit(0);}
 
 //Igorjanjoin
 template<typename T, template<typename> typename C>
-string join(C<T> const& a, string_view const& delim = " ")
+string join(C<T> const& a, string const& delim = " ")
 {
     if (size(a) == 0) return "";
     stringstream ss;
@@ -886,7 +896,7 @@ private:
 
     static optional<T> solve(matrix& temp) {
         vector<int> permutation(temp.n);
-        iota(whole(permutation), 0);
+        iota(all(permutation), 0);
 
         auto get = [&](int i, int j) {
             return temp[permutation[i]][j];
@@ -1074,7 +1084,7 @@ vector<int> lis(const vector<int>& a)
             p[i] = x[j - 1];
     }
     int index = 0;
-    while (index < n && d[index] < INF) ++index;
+    while (index <= n && d[index] < INF) ++index;
     index = x[--index];
 
     vector<int> ans;
@@ -1082,7 +1092,7 @@ vector<int> lis(const vector<int>& a)
         ans.pb(a[index]),
         index = p[index];
 
-    reverse(whole(ans));
+    reverse(all(ans));
     return ans;
 }
 

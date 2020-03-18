@@ -1,4 +1,4 @@
-// Igorjan94, template version from 13 October 2017. C++17 version, modified 14 september 2019 (writeln<T>, main) {{{
+// Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -16,27 +16,19 @@ typedef  pair<int, int>   pii;
 typedef   vector<int>     vi;
 typedef    long long      ll;
 
-#define    pb    push_back
-#define whole(a) begin(a), end(a)
-#define   next   next__
-#define   prev   prev__
-#define  count   count__
+#define pb push_back
+#define all(a) begin(a), end(a)
+#define ints(a...) int a; readln(a)
 
-#define ints(a...)  int a; readln(a)
-#define wr(args...) err(#args, args)
+[[maybe_unused]] const int MOD = 1000000007;
+[[maybe_unused]] const int INTMAX = numeric_limits<int>::max();
 
 #define ttt12i template<class T1, class T2> inline
-#define  tthti template<class H, class...T> inline
-#define  ttta  template<class... Args> inline
 #define  ttti  template<class T> inline
 
-const int MOD = 1000000007;
-const int INTMAX = numeric_limits<int>::max();
-
 void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
-ttta void readln(Args&... args){(read(args),...);}tthti void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
-vector<string>split(string&s,string d){vector<string>v;size_t p=0;while((p=s.find(d))!=string::npos)v.pb(s.substr(0,p)),s.erase(0,p+d.length());v.pb(s);return v;}
-ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(writeln(*it++,"=",args),...);}
+template<class... Args> inline void readln(Args&... args){(read(args),...);}
+template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
 
 //Igorjan
 //}}}
@@ -46,7 +38,7 @@ void run()
     ints(n);
     vi a(n);
     readln(a);
-    sort(whole(a));
+    sort(all(a));
     writeln(a);
 }
 
