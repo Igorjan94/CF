@@ -1,5 +1,4 @@
 import sys
-# the mock-0.3.1 dir contains testcase.py, testutils.py & mock.py
 sys.path.append('/home/igorjan/206round/scripts')
 
 from library import *
@@ -9,7 +8,7 @@ def cf(method, **kwargs):
     ret = requests.get('https://codeforces.com/api/' + method, params = params).json()
     if ret.status != 'OK':
         print(f'Error in {method} {ret.status}: {ret.comment}', kwargs)
-        return ret.comment
+        return None
     return ret
 
 def getSubmits(contestId):
