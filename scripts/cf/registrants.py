@@ -44,36 +44,38 @@ def addRound(round):
     else:
         othe.append(round)
 
-participants_all = {}
+participants_all = loadJsonFromFile(participantsFile)
+div1, div2, div3, educ, comb, othe = loadJsonFromFile(filename)
 
-if True:
-    participants_all = loadJsonFromFile(participantsFile)
-else:
-    for i in range(1, 1350):
-        if i % 10 == 0:
-            print(f'Contest {i}')
-        contest = cf('contest.standings', contestId = i, lang = 'en')
-        time.sleep(1)
-        if not contest: continue
-        contest = contest.result
-        participants_all[i] = len(contest.rows)
-        saveJsonInFile(contest, f'/home/igorjan/.cache/cf/contests/{i}.json')
-        saveJsonInFile(participants_all, participantsFile)
+def getParticipants(contestId):
+    print('Getting contest', contestId)
+    contest = cf('contest.standings', contestId = contestId, lang = 'en')
+    time.sleep(1)
+    if not contest: return
+    contest = contest.result
+    participants_all[contestId] = len(contest.rows)
+    saveJsonInFile(contest, f'/home/igorjan/.cache/cf/contests/{contestId}.json')
+    saveJsonInFile(participants_all, participantsFile)
 
-if True:
-    div1, div2, div3, educ, comb, othe = loadJsonFromFile(filename)
-else:
-    for i in range(1, 14):
-        url = f'https://codeforces.com/contests/page/{i}?locale=ru'
-        html = requests.get(url).text.split('\n', 2)[2]
-        page = BeautifulSoup(html, 'html5lib')
-        for tr in page.body.find('div', attrs={'class': 'contests-table'}).find('div', attrs={'class': 'datatable'}).find_all('tr'):
-            cid = tr.get('data-contestid')
-            if not cid: continue
-            date = tr.find('span', attrs={'class': 'format-date'}).contents[0]
-            title = tr.td.contents[0].strip()
-            count = int(tr.find('a', attrs={'class': 'contestParticipantCountLinkMargin'}).contents[1][2:])
-            addRound([date, count, participants_all.get(cid, 0), title])
+for i in range(1, 14):
+    stop = False
+    url = f'https://codeforces.com/contests/page/{i}?locale=ru'
+    html = requests.get(url).text.split('\n', 2)[2]
+    page = BeautifulSoup(html, 'html5lib')
+    for tr in page.body.find('div', attrs={'class': 'contests-table'}).find('div', attrs={'class': 'datatable'}).find_all('tr'):
+        cid = tr.get('data-contestid')
+        if not cid: continue
+        if cid in participants_all:
+            stop = True
+            break
+        getParticipants(cid)
+        date = tr.find('span', attrs={'class': 'format-date'}).contents[0]
+        title = tr.td.contents[0].strip()
+        count = int(tr.find('a', attrs={'class': 'contestParticipantCountLinkMargin'}).contents[1][2:])
+        addRound([date, count, participants_all.get(cid, 0), title])
+    saveJsonInFile([div1, div2, div3, educ, comb, othe], filename)
+    if stop:
+        break
 
 
 import matplotlib.pyplot as plt
@@ -111,21 +113,19 @@ def draw(title, rounds):
     participants = np
     dates = mdates.date2num(list(map(lambda date: datetime.strptime(date, DATE_FORMAT), dates)))
 
-    # ax.plot_date(dates, counts, markersize = 4)
-    # legend.append(title + ' registrations')
-    # ax.plot_date(dates, participants, markersize = 4)
-    # legend.append(title + ' participants')
-    ax.plot_date(dates, percents, markersize = 4, color = 'blue')
-    print(title, median(percents))
+    ax.plot_date(dates, counts, markersize = 4)
+    legend.append(title + ' registrations')
+    ax.plot_date(dates, participants, markersize = 4)
+    legend.append(title + ' participants')
+    # ax.plot_date(dates, percents, markersize = 4, color = 'blue')
+    # print(title, median(percents))
 
-draw('div1', div1)
-draw('div2', div2)
-draw('div3', div3)
+# draw('div1', div1)
+# draw('div2', div2)
+# draw('div3', div3)
 draw('educ', educ)
-draw('comb', comb)
-draw('othe', othe)
-
-saveJsonInFile([div1, div2, div3, educ, comb, othe], filename)
+# draw('comb', comb)
+# draw('othe', othe)
 
 ax.legend(legend)
 plt.show()
