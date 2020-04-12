@@ -603,7 +603,7 @@ struct modularR
     inline modularR  operator~ (                ) const { return modularR(T(1), value, mod); }
     inline bool     operator==(modularR const& t) const { return value == t.value; }
     inline bool     operator!=(modularR const& t) const { return value != t.value; }
-    operator T() const { return value; }
+    explicit operator T() const { return value; }
 
     inline friend ostream& operator<<(ostream& os, modularR const& m) { return os << m.value; }
     inline friend istream& operator>>(istream& is, modularR& m) { return is >> m.value >> m.mod; m.value %= m.mod; if (m.value < 0) m.value += m.mod; }
@@ -634,7 +634,7 @@ struct modular
     inline modular  operator~ (                ) const { return modular(T(1), value); }
     inline bool     operator==(modular const& t) const { return value == t.value; }
     inline bool     operator!=(modular const& t) const { return value != t.value; }
-    operator T() const { return value; }
+    explicit operator T() const { return value; }
 
     inline friend ostream& operator<<(ostream& os, modular const& m) { return os << m.value; }
     inline friend istream& operator>>(istream& is, modular& m) { return is >> m.value; m.value %= mod; if (m.value < 0) m.value += mod; }
