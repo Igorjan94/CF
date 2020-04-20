@@ -1120,5 +1120,22 @@ T KTO(const vector<T>& a, const vector<T>& p)
     return result;
 }
 
+//Igorjancached
+template<class T, class... Args>
+struct cached
+{
+    function<T(Args...)> f;
+    map<tuple<Args...>, T> m;
+
+    cached(const function<T(Args...)>& f) : f(f) { }
+
+    T operator()(Args&&... args) {
+        auto x = tuple(forward<Args>(args)...);
+        if (auto it = m.find(x); it != m.end())
+            return it->second;
+        return m[x] = f(forward<Args>(args)...);
+    }
+};
+
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
