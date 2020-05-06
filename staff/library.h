@@ -1046,23 +1046,30 @@ vector<pii> khun(const vector<vector<int>>& g, int n)
 }
 
 //Igorjantopsort
+//Returns empty vector if cycle is found
 vector<int> topsort(const vector<vector<int>>& edges, bool reversed = false)
 {
     int n = edges.size();
     vector<int> ans;
-    vector<bool> used(n, false);
+    vector<int> used(n, -1);
+    bool cycle = false;
+    int iteration = 0;
     
     function<void(int)> dfs = [&](int u) {
-        used[u] = true;
+        used[u] = iteration;
         for (const int& v: edges[u])
-            if (!used[v])
+            if (used[v] == iteration)
+                cycle = true;
+            else if (used[v] == -1)
                 dfs(v);
         ans.pb(u);
     };
 
     fori(n)
-        if (!used[i])
-            dfs(i);
+        if (used[i] == -1)
+            dfs(i), iteration++;
+    if (cycle)
+        return vector<int>();
     if (!reversed)
         reverse(ans.begin(), ans.end());
     return ans;
