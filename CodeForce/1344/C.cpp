@@ -43,23 +43,23 @@ vector<int> topsort(const vector<vector<int>>& edges, bool reversed = false)
 {
     int n = edges.size();
     vector<int> ans;
-    vector<int> used(n, -1);
+    vector<int> used(n, 0);
     bool cycle = false;
-    int iteration = 0;
     
     function<void(int)> dfs = [&](int u) {
-        used[u] = iteration;
+        used[u] = 1;
         for (const int& v: edges[u])
-            if (used[v] == iteration)
-                cycle = true;
-            else if (used[v] == -1)
+            if (!used[v])
                 dfs(v);
+            else if (used[v] == 1)
+                cycle = true;
+        used[u] = 2;
         ans.pb(u);
     };
 
     fori(n)
-        if (used[i] == -1)
-            dfs(i), iteration++;
+        if (!used[i])
+            dfs(i);
     if (cycle)
         return vector<int>();
     if (!reversed)
@@ -82,19 +82,19 @@ void run()
     if (order.empty())
         return writeln(-1);
     string ans(n, 'A');
-    int cnt = n;
     vector<int> mn(n);
     iota(all(mn), 0);
     for (int i: order)
         for (int j: g[i])
             umin(mn[j], mn[i]);
     fori(n) if (mn[i] < i) ans[i] = 'E';
-    reverse(all(mn));
+    reverse(all(order));
+    iota(all(mn), 0);
     for (int i: order)
         for (int j: g[i])
-            umin(mn[j], mn[i]);
-    fori(n) if (mn[i] < i) cnt--, ans[i] = 'E';
-    writeln(cnt);
+            umin(mn[i], mn[j]);
+    fori(n) if (mn[i] < i) ans[i] = 'E';
+    writeln(count_if(all(ans), [](char c){ return c == 'A'; }));
     writeln(ans);
 }
 

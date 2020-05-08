@@ -1051,23 +1051,23 @@ vector<int> topsort(const vector<vector<int>>& edges, bool reversed = false)
 {
     int n = edges.size();
     vector<int> ans;
-    vector<int> used(n, -1);
+    vector<int> used(n, 0);
     bool cycle = false;
-    int iteration = 0;
     
     function<void(int)> dfs = [&](int u) {
-        used[u] = iteration;
+        used[u] = 1;
         for (const int& v: edges[u])
-            if (used[v] == iteration)
-                cycle = true;
-            else if (used[v] == -1)
+            if (!used[v])
                 dfs(v);
+            else if (used[v] == 1)
+                cycle = true;
+        used[u] = 2;
         ans.pb(u);
     };
 
     fori(n)
-        if (used[i] == -1)
-            dfs(i), iteration++;
+        if (!used[i])
+            dfs(i);
     if (cycle)
         return vector<int>();
     if (!reversed)
