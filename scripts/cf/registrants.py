@@ -15,6 +15,7 @@ DATE_FORMAT = '%d.%m.%Y %H:%M'
 div1 = []
 div2 = []
 div3 = []
+div4 = []
 educ = []
 comb = []
 othe = []
@@ -28,11 +29,14 @@ def addRound(round):
     d1 = check(r'Div. ?1')
     d2 = check(r'Div. ?2') or check(r'Див. ?2') or check(r'Дивизион 2')
     d3 = check(r'Div. ?3')
+    d4 = check(r'Div. ?4')
     ed = check('Edu')
     if ed:
         educ.append(round)
     elif d3:
         div3.append(round)
+    elif d4:
+        div4.append(round)
     elif d1 and d2:
         comb.append(round)
     elif d1:
@@ -45,7 +49,7 @@ def addRound(round):
         othe.append(round)
 
 participants_all = loadJsonFromFile(participantsFile)
-div1, div2, div3, educ, comb, othe = loadJsonFromFile(filename)
+div1, div2, div3, div4, educ, comb, othe = loadJsonFromFile(filename)
 
 def getParticipants(contestId):
     print('Getting contest', contestId)
@@ -73,7 +77,7 @@ for i in range(1, 14):
         title = tr.td.contents[0].strip()
         count = int(tr.find('a', attrs={'class': 'contestParticipantCountLinkMargin'}).contents[1][2:])
         addRound([date, count, participants_all.get(cid, 0), title])
-    saveJsonInFile([div1, div2, div3, educ, comb, othe], filename)
+    saveJsonInFile([div1, div2, div3, div4, educ, comb, othe], filename)
     if stop:
         break
 
