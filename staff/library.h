@@ -89,15 +89,35 @@ ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(wr
 #endif
 
 //IgorjanbinSearch
-//x -> min, f(x) == true
+//x \in [l, r]-> min, f(x) == true
 template<typename T, typename F>
 T binSearch(T l, T r, F f, T eps = 1)
 {
     T m;
-    while (fabs(r - l) > eps)
+    while (abs(r - l) > eps)
         m = l + (r - l) / 2,
         (f(m) ? r : l) = m;
     return f(l) ? l : r;
+}
+
+//IgorjanternarySearch
+//x \in [l, r]: f(x) -> min
+template<typename T, typename F>
+auto ternarySearch(T l, T r, F f) -> decltype(f(l))
+{
+    T m;
+    while (r - l > 4)
+    {
+        m = l + (r - l) / 2;
+        if (f(m) < f(m + 1))
+            r = m + 1;
+        else
+            l = m;
+    }
+    auto ans = f(l);
+    for (int i = l + 1; i <= r; ++i)
+        ans = min(ans, f(i));
+    return ans;
 }
 
 //Igorjandsu
