@@ -270,7 +270,8 @@ struct fenwickTree
 
     fenwickTree(vector<T>& arr)
     {
-        t.resize(n = arr.size(), 0);
+        n = arr.size();
+        t.resize(n + 1, 0);
         fori(n)
             update(i + 1, arr[i]);
     }

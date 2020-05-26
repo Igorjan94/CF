@@ -31,70 +31,52 @@ template<class... Args> inline void readln(Args&... args){(read(args),...);}
 template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
 
 //Igorjan
-//segmentTree
-//0-indexed, [l..r]
-template<typename T>
-struct segmentTree
+//fenwickTree
+//1-indexed, [l, r]
+template <typename T>
+struct fenwickTree
 {
-    int n;
     vector<T> t;
+    int n;
 
-    void build(vector<T>& a, int v, int l, int r)
+    fenwickTree(int size, T value = 0)
     {
-        if (l == r)
-            t[v] = a[l];
-        else 
-        {
-            int m = (l + r) / 2;
-            build(a, v * 2, l, m);
-            build(a, v * 2 + 1, m + 1, r);
-            t[v] = (t[v * 2] + t[v * 2 + 1]);
-        }
-    };
-
-    segmentTree(vector<T>& a)
-    {
-        n = a.size();
-        t.resize(n * 4);
-        build(a, 1, 0, n - 1);
+        n = size;
+        t.resize(n + 1, value);
     }
 
-    T get(int l, int r)
+    fenwickTree(vector<T>& arr)
     {
-        return get(1, 0, n - 1, l, r);
+        n = arr.size();
+        t.resize(n + 1, 0);
+        fori(n)
+            update(i + 1, arr[i]);
     }
 
-    T get(int v, int tl, int tr, int l, int r) 
+    void update(int index, T value)
     {
-        if (l > r)
-            return 0;
-        if (l == tl && r == tr)
-            return t[v];
-        int tm = (tl + tr) / 2;
-        return (get(v * 2, tl, tm, l, min(r, tm)) + get(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r));
+        for (; index <= n; index += index & -index)
+            t[index] += value;
     }
 
-    void update(int position, T value)
+    T sum(int i)
     {
-        update(1, 0, n - 1, position, value);
+        T res = 0;
+        for (; i; i -= i & -i)
+            res += t[i];
+        return res;
     }
 
-    void update(int v, int tl, int tr, int position, T value) 
+    T sum(int l, int r)
     {
-        if (tl == tr)
-            t[v] = value;
-        else 
-        {
-            int tm = (tl + tr) / 2;
-            if (position <= tm)
-                update(v * 2, tl, tm, position, value);
-            else
-                update(v * 2 + 1, tm + 1, tr, position, value);
-            t[v] = (t[v * 2] + t[v * 2 + 1]);
-        }
+        return sum(r) - sum(l - 1);
+    }
+
+    T sum0(int l, int r)
+    {
+        return sum(r + 1) - sum(l);
     }
 };
-
 //}}}
 
 void run()
@@ -106,7 +88,7 @@ void run()
     ints(x);
     fori(n / 2)
         a.pb(x);
-    segmentTree f(a);
+    fenwickTree f(a);
     vector<int> indices(n);
     iota(all(indices), 1);
     shuffle(all(indices), rng);
@@ -115,12 +97,15 @@ void run()
         if (n / 2 + i >= 1 && n / 2 + i <= n)
             indices.pb(n / 2 + i);
     reverse(all(indices));
+    double time = clock();
     for (int k: indices)
     {
+        if (1000.0 * (clock() - time) / CLOCKS_PER_SEC >= 1800)
+            return writeln(-1);
         bool ok = true;
         for (int i = 0; i < n && ok; ++i)
             if (int left = n - indices[i]; left < n - k + 1)
-                ok &= f.get(left, left + k - 1) > 0;
+                ok &= f.sum0(left, left + k - 1) > 0;
         if (ok)
             return writeln(k);
     }
