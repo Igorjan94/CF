@@ -110,14 +110,17 @@ void run()
     vector<int> indices(n);
     iota(all(indices), 1);
     shuffle(all(indices), rng);
+    indices.pb(n);
+    FOR(i, -2, 3)
+        if (n / 2 + i >= 1 && n / 2 + i <= n)
+            indices.pb(n / 2 + i);
+    reverse(all(indices));
     for (int k: indices)
     {
         bool ok = true;
-        for (int i = 0; i < max(1000, n * 2) && ok; ++i)
-        {
-            int left = rng() % (n - k + 1);
-            ok &= f.get(left, left + k - 1) > 0;
-        }
+        for (int i = 0; i < n && ok; ++i)
+            if (int left = n - indices[i]; left < n - k + 1)
+                ok &= f.get(left, left + k - 1) > 0;
         if (ok)
             return writeln(k);
     }
