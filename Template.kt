@@ -1,49 +1,48 @@
-import java.io.*
-import java.util.*
+import java.io.PrintWriter// {{{
 import kotlin.math.*
-import kotlin.collections.*
+import kotlin.collections.*// }}}
 
-fun main() = bufferOut { readSolveWrite() }
+private fun run() {
+    val (n) = readln()
+    var a = ArrayList<Pt>(n)
+    for (i in 1..n) {
+        val (x, y) = readln()
+        a.add(Pt(x, y, i, 2))
+    }
+    a.sortBy{it.x}
+    var i = 0
+    var r = a[0].x
+    while (i < n && a[i].x <= r) {
+        a[i].ans = 1
+        r = max(r, a[i++].y)
+    }
+    a.sortBy{it.i}
+    if (i == n)
+        writeln(-1)
+    else
+        writeln(a.map{it.ans}.joinToString(" "))
+}
 
 private fun PrintWriter.readSolveWrite() {
-    fun writeln(vararg strings: Any) {
-        println(strings.map{if (it is IntArray) it.joinToString(" ") else it}.joinToString(" "))
-    }
-    val (t) = getIntArray()
+    val (t) = readln()
     for (q in 1..t) {
-        val (n) = getIntArray()
-        var a = ArrayList<Pt>(n)
-        for (i in 1..n) {
-            val (x, y) = getIntArray()
-            a.add(Pt(x, y, i, 2))
-        }
-        a.sortBy{it.x}
-        var i = 0
-        var r = a[0].x
-        while (i < n && a[i].x <= r) {
-            a[i].ans = 1
-            r = max(r, a[i++].y)
-        }
-        a.sortBy{it.i}
-        if (i == n)
-            println(-1)
-        else
-            println(a.map{it.ans}.joinToString(" "))
+        run()
     }
 }
 
 private fun ok(x: Boolean) = if (x) 1 else 0// {{{
 
+private fun writeln(vararg strings: Any) = println(strings.map{if (it is IntArray) it.joinToString(" ") else it}.joinToString(" "))
+
+private fun readln() = getIntArray()
+
 private fun getIntArray() = readLine()!!.splitToIntArray()
 
 private fun bufferOut(block: PrintWriter.() -> Unit) = PrintWriter(System.out).use { block(it) }
 
-class CMap<K,V>(val m: HashMap<K,V> = HashMap<K,V>(), val def: () -> V) {
-    operator fun get(k: K): V = m.getOrPut(k, def)
-    operator fun set(k: K, v: V) = m.put(k, v)
-}
-
 data class Pt(val x: Int, val y: Int, val i: Int, var ans: Int)
+
+fun main() = bufferOut { readSolveWrite() }
 
 private fun String.splitToIntArray(): IntArray {
     val n = length
