@@ -2,7 +2,7 @@ import sys
 sys.path.append('/home/igorjan/206round/scripts')
 
 from library import *
-from plotSubmits import cf
+# from plotSubmits import cf
 from bs4 import BeautifulSoup
 import re
 from datetime import datetime
@@ -61,75 +61,146 @@ def getParticipants(contestId):
     saveJsonInFile(contest, f'/home/igorjan/.cache/cf/contests/{contestId}.json')
     saveJsonInFile(participants_all, participantsFile)
 
-for i in range(1, 14):
-    stop = False
-    url = f'https://codeforces.com/contests/page/{i}?locale=ru'
-    html = requests.get(url).text.split('\n', 2)[2]
-    page = BeautifulSoup(html, 'html5lib')
-    for tr in page.body.find('div', attrs={'class': 'contests-table'}).find('div', attrs={'class': 'datatable'}).find_all('tr'):
-        cid = tr.get('data-contestid')
-        if not cid: continue
-        if cid in participants_all:
-            stop = True
+if False:
+    for i in range(1, 14):
+        stop = False
+        url = f'https://codeforces.com/contests/page/{i}?locale=ru'
+        html = requests.get(url).text.split('\n', 2)[2]
+        page = BeautifulSoup(html, 'html5lib')
+        for tr in page.body.find('div', attrs={'class': 'contests-table'}).find('div', attrs={'class': 'datatable'}).find_all('tr'):
+            cid = tr.get('data-contestid')
+            if not cid: continue
+            if cid in participants_all:
+                stop = True
+                break
+            getParticipants(cid)
+            date = tr.find('span', attrs={'class': 'format-date'}).contents[0]
+            title = tr.td.contents[0].strip()
+            count = int(tr.find('a', attrs={'class': 'contestParticipantCountLinkMargin'}).contents[1][2:])
+            addRound([date, count, participants_all.get(cid, 0), title])
+        saveJsonInFile([div1, div2, div3, div4, educ, comb, othe], filename)
+        if stop:
             break
-        getParticipants(cid)
-        date = tr.find('span', attrs={'class': 'format-date'}).contents[0]
-        title = tr.td.contents[0].strip()
-        count = int(tr.find('a', attrs={'class': 'contestParticipantCountLinkMargin'}).contents[1][2:])
-        addRound([date, count, participants_all.get(cid, 0), title])
-    saveJsonInFile([div1, div2, div3, div4, educ, comb, othe], filename)
-    if stop:
-        break
 
-
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-from scipy.interpolate import make_interp_spline, BSpline
-import numpy as np
 from statistics import median
+import plotly.graph_objects as go
 
-fig, ax = plt.subplots(1, 1)
-legend = []
-plt.xlabel('Date')
-plt.ylabel('Percent of participants')
-
+data = []
 def draw(title, rounds):
     if not rounds: return
+    rounds = sorted(rounds, key = lambda x: datetime.strptime(x[0], DATE_FORMAT))
 
-    dates, counts, participants, titles, *_ = zip(*reversed(rounds))
+    dates, counts, participants, titles, *_ = zip(*rounds)
+    dates = list(map(lambda date: datetime.strptime(date, DATE_FORMAT), dates))
     print(title, len(rounds))
-    # print('\n'.join(titles))
     nd = [dates[0]]
     nc = [counts[0]]
     np = [participants[0]]
+    nt = [[titles[0]]]
     percents = [participants[0] / counts[0]]
     for i in range(1, len(dates)):
         if dates[i] == dates[i - 1]:
             nc[-1] = max(nc[-1], counts[i])
             np[-1] = max(np[-1], participants[i])
+            nt[-1].append(titles[i])
         else:
             nd.append(dates[i])
             nc.append(counts[i])
             np.append(participants[i])
+            nt.append([titles[i]])
             percents.append(participants[i] / counts[i] if counts[i] > 0 else 0)
+
     dates = nd
     counts = nc
     participants = np
-    dates = mdates.date2num(list(map(lambda date: datetime.strptime(date, DATE_FORMAT), dates)))
+    titles = list(map(lambda t: ', '.join(t), nt))
 
-    ax.plot_date(dates, counts, markersize = 4)
-    legend.append(title + ' registrations')
-    ax.plot_date(dates, participants, markersize = 4)
-    legend.append(title + ' participants')
-    # ax.plot_date(dates, percents, markersize = 4, color = 'blue')
-    # print(title, median(percents))
+    assert(len(dates) == len(counts))
+    assert(len(dates) == len(participants))
 
-# draw('div1', div1)
-# draw('div2', div2)
-# draw('div3', div3)
+    data.append(go.Scatter(
+        x = dates,
+        y = participants,
+        text = titles,
+        mode = 'markers',
+        name = title + ' participants'
+    ))
+    data.append(go.Scatter(
+        x = dates,
+        y = counts,
+        text = titles,
+        mode = 'markers',
+        name = title + ' registrants'
+    ))
+    # data.append(go.Scatter(x = dates, y = percents, name = title + ' participa'))
+
+draw('div1', div1)
+draw('div2', div2)
+draw('div3', div3)
 draw('educ', educ)
-# draw('comb', comb)
+draw('comb', comb)
 # draw('othe', othe)
+# draw('div4', div4)
+def x(t):
+    return list(map(lambda g: g.name.find(t) >= 0, data))
 
-ax.legend(legend)
-plt.show()
+def getButton(t, **kwargs):
+    f = kwargs['f'] if 'f' in kwargs else t
+    return dict(
+        label = t,
+        method = 'update',
+        args = [{'visible': x(f)}, {'title': t, 'annotations': []}]
+    )
+
+roundButtons = [
+    getButton('All', f = ''),
+    getButton('Participants', f = 'part'),
+    getButton('Registrants', f = 'reg'),
+    *[getButton(t) for t in ['div1', 'div2', 'div3', 'educ', 'comb', 'othe', 'div4']]
+]
+
+fig = go.Figure(data = data)
+fig.update_xaxes(
+    rangeslider_visible = True,
+    rangeselector = dict(
+        buttons = list([
+            dict(count = 1, label = '1m', step = 'month', stepmode = 'backward'),
+            dict(count = 6, label = '6m', step = 'month', stepmode = 'backward'),
+            dict(count = 1, label = 'YTD', step = 'year', stepmode = 'todate'),
+            dict(count = 1, label = '1y', step = 'year', stepmode = 'backward'),
+            dict(step = 'all')
+        ])
+    )
+)
+
+fig.update_layout(
+    legend_orientation = 'v',
+    title = 'Registrants and participants',
+    xaxis_title = 'Date',
+    yaxis_title = 'Number',
+    legend = dict(xanchor = 'center'),
+    updatemenus = [
+        dict(
+            active = 1,
+            showactive = True,
+            xanchor = 'left',
+            yanchor = 'top',
+            y = 0,
+            buttons = list([
+                dict(label = 'Log Scale', method = 'update', args = [{'visible': [True] * len(data)}, {'yaxis': {'type': 'log'}}]),
+                dict(label = 'Linear Scale', method = 'update', args = [{'visible': [True] * len(data)}, {'yaxis': {'type': 'linear'}}])
+            ]),
+        ),
+        dict(
+            type = 'buttons',
+            xanchor = 'left',
+            yanchor = 'top',
+            y = 1,
+            buttons = roundButtons,
+        )
+    ]
+)
+fig.update_traces(hoverinfo = 'all', hovertemplate = '%{x}, %{y}<br>%{text}')
+fig.update_layout(xaxis_range = [datetime(2020, 1, 1), datetime(2020, 6, 1)], hovermode = 'x')
+fig.show()
+
