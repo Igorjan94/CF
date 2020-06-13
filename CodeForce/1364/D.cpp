@@ -41,6 +41,8 @@ void run()
     fori(m)
     {
         ints(u, v); --u; --v;
+        if (u >= k || v >= k)
+            continue;
         g[u].pb(v);
         g[v].pb(u);
     }
@@ -51,55 +53,29 @@ void run()
         l[d % 2].pb(u + 1);
         used[u] = 1;
         for (int v: g[u])
-            if (used[v] == 0) {
+            if (used[v] == 0)
+            {
                 parent[v] = u;
                 dfs(v, u, d + 1);
             }
-            else if (used[v] == 1 && v != p) {
+            else if (used[v] == 1 && p != v)
+            {
                 vector<int> ans;
-                while (v != u)
-                    ans.pb(u),
+                while (u != v)
+                    ans.pb(u + 1),
                     u = parent[u];
-                ans.pb(u);
+                ans.pb(u + 1);
                 reverse(all(ans));
-
-                vector<int> d(n, -1);
-                fori(ans.size())
-                    d[ans[i]] = i;
-                vector<int> ans2;
-                int sz = ans.size();
-                for (int i = 0; i < sz; )
-                {
-                    int u = ans[i];
-                    ans2.pb(u);
-                    int mx = -1;
-                    for (int v: g[u])
-                        if (d[v] != -1 && d[v] != (d[u] + sz - 1) % sz && d[v] != (d[u] + 1) % sz)
-                            if (d[v] > mx)
-                                mx = d[v];
-                    if (mx > i)
-                        i = mx;
-                    else
-                        ++i;
-                }
-                for (int& u: ans2) ++u;
-                if (SZ(ans2) <= k)
-                    writeln(2),
-                    writeln(ans2.size()),
-                    writeln(ans2);
-                else
-                {
-                    vector<int> ans3;
-                    for (int i = 0; i < SZ(ans2) && SZ(ans3) < c; i += 2)
-                        ans3.pb(ans2[i]);
-                    writeln(1);
-                    writeln(ans3);
-                }
+                writeln(2);
+                writeln(ans.size());
+                writeln(ans);
                 exit(0);
             }
         used[u] = 2;
     };
-    dfs(0, -1, 0);
+    fori(n)
+        if (!used[i])
+            dfs(i, -1, 0);
     fori(2)
         if (SZ(l[i]) >= c)
         {
