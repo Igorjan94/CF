@@ -39,16 +39,12 @@ void run()
     string s;
     readln(s);
     function<int(char, int, int)> get = [&](char c, int l, int r) -> int {
-        int length = r - l;
-        int m = l + length / 2;
-        if (length == 1)
+        int m = l + (r - l) / 2;
+        if (l + 1 == r)
             return s[l] != c;
-        int first = 0;
-        int second = 0;
-        FOR(i, l, m) first += s[i] != c;
-        FOR(i, m, r) second += s[i] != c;
-        first += get(c + 1, m, r);
-        second += get(c + 1, l, m);
+        int first = get(c + 1, m, r);
+        int second = get(c + 1, l, m);
+        FOR(i, l, r) (i < m ? first : second) += s[i] != c;
         return min(first, second);
     };
     writeln(get('a', 0, n));
