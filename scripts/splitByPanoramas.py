@@ -9,8 +9,8 @@ from library import *
 def getDate(x):
     return datetime.datetime.strptime(x, '%Y:%m:%d %H:%M:%S')
 
-@completion.command()
-@click.argument('directory', required=True, type=click.Path(file_okay=False), nargs=1)
+# @completion.command()
+# @click.argument('directory', required=True, type=click.Path(file_okay=False), nargs=1)
 def findPanos(directory):
     def getExif(filename):
         try:
@@ -59,4 +59,4 @@ def findPanos(directory):
             os.rename(os.path.join(directory, filename), os.path.join(dst, filename))
 
 
-# findPanos('/home/igorjan/photos/unbackuped/kir/02.08/2')
+findPanos('/run/media/igorjan/Новый том/photos/vottovaara')
