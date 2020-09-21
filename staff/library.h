@@ -552,7 +552,7 @@ pointtt struct point
     T x, y;
     point(){}
     point(T _x, T _y) : x(_x), y(_y) {}
-    point operator=(const point& b) { x = b.x; y = b.y; }
+    point operator=(const point& b) { x = b.x; y = b.y; return *this; }
     point operator+(const point& b) const { return point(x + b.x, y + b.y); }
     point operator-(const point& b) const { return point(x - b.x, y - b.y); }
     point operator-() const { return point(-x, -y); }
