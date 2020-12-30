@@ -613,7 +613,7 @@ struct modularR
     template<typename T1> modularR(T1 const& num, T1 const& den, T1 const& mod) { *this = modularR(den, mod) ^ (mod - 2) * num; }
     template<typename T1> modularR& operator^=(T1 const& deg) { modularR a(*this); for (T1 n = deg - 1; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
     template<typename T1> modularR  operator^ (T1 const& deg) const { return modularR(*this) ^= deg; }
-    template<typename T1> inline modularR& operator+=(T1 const& t)       { value += t; if (value > mod) value -= mod; return *this; }
+    template<typename T1> inline modularR& operator+=(T1 const& t)       { value += t; if (value >= mod) value -= mod; return *this; }
     template<typename T1> inline modularR& operator-=(T1 const& t)       { value -= t; if (value < 0  ) value += mod; return *this; }
     template<typename T1> inline modularR& operator*=(T1 const& t)       { value = (value * 1ll * t) % mod; return *this; }
     template<typename T1> inline modularR& operator/=(T1 const& t)       { return *this *= ~modularR(t, mod); }
@@ -644,7 +644,7 @@ struct modular
     template<typename T1> modular(T1 const& num, T1 const& den) { *this = modular(den) ^ (mod - 2) * num; }
     template<typename T1> modular& operator^=(T1 const& deg) { modular a(*this); for (T1 n = deg - 1; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
     template<typename T1> modular  operator^ (T1 const& deg) const { return modular(*this) ^= deg; }
-    inline modular& operator+=(modular const& t)       { value += t.value; if (value > mod) value -= mod; return *this; }
+    inline modular& operator+=(modular const& t)       { value += t.value; if (value >= mod) value -= mod; return *this; }
     inline modular& operator-=(modular const& t)       { value -= t.value; if (value < 0  ) value += mod; return *this; }
     inline modular& operator*=(modular const& t)       { value = (value * 1ll * t.value) % mod; return *this; }
     inline modular& operator/=(modular const& t)       { return *this *= ~t; }
