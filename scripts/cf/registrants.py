@@ -2,7 +2,7 @@ import sys
 sys.path.append('/home/igorjan/206round/scripts')
 
 from library import *
-# from plotSubmits import cf
+from plotSubmits import cf
 from bs4 import BeautifulSoup
 import re
 from datetime import datetime
@@ -32,21 +32,25 @@ def addRound(round):
     d4 = check(r'Div. ?4')
     ed = check('Edu')
     if ed:
-        educ.append(round)
+        toAppend = educ
     elif d3:
-        div3.append(round)
+        toAppend = div3
     elif d4:
-        div4.append(round)
+        toAppend = div4
     elif d1 and d2:
-        comb.append(round)
+        toAppend = comb
     elif d1:
-        div1.append(round)
+        toAppend = div1
     elif d2:
-        div2.append(round)
+        toAppend = div2
     elif check(r'Global') or check(r'Hello') or check(r'Good Bye') or check(r'Beta Round') or check('Alpha Round'):
-        comb.append(round)
+        toAppend = comb
     else:
-        othe.append(round)
+        toAppend = othe
+    for i in range(len(toAppend)):
+        if toAppend[i][3] == title:
+            return
+    toAppend.append(round)
 
 participants_all = loadJsonFromFile(participantsFile)
 div1, div2, div3, div4, educ, comb, othe = loadJsonFromFile(filename)
@@ -67,7 +71,10 @@ if False:
         url = f'https://codeforces.com/contests/page/{i}?locale=ru'
         html = requests.get(url).text.split('\n', 2)[2]
         page = BeautifulSoup(html, 'html5lib')
+        j = 0
         for tr in page.body.find('div', attrs={'class': 'contests-table'}).find('div', attrs={'class': 'datatable'}).find_all('tr'):
+            j += 1
+            if j == 20: break
             cid = tr.get('data-contestid')
             if not cid: continue
             if cid in participants_all:
@@ -84,6 +91,7 @@ if False:
 
 from statistics import median
 import plotly.graph_objects as go
+import plotly
 
 data = []
 def draw(title, rounds):
@@ -200,7 +208,10 @@ fig.update_layout(
         )
     ]
 )
-fig.update_traces(hoverinfo = 'all', hovertemplate = '%{x}, %{y}<br>%{text}')
+fig.update_traces(hoverinfo = 'all', hovertemplate = '%{x}, %{y}<br><a href="https://codeforces.com">%{text}</a>')
 fig.update_layout(xaxis_range = [datetime(2020, 1, 1), datetime(2020, 6, 1)], hovermode = 'x')
 fig.show()
 
+graphJSON = json.dumps(fig, cls = plotly.utils.PlotlyJSONEncoder)
+with open('./registrants.json', 'w') as file:
+    file.write('const graphs = {};'.format(graphJSON))
