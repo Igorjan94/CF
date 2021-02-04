@@ -1,172 +1,97 @@
-#include <cstdlib>
-#include <iostream>
-#include <stdio.h>
-#include <vector>
-#include <set>
-#include <algorithm>
-#include <queue>
-#define enter printf("\n")
-#define pb push_back
-#define ll long long
-#define fors(it, r) for (set<int>::iterator it = r.begin(); it != r.end(); it++)
-#define forvit(it, r) for (vector<int>::iterator it = r.begin(); it != r.end(); it++)
-#define forv(i, vector) for (int i = 0; i < vector.size(); i++)
-#define forn(i, n) for (int i = 0; i < n; i++)
-#define forn1(i, n) for (int i = 1; i < n; i++)
-#define fori(n) for (int i = 0; i < n; i++)
-#define forj(n) for (int j = 0; j < n; j++)
-#define vi vector<int>
+// Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
+#include <bits/stdc++.h>
 
 using namespace std;
-int INF = 1000000007;
-string FILENAME = "input";
-string FILEINPUT = FILENAME;
 
-void writeln(int a){printf("%d\n", a);}void writeln(int a, int b){printf("%d %d\n", a, b);}void writeln(int a, int b, int c){printf("%d %d %d\n", a, b, c);}void writeln(int a, int b, int c, int d){printf("%d %d %d %d\n", a, b, c, d);}void write(int a){printf("%d", a);}void write(int a, int b){printf("%d %d", a, b);}void write(int a, int b, int c){printf("%d %d %d", a, b, c);}void write(int a, int b, int c, int d){printf("%d %d %d %d", a, b, c, d);}void read(int &a){scanf("%d", &a);}void read(int &a, int &b){scanf("%d %d", &a, &b);}void read(int &a, int &b, int &c){scanf("%d %d %d", &a, &b, &c);}void read(int &a, int &b, int &c, int &d){scanf("%d %d %d %d", &a, &b, &c, &d);}void readln(int &a){scanf("%d\n", &a);}void readln(int &a, int &b){scanf("%d %d\n", &a, &b);}void readln(int &a, int &b, int &c){scanf("%d %d %d\n", &a, &b, &c);}void readln(int &a, int &b, int &c, int &d){scanf("%d %d %d %d\n", &a, &b, &c, &d);}
-void readln(vector<int> &f, int n){int x;for (int i = 1; i <= n; i++){read(x);f.push_back(x);}}void writeln(vector<int> &f){for (int i = 0; i < f.size(); i++)printf("%d%c", f[i], i == f.size() - 1 ? '\n' : ' ');}
+#define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
+#define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
+#define forn(i, n)   for (int i = 0; i < (int) (n); ++i)
+#define  fori1(n)    for (int i = 1; i < (int) (n); ++i)
+#define  forj1(n)    for (int j = 1; j < (int) (n); ++j)
+#define   fori(n)    for (int i = 0; i < (int) (n); ++i)
+#define   forj(n)    for (int j = 0; j < (int) (n); ++j)
+#define     SZ(a)    int(size(a))
 
-vector<ll> fib, fib2;
+typedef  pair<int, int>   pii;
+typedef   vector<int>     vi;
+typedef    long long      ll;
+
+#define pb push_back
+#define all(a) begin(a), end(a)
+#define ints(a...) int a; readln(a)
+
+[[maybe_unused]] const int MOD = 1000000007;
+[[maybe_unused]] const int INTMAX = numeric_limits<int>::max();
+
+#define ttt12i template<class T1, class T2> inline
+#define  ttti  template<class T> inline
+
+void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
+template<class... Args> inline void readln(Args&... args){(read(args),...);}
+template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
+
+//Igorjan
+//}}}
 
 void run()
 {
-    int k, x, n, m, a, b;
-    readln(k, x, n, m);
-    if (k == 3 && x == 1 && n == 1 && m == 1)
-    {
-        printf("A\nC");
-        return;
-    }
-    if (k == 4 && x == 2 && n == 2 && m == 1)
-    {
-    printf("Happy new year!\n");
-        return;
-    }
-    a = n / 2;
-    b = m / 2;
-    if (x == 0)
-    {
-        fori(n)
-            printf("Q");
-        enter;
-        fori(m)
-            printf("Q");
-        enter;
-        return;
-    }
-    fib.pb(1);
-    fib.pb(1);
-    for (int i = 2; i < 55; i++)
-        fib.pb(fib[i - 1] + fib[i - 2]);
-    fib2.pb(1);
-    fib2.pb(1);
-    for (int i = 2; i < 55; i++)
-        fib2.pb(fib2[i - 1] + fib2[i - 2] + (i + 1) % 2);
-    fori(x + 1)
-    {
-//        cout << i << " " << (x - fib[k - 3] * (i + 1)) << " " <<
-  //             (x - fib[k - 3] * (i + 1)) % fib[k - 2] << " " << (x - fib[k - 3] * (i + 1)) / fib[k - 2] << "\n";
-        if (x >= fib[k - 3] * i)
-        {
-            if ((x - fib[k - 3] * i) % fib[k - 2] == 0)
+    ints(k, x, n, m);
+    for (char a: "QAC")
+    for (char b: "QAC")
+    for (char c: "QAC")
+    for (char d: "QAC")
+        for (int i = 0; i * 2 + (a != 'Q') + (b != 'Q') <= n; ++i)
+            for (int j = 0; j * 2 + (c != 'Q') + (d != 'Q') <= m; ++j)
             {
-                ll q = (x - fib[k - 3] * i) / fib[k - 2];
-                if (i <= a && q <= b)
+                vector<int> cur = {i, j};
+                vector<array<char, 2>> ss = {{a, b}, {c, d}};
+                for (int q = 2; cur.back() <= x && q < k; ++q)
+                    cur.push_back(cur[q - 2] + cur[q - 1] + (ss[q - 2][1] == 'A' && ss[q - 1][0] == 'C')),
+                    ss.push_back({ss[q - 2][0], ss[q - 1][1]});
+                if (SZ(cur) == k && cur.back() == x)
                 {
-                    forj(i)
-                        printf("AC");
-                    forj(n - 2 * i)
-                        printf("Q");
-                    enter;
-                    forj(q)
-                        printf("AC");
-                    forj(m - 2 * q)
-                        printf("Q");
-                    enter;
+                    string s(n, 'Q');
+                    string t(m, 'Q');
+                    if (a != 'Q')
+                        s[0] = a;
+                    if (b != 'Q')
+                        s.back() = b;
+                    if (c != 'Q')
+                        t[0] = c;
+                    if (d != 'Q')
+                        t.back() = d;
+                    for (int q = 0; q < i; ++q)
+                        s[(a != 'Q') + q * 2] = 'A',
+                        s[(a != 'Q') + q * 2 + 1] = 'C';
+                    for (int q = 0; q < j; ++q)
+                        t[(c != 'Q') + q * 2] = 'A',
+                        t[(c != 'Q') + q * 2 + 1] = 'C';
+
+                    writeln(s);
+                    writeln(t);
                     return;
                 }
             }
-        }
-        else
-            break;
-        if (x >= fib[k - 3] * (i + 1))
-            if ((x - fib[k - 3] * (i + 1)) % fib[k - 2] == 0)
-            {
-                ll q = (x - fib[k - 3] * (i + 1)) / fib[k - 2];
-                if (i <= a && q * 2 + 1 <= m)
-                    if (n > 2 * i)
-                    {
-                        forj(i)
-                            printf("AC");
-                        forj(n - 2 * i)
-                            printf("A");
-                        enter;
-                        printf("C");
-                        forj(q)
-                            printf("AC");
-                        forj(m - 2 * q - 1)
-                            printf("Q");
-                        enter;
-                        return;
-                    }
-                    else
-                    {
-                        forj(i)
-                            printf("CA");
-                        q++;
-                        enter;
-                        printf("A");
-                        forj(m - 2 * q - 1)
-                            printf("Q");
-                        forj(q)
-                            printf("CA");
-                        enter;
-                        return;
-                    }
-            }
-//        cout << i << " " << x << " " << fib[k - 3] * i + fib2[k - 3] << " " << fib[k - 2] << "\n";
-        if (x >= fib[k - 3] * i + fib2[k - 3])
-            if ((x - fib[k - 3] * i - fib2[k - 3]) % fib[k - 2] == 0)
-            {
-                ll q = (x - fib[k - 3] * i - fib2[k - 3]) / fib[k - 2];
-                if (i <= a && q * 2 + 1 <= m)
-                    if (n > 2 * i)
-                    {
-                        forj(i)
-                            printf("AC");
-                        forj(n - 2 * i)
-                            printf("A");
-                        enter;
-                        printf("C");
-                        forj(q)
-                            printf("AC");
-                        forj(m - 2 * q - 1)
-                            printf("A");
-                        enter;
-                        return;
-                    }
-                    else
-                    {
-                        forj(i)
-                            printf("CA");
-                        enter;
-                        printf("C");
-                        forj(q)
-                            printf("AC");
-                        forj(m - 2 * q - 1)
-                            printf("A");
-                        enter;
-                        return;
-                    }
-            }
-    }
-    printf("Happy new year!\n");
+    writeln("Happy new year!");
 }
 
+//{{{
 int main()
 {
-    //freopen(FILEINPUT.append(".in").c_str(), "r", stdin);
-    //freopen(FILENAME.append(".out").c_str(), "w", stdout);
-    //fori(5)
+    ios_base::sync_with_stdio(false);
     run();
+    cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
     return 0;
 }
+
+#define a _a
+#define n _n
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a);
+template<typename T,typename D=decltype(*begin(declval<T>())),typename enable_if<!is_same<T,basic_string<char>>::value>::type* =nullptr>
+ostream&operator<<(ostream&os,T const&a){auto it=begin(a);if(it!=end(a))os<<*it++;while(it!=end(a))os<<"\n "[is_fundamental<typename T::value_type>::value]<<*it++;return os;}
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
+ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
+ttti   istream&operator>>(istream&is,vector<T>&a){fori(a.size())is>>a[i];return is;}
+ttti void print(T&&a){cout<<" "<<a;}
+ttti void priws(T&&a){cout<<a;}
+ttti void read(T&a){cin>>a;} //}}}
