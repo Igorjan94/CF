@@ -69,11 +69,7 @@ void run()
     ints(n);
     vector<ll> a(n);
     readln(a);
-    sort(all(a));
     modular<> ans;
-    ans += 1000000006;
-    ans += 1;
-    writeln(ans);
     vector<modular<>> ones(62);
     fori(n)
         forn(b, 61)
@@ -94,6 +90,8 @@ void run()
             }
             else
                 sum += ones[b] * bit;
+
+            writeln(a[j], ' ', b, ' ', ones[b], ' ', aj, ' ', bit, ' ', sum, ' ', mul);
         }
         ans += sum * mul;
     }
