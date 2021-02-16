@@ -136,45 +136,16 @@ T1 umin(T1& a, T2 b)
 
 //}}}
 
-ll run(vector<int>& a, int x)
+ll run(const vector<int>& a, ll x)
 {
     int n = a.size();
-    if (accumulate(whole(a), 0ll) % x)
-        return numeric_limits<ll>::max();
-    for (int& y: a) y %= x;
-    ll sum = 0;
     ll ans = 0;
-    int first = -1;
+    ll s = 0;
     fori(n)
-        if (a[i])
-        {
-            if (first == -1)
-                first = i;
-            sum++;
-            if (sum == x)
-            {
-                vector<ll> prefix(i - first + 1, 0);
-                vector<ll> suffix(i - first + 1, 0);
-
-                ll cnt = 1;
-                FOR(j, first + 1, i + 1)
-                    prefix[j - first] = prefix[j - first - 1] + cnt,
-                    cnt += a[j];
-
-                cnt = 1;
-                ROF(j, i - 1, first)
-                    suffix[j - first] = suffix[j - first + 1] + cnt,
-                    cnt += a[j];
-
-                ll curAns = numeric_limits<ll>::max();
-                fori(prefix.size())
-                    umin(curAns, prefix[i] + suffix[i]);
-                ans += curAns;
-
-                sum = 0;
-                first = -1;
-            }
-        }
+    {
+        s = (s + a[i]) % x;
+        ans += min(s, x - s);
+    }
     return ans;
 }
 
@@ -186,15 +157,21 @@ int main()
     vi a(n);
     readln(a);
     ll sum = accumulate(whole(a), 0ll);
-    linearSieve s(sum + 1);
-    vector<int> primes = s.primes;
+    if (sum == 1ll) return writeln(-1), 0;
+
     ll ans = numeric_limits<ll>::max();
-    for (int x: primes)
+    vector<ll> primes;
+    for (ll i = 2; i * i <= sum; ++i)
+        if (sum % i == 0)
+        {
+            primes.pb(i);
+            while (i * i <= sum && sum % i == 0)
+                sum /= i;
+        }
+    primes.pb(sum);
+    for (ll x: primes)
         umin(ans, run(a, x));
-    if (ans == numeric_limits<ll>::max())
-        writeln(-1);
-    else
-        writeln(ans);
+    writeln(ans);
     cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
     return 0;
 }
