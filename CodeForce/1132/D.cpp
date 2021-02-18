@@ -1,3 +1,4 @@
+#pragma GCC optimize "-O3"
 // Igorjan94, template version from 13 October 2017. C++17 version, modified 07 August 2018 (&&, whole) {{{
 #include <bits/stdc++.h>
 
@@ -68,20 +69,20 @@ void run()
     ll mx = 10000000000000ll;
     ll m = binSearch(0ll, mx, [&](ll x) {
         auto c(a);
-        set<pair<ll, ll>> s;
+        priority_queue<pair<ll, ll>> s;
         auto push = [&](int i) {
             ll temp = c[i] / b[i];
             if (temp < k)
-                s.insert({temp, i});
+                s.emplace(-temp, i);
         };
 
         fori(n) push(i);
         fori(k)
         {
             if (s.empty()) return true;
-            auto [time, index] = *s.begin();
-            s.erase(s.begin());
-            if (time < i)
+            auto [time, index] = s.top();
+            s.pop();
+            if (-time < i)
                 return false;
             c[index] += x;
             push(index);
