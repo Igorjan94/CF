@@ -1165,5 +1165,61 @@ struct cached
     }
 };
 
+//Igorjanlca
+struct lca
+{
+    vector<vector<int>> g, up;
+    vector<int> h;
+    int n, l;
+
+    lca(const vector<vector<int>>& g) //O(n * log(n))
+    {
+        this->g = g;
+        n = SZ(g);
+        l = 1;
+        while ((1 << l) <= n) ++l;
+        h.resize(n, -1);
+        up.resize(l + 1, vector<int>(n));
+        dfs(0, 0);
+        fori(l)
+            forj(n)
+                up[i + 1][j] = up[i][up[i][j]];
+    }
+ 
+    int getParent(int u, int dist) { //O(log(n))
+        fori(l)
+            if (dist >> i & 1)
+                u = up[i][u];
+        return u;
+    }
+
+    void dfs(int u, int p) //O(n)
+    {
+        h[u] = h[p] + 1;
+        up[0][u] = p;
+        for (const int& v: g[u])
+            if (v != p)
+                dfs(v, u);
+    }
+
+    int get(int a, int b) //O(log(n))
+    {
+        if (h[a] < h[b]) swap(a, b);
+        a = getParent(a, h[a] - h[b]);
+        if (a == b) return a;
+        ROF(i, l, 0)
+            if (up[i][a] != up[i][b])
+                a = up[i][a],
+                b = up[i][b];
+        return up[0][a];
+    }
+
+    int getChildWithVertex(int a, int b) //O(log(n))
+    {
+        if (a == b) return -1;
+        return getParent(b, h[b] - h[a] - 1);
+    }
+};
+
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
