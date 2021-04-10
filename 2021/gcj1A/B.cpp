@@ -41,7 +41,7 @@ ll run()
     ll x = 0;
     for (const auto& [p, c]: a)
         x += c * p;
-    ROF(j, x, max(2ll, x - 3030))
+    for (ll j = x; j >= max(2ll, x - 3030); --j)
     {
         ll i = j;
         ll sum = 0;
