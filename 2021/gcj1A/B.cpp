@@ -33,35 +33,27 @@ template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(
 //Igorjan
 //}}}
 
-const int N = 500;
-
 ll run()
 {
-    vector<ll> a(N);
-    ll x = 0;
     ints(n);
-    vector<int> primes;
-    fori(n)
-    {
-        int p;
-        ll c;
-        readln(p, c);
-        primes.pb(p);
-        a[p] = c;
+    vector<pair<int, ll>> a(n);
+    readln(a);
+    ll x = 0;
+    for (const auto& [p, c]: a)
         x += c * p;
-    }
-    ROF(j, x, max(2ll, x - 10000))
+    ROF(j, x, max(2ll, x - 3030))
     {
         ll i = j;
         ll sum = 0;
         bool ok = true;
-        for (int p: primes)
+        for (const auto& [p, c]: a)
         {
-            int c = 0;
-            while (i % p == 0)
-                i /= p, ++c;
-            ok &= a[p] >= c;
-            sum += (a[p] - c) * p;
+            int d = 0;
+            while (ok && i % p == 0)
+                i /= p,
+                ok &= c >= ++d;
+            if (!ok) break;
+            sum += (c - d) * p;
         }
         if (ok && i == 1ll && sum == j)
             return j;
