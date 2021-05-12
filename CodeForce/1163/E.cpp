@@ -1,10 +1,10 @@
 // Igorjan94, template version from 13 October 2017. C++17 version, modified 07 August 2018 (&&, whole) {{{
 #include <bits/stdc++.h>
-
+ 
 using namespace std;
-
+ 
 #define FILENAME "input"
-
+ 
 #define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
 #define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
 #define forn(i, n)   for (int i = 0; i < (int) (n); ++i)
@@ -13,37 +13,37 @@ using namespace std;
 #define   fori(n)    for (int i = 0; i < (int) (n); ++i)
 #define   forj(n)    for (int j = 0; j < (int) (n); ++j)
 #define     SZ(a)    int(size(a))
-
+ 
 typedef  pair<int, int>   pii;
 typedef  valarray<int>    va;
 typedef   vector<int>     vi;
 typedef    long long      ll;
-
+ 
 #define    pb    push_back
 #define whole(a) begin(a), end(a)
 #define   next   next__
 #define   prev   prev__
 #define  count   count__
-
+ 
 #define ints(a...)  int a; readln(a)
 #define wr(args...) err(#args, args)
-
+ 
 #define ttt12i template<class T1, class T2> inline
 #define  tthti template<class H, class...T> inline
 #define  ttta  template<class... Args> inline
 #define  ttti  template<class T> inline
-
+ 
 const int MOD = 1000000007;
 const int INTMAX = numeric_limits<int>::max();
 const ll LLMAX = numeric_limits<ll>::max();
-
+ 
 void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
 ttta void readln(Args&... args){(read(args),...);}tthti void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
 ttti void writeln_range(T f,T s){if(f!=s)for(auto i=f;i!=s;++i)writeln(*i);}
 vector<string>split(string&s,string d){vector<string>v;size_t p=0;while((p=s.find(d))!=string::npos)v.pb(s.substr(0,p)),s.erase(0,p+d.length());v.pb(s);return v;}
 ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(writeln(*it++,"=",args),...);}
-
-
+ 
+ 
 //binpow
 template<typename T>
 T binpow(T a, ll n)
@@ -61,7 +61,7 @@ T binpow(T a, ll n)
 }
 //Igorjan
 //}}}
-
+ 
 void run()
 {
     ints(n);
@@ -74,14 +74,15 @@ void run()
         if (basis.size() >= 20)
             break;
         int tmp = x;
-        for (int& y:basis)
+        for (int& y: basis)
             tmp = min(tmp, tmp ^ y);
         if (tmp)
             basis.pb(tmp),
             a.pb(x);
-        sort(basis.rbegin(), basis.rend());
+        //sort(basis.rbegin(), basis.rend());
     }
-
+    //writeln(a);
+ 
     for (int i = min(19, n), len = binpow(2ll, i); i >= 1; --i, len /= 2)
     {
         if (SZ(a) < i) continue;
@@ -113,7 +114,7 @@ void run()
     writeln(0);
     writeln(0);
 }
-
+ 
 //{{{
 int main()
 {
@@ -129,7 +130,7 @@ int main()
 #endif
     return 0;
 }
-
+ 
 #define a _a
 #define n _n
 ttti   ostream&operator<<(ostream&os,vector<T>const&a);
