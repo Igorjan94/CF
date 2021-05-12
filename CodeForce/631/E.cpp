@@ -31,77 +31,62 @@ template<class... Args> inline void readln(Args&... args){(read(args),...);}
 template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
 
 //Igorjan
-//point
-#define pointtt template<typename T = int>
-//sorts only if z is corner point;
-#define sortByPolarAngle(v, z, T) sort(v.begin(), v.end(), [&z](point<T>& a, point<T>& b) {\
-    int q = orientation(z, a, b); return q == 0 ? dist(z, a) < dist(z, b) : q == -1;\
-});
-
-pointtt struct point
+//IgorjanchtTrick
+//Author: Simon Lindholm
+// https://github.com/kth-competitive-programming/kactl/blob/main/content/data-structures/LineContainer.h
+template<typename T>
+struct line
 {
-    T x, y;
-    point(){}
-    point(T _x, T _y) : x(_x), y(_y) {}
-    point(const point& other) : x(other.x), y(other.y) {}
-    point operator=(const point& b) { x = b.x; y = b.y; return *this; }
-    point operator+(const point& b) const { return point(x + b.x, y + b.y); }
-    point operator-(const point& b) const { return point(x - b.x, y - b.y); }
-    point operator-() const { return point(-x, -y); }
-    T operator*(const point& b) const { return x * b.x + y * b.y; }
-    T operator^(const point& b) const { return x * b.y - y * b.x; }
-    T operator!() const { return x * x + y * y; }
-    bool operator<(const point& b) const { return x == b.x ? y < b.y : x < b.x; }
-};
-pointtt istream&operator>>(istream&is,point<T>&a){return is>>a.x>>a.y;}
-pointtt ostream&operator<<(ostream&os,const point<T>&a){return os<<a.x<<" "<<a.y;}
-pointtt T dist(const point<T>&a,const point<T>&b){return!point<T>(a-b);}
-//dist from point C to line AB equals to answer.first / sqrt(answer.second);
-pointtt pair<T,T> dist(const point<T>&a,const point<T>&b,const point<T>&c){return{abs((a-b)*c)+(a^b),dist(a,b)};}
-static const int CW = 1;
-static const int CCW = -1;
-pointtt int orientation(const point<T>&a,const point<T>&b,const point<T>&c){T q=a.x*b.y-a.y*b.x-a.x*c.y+a.y*c.x+b.x*c.y-b.y*c.x;return q>0?CCW:q<0?CW:0;}
-//reflects point C to line AB (in doubles)
-pointtt point<T> reflect(const point<T>&a,const point<T>&b,const point<T>&c){
-    T A = a.y - b.y;
-    T B = b.x - a.x;
-    T C = a ^ b;
-    T D = A * A - B * B;
-    T S = A * A + B * B;
-    return {(-D * c.x - 2 * A * B * c.y - 2 * A * C) / S, (D * c.y - 2 * A * B * c.x - 2 * B * C) / S};
+    mutable T k, b, p;
+    bool operator<(const line& other) const { return k < other.k; }
+    bool operator<(const T& other) const { return p < other; }
+    T get(const T& x) const { return k * x + b; }
 };
 
 template<typename T>
-struct chtTrick
+struct chtTrick : multiset<line<T>, less<>>
 {
-    vector<point<T>> hull;
-    T f(const point<T>& a, T x) {
-        return a * point<T>(x, T(1));
-    };
-
+    static const T inf = numeric_limits<T>::max();
     chtTrick() {}
 
-    void addLine(const point<T>& nw) {
-        hull.pb(nw);
-        while (SZ(hull) >= 3 && orientation(hull[SZ(hull) - 3], hull[SZ(hull) - 2], hull.back()) != CW)
-            hull[SZ(hull) - 2] = hull.back(),
-            hull.pop_back();
+    T div(const T& a, const T& b)
+    {
+        return a / b - ((a ^ b) < 0 && a % b);
     }
 
-    T get(const T& x) {
-        point<T> p(x, 1);
-        int l = 0;
-        int r = SZ(hull);
-        while (r - l > 1)
+    bool isect(typename multiset<line<T>, less<>>::iterator x, typename multiset<line<T>, less<>>::iterator y) {
+        auto& [kx, bx, px] = *x;
+        auto& [ky, by, py] = *y;
+		if (y == this->end())
         {
-            int m = l + (r - l) / 2;
-            (f(hull[m], x) >= f(hull[m + 1], x) ? l : r) = m;
+            px = inf;
+            return false;
         }
-        T ans = f(hull[l], x);
-        if (r < SZ(hull))
-            ans = min(ans, f(hull[r], x));
-        return ans;
-    }
+		if (kx == ky)
+            px = bx > by ? inf : -inf;
+		else
+            px = div(by - bx, kx - ky);
+		return px >= py;
+	}
+
+	void addLine(const T& k, const T& b) {
+		auto z = this->insert({k, b, 0});
+        auto y = z++;
+        auto x = y;
+		while (isect(y, z))
+            z = this->erase(z);
+
+		if (x != this->begin() && isect(--x, y))
+            isect(x, y = this->erase(y));
+
+		while ((y = x) != this->begin() && (--x)->p >= y->p)
+			isect(x, this->erase(y));
+	}
+
+	T get(const T& x) {
+		assert(!this->empty());
+        return this->lower_bound(x)->get(x);
+	}
 };
 
 void run()
@@ -117,9 +102,9 @@ void run()
         sum.pb(sum.back() + a[i]);
     ll ans = 0;
     fori(n + 1)
-        tree.addLine({-i, sum[i]});
+        tree.addLine(i, -sum[i]);
     fori(n)
-        ans = max(ans, sum[i] - tree.get(a[i]) - a[i] * i);
+        ans = max(ans, sum[i] + tree.get(a[i]) - a[i] * i);
 
     writeln(curSum + ans);
 }
