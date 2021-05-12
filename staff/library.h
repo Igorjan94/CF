@@ -552,6 +552,7 @@ pointtt struct point
     T x, y;
     point(){}
     point(T _x, T _y) : x(_x), y(_y) {}
+    point(const point& other) : x(other.x), y(other.y) {}
     point operator=(const point& b) { x = b.x; y = b.y; return *this; }
     point operator+(const point& b) const { return point(x + b.x, y + b.y); }
     point operator-(const point& b) const { return point(x - b.x, y - b.y); }
@@ -561,7 +562,7 @@ pointtt struct point
     T operator!() const { return x * x + y * y; }
     bool operator<(const point& b) const { return x == b.x ? y < b.y : x < b.x; }
 };
-pointtt istream&operator>>(istream&is,point<T>&a){return is>>a.x>>a.y;}
+pointtt istream&operator>>(istream&is,const point<T>&a){return is>>a.x>>a.y;}
 pointtt ostream&operator<<(ostream&os,point<T>&a){return os<<a.x<<" "<<a.y;}
 pointtt T dist(const point<T>&a,const point<T>&b){return!point<T>(a-b);}
 //dist from point C to line AB equals to answer.first / sqrt(answer.second);
@@ -1219,6 +1220,153 @@ struct lca
         if (a == b) return -1;
         return getParent(b, h[b] - h[a] - 1);
     }
+};
+
+//Igorjanint128
+inline istream&operator>>(istream&in,__int128&a){
+    a = 0;
+    bool neg = false;
+    char c;
+    in >> noskipws >> c;
+    while (c < '0' || c > '9') {
+        neg = c == '-';
+        in >> noskipws >> c;
+    }
+    while (c >= '0' && c <= '9') {
+        a = a * 10 + c - '0';
+        in >> noskipws >> c;
+    }
+    if (neg) a *= -1;
+    return in;
+}
+inline ostream&operator<<(ostream&out,const __int128& x) {
+    auto a = x;
+    if (a < 0)
+    {
+        out << "-";
+        a *= -1;
+    }
+    string s;
+    while (a >= 10)
+        s.pb((a % 10) + '0'),
+        a /= 10;
+    s.pb(a + '0');
+    reverse(all(s));
+    return out << s;
+}
+
+//IgorjanliChaoTree
+template<typename T>
+struct liChaoTree //Note that liChaoTree assumes that there is no point in which more than two lines intersect
+{
+    int n;
+    vector<point<T>> line;
+    T f(const point<T>& a, T x)
+    {
+        return a * point<T>(x, T(1));
+    };
+
+    liChaoTree(int n, T maxSecureValue = numeric_limits<T>::max()) : n(n)
+    {
+        line.resize(n * 4, {0, maxSecureValue});
+    }
+
+    void addLine(point<T> nw)
+    {
+        addLineImpl(nw, 1, 0, n);
+    }
+
+    void addLineImpl(point<T>& nw, int v, int l, int r)
+    {
+        int m = (l + r) / 2;
+        bool lef = f(nw, l) < f(line[v], l);
+        bool mid = f(nw, m) < f(line[v], m);
+        if (mid)
+            swap(line[v], nw);
+        if (r - l == 1)
+            return;
+
+        if (lef != mid)
+            addLineImpl(nw, 2 * v, l, m);
+        else
+            addLineImpl(nw, 2 * v + 1, m, r);
+    }
+
+    T get(const T& x)
+    {
+        return getImpl(x, 1, 0, n);
+    }
+
+    T getImpl(const T& x, int v, int l, int r) 
+    {
+        int m = (l + r) / 2;
+        if (r - l == 1)
+            return f(line[v], x);
+        
+        if (x < m)
+            return min(f(line[v], x), getImpl(x, 2 * v, l, m));
+        else
+            return min(f(line[v], x), getImpl(x, 2 * v + 1, m, r));
+    }
+};
+
+//IgorjanchtTrick
+// Allows to add kx+b lines. Returns max(x). min(x) = -max(-kx-b)
+// Author: Simon Lindholm
+// https://github.com/kth-competitive-programming/kactl/blob/main/content/data-structures/LineContainer.h
+template<typename T>
+struct line
+{
+    mutable T k, b, p;
+    bool operator<(const line& other) const { return k < other.k; }
+    bool operator<(const T& other) const { return p < other; }
+    T get(const T& x) const { return k * x + b; }
+};
+
+template<typename T>
+struct chtTrick : multiset<line<T>, less<>>
+{
+    static const T inf = numeric_limits<T>::max();
+    chtTrick() {}
+
+    T div(const T& a, const T& b)
+    {
+        return a / b - ((a ^ b) < 0 && a % b);
+    }
+
+    bool isect(typename multiset<line<T>, less<>>::iterator x, typename multiset<line<T>, less<>>::iterator y) {
+        auto& [kx, bx, px] = *x;
+        auto& [ky, by, py] = *y;
+		if (y == this->end())
+        {
+            px = inf;
+            return false;
+        }
+		if (kx == ky)
+            px = bx > by ? inf : -inf;
+		else
+            px = div(by - bx, kx - ky);
+		return px >= py;
+	}
+
+	void addLine(const T& k, const T& b) {
+		auto z = this->insert({k, b, 0});
+        auto y = z++;
+        auto x = y;
+		while (isect(y, z))
+            z = this->erase(z);
+
+		if (x != this->begin() && isect(--x, y))
+            isect(x, y = this->erase(y));
+
+		while ((y = x) != this->begin() && (--x)->p >= y->p)
+			isect(x, this->erase(y));
+	}
+
+	T get(const T& x) {
+		assert(!this->empty());
+        return this->lower_bound(x)->get(x);
+	}
 };
 
 //IgorjanEndIfIgorjan
