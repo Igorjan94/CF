@@ -1311,7 +1311,7 @@ struct liChaoTree //Note that liChaoTree assumes that there is no point in which
 };
 
 //IgorjanchtTrick
-// Allows to add kx+b lines. Returns max(x). min(x) = -max(-kx-b)
+// Add kx+b lines. Return min/max in given point
 // Author: Simon Lindholm
 // https://github.com/kth-competitive-programming/kactl/blob/main/content/data-structures/LineContainer.h
 template<typename T>
@@ -1327,7 +1327,12 @@ template<typename T>
 struct chtTrick : multiset<line<T>, less<>>
 {
     static const T inf = numeric_limits<T>::max();
-    chtTrick() {}
+    int sign = 1;
+
+    chtTrick(bool mn = false) //if mn is true, than return minimum value. Else return maximum value
+    {
+        if (mn) sign = -1;
+    }
 
     T div(const T& a, const T& b)
     {
@@ -1350,7 +1355,7 @@ struct chtTrick : multiset<line<T>, less<>>
 	}
 
 	void addLine(const T& k, const T& b) {
-		auto z = this->insert({k, b, 0});
+		auto z = this->insert({k * sign, b * sign, 0});
         auto y = z++;
         auto x = y;
 		while (isect(y, z))
@@ -1365,7 +1370,7 @@ struct chtTrick : multiset<line<T>, less<>>
 
 	T get(const T& x) {
 		assert(!this->empty());
-        return this->lower_bound(x)->get(x);
+        return sign * this->lower_bound(x)->get(x);
 	}
 };
 
