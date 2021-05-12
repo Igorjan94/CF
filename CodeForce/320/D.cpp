@@ -1,89 +1,135 @@
-#include <cstdlib>
-#include <iostream>
-#include <stdio.h>
-#include <vector>
-#include <set>
-#include <algorithm>
-#define enter printf("\n");
+// Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
+#include <bits/stdc++.h>
 
 using namespace std;
-int INF = 1000000007;
-vector<int> a, b;
-void writeln(int a){printf("%d\n", a);}void writeln(int a, int b){printf("%d %d\n", a, b);}void writeln(int a, int b, int c){printf("%d %d %d\n", a, b, c);}void writeln(int a, int b, int c, int d){printf("%d %d %d %d\n", a, b, c, d);}void write(int a){printf("%d", a);}void write(int a, int b){printf("%d %d", a, b);}void write(int a, int b, int c){printf("%d %d %d", a, b, c);}void write(int a, int b, int c, int d){printf("%d %d %d %d", a, b, c, d);}void read(int &a){scanf("%d", &a);}void read(int &a, int &b){scanf("%d %d", &a, &b);}void read(int &a, int &b, int &c){scanf("%d %d %d", &a, &b, &c);}void read(int &a, int &b, int &c, int &d){scanf("%d %d %d %d", &a, &b, &c, &d);}void readln(int &a){scanf("%d\n", &a);}void readln(int &a, int &b){scanf("%d %d\n", &a, &b);}void readln(int &a, int &b, int &c){scanf("%d %d %d\n", &a, &b, &c);}void readln(int &a, int &b, int &c, int &d){scanf("%d %d %d %d\n", &a, &b, &c, &d);}
 
-void readln(vector<int> &f, int n)
+#define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
+#define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
+#define forn(i, n)   for (int i = 0; i < (int) (n); ++i)
+#define  fori1(n)    for (int i = 1; i < (int) (n); ++i)
+#define  forj1(n)    for (int j = 1; j < (int) (n); ++j)
+#define   fori(n)    for (int i = 0; i < (int) (n); ++i)
+#define   forj(n)    for (int j = 0; j < (int) (n); ++j)
+#define     SZ(a)    int(size(a))
+
+typedef  pair<int, int>   pii;
+typedef   vector<int>     vi;
+typedef    long long      ll;
+
+#define pb push_back
+#define all(a) begin(a), end(a)
+#define ints(a...) int a; readln(a)
+
+[[maybe_unused]] const int MOD = 1000000007;
+[[maybe_unused]] const int INTMAX = numeric_limits<int>::max();
+
+#define ttt12i template<class T1, class T2> inline
+#define  ttti  template<class T> inline
+
+void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
+template<class... Args> inline void readln(Args&... args){(read(args),...);}
+template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
+
+//Igorjan
+//dsu
+struct dsu
 {
-    int x;
-    for (int i = 1; i <= n; i++)
+    vector<int> a, size, l, r;
+
+    dsu(int n)
     {
-        read(x);
-        f.push_back(x);
+        a.resize(n);
+        l.resize(n);
+        r.resize(n);
+        size.resize(n, 1);
+        iota(all(a), 0);
+        iota(all(l), 0);
+        iota(all(r), 0);
     }
-}
 
-void writeln(vector<int> &f)
+    int get(int i)
+    {
+        return a[i] == i ? i : a[i] = get(a[i]);
+    }
+
+    int operator[](int i)
+    {
+        return get(i);
+    }
+
+    bool uni(int i, int j)
+    {
+        i = get(i);
+        j = get(j);
+        if (i == j) return false;
+        if (size[i] > size[j])
+            swap(i, j);
+        a[i] = j;
+        l[j] = min(l[j], l[i]);
+        r[j] = max(r[j], r[i]);
+        size[j] += size[i];
+        return true;
+    }
+};
+
+//}}}
+
+void run()
 {
-    for (int i = 0; i < f.size(); i++)
-        printf("%d%c", f[i], i == f.size() - 1 ? '\n' : ' ');
+    ints(n);
+    vi a(n);
+    readln(a);
+    set<pii> s;
+    fori1(n)
+        if (a[i - 1] > a[i])
+            s.insert({-i + 1, -i});
+    dsu d(n);
+    int ans = 0;
+    while (SZ(s))
+    {
+        ++ans;
+        set<pii> nxt;
+        for (auto [u, v]: s)
+        {
+            u = d[-u];
+            v = d[-v];
+            if (d.uni(u, v))
+            {
+                u = d[u];
+                v = d.r[u] + 1;
+                if (v < n)
+                {
+                    v = d[v];
+
+                    u = d.l[u];
+                    v = d.l[v];
+                    if (a[u] > a[v])
+                        nxt.insert({-u, -v});
+                }
+            }
+        }
+        s = nxt;
+    }
+    writeln(ans);
 }
 
+//{{{
 int main()
 {
-   freopen("input.txt", "r", stdin);
-   int n;
-   readln(n);
-   readln(a, n);
-   if (n == 1)
-   {
-       printf("0\n");
-       return 0;
-   }
-   a.push_back(INF);
-   for (int i = 0; i <= n; i++)
-        b.push_back(i + 1);
-   int j = 0;
-   int i, k, h, x;
-   int as = 0;
-   for (i = 0, k = 0; b[j] < n; )
-   {
-        for (int l = 0; l < n; l = b[l])
-            printf("%d ", a[l]);
-        enter
-        while (a[j] < a[b[j]])
-            j = b[j];
-        if (j >= n)
-            break;
-        k = j;
-        as = 0;
-        while (k < n)
-        {
-            x = 0;
-            h = k;
-            while (a[k] > a[b[k]])
-                k = b[k];
-            if (b[k] >= n)
-            {
-                b[h] = k = b[k];
-                as = 1;
-                break;
-            }
-            do
-            {
-                k = b[k];
-                x++;
-            }
-            while (a[k] < a[b[k]] && a[b[k]] < a[h]);
-/*            if (k >= n)
-                x--;
-            else*/
-                as = max(as, x);
-                writeln(as);
-            b[h] = k;
-        }
-        cout << "asdf\n";
-        i += as;
-        writeln(i);
-   }
-   printf("%d\n", i);
-   return 0;
+    ios_base::sync_with_stdio(false);
+    run();
+    cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
+    return 0;
 }
+
+#define a _a
+#define n _n
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a);
+template<typename T,typename D=decltype(*begin(declval<T>())),typename enable_if<!is_same<T,basic_string<char>>::value>::type* =nullptr>
+ostream&operator<<(ostream&os,T const&a){auto it=begin(a);if(it!=end(a))os<<*it++;while(it!=end(a))os<<"\n "[is_fundamental<typename T::value_type>::value]<<*it++;return os;}
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
+ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
+ttti   istream&operator>>(istream&is,vector<T>&a){fori(a.size())is>>a[i];return is;}
+ttti void print(T&&a){cout<<" "<<a;}
+ttti void priws(T&&a){cout<<a;}
+ttti void read(T&a){cin>>a;} //}}}
