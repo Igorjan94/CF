@@ -31,6 +31,13 @@ template<class... Args> inline void readln(Args&... args){(read(args),...);}
 template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
 
 //Igorjan
+//umin
+template<typename T1, typename T2>
+T1 umin(T1& a, T2 b)
+{
+    return a > T2(b) ? a = b : a;
+}
+
 //}}}
 
 const ll LL_MAX = numeric_limits<ll>::max();
@@ -43,33 +50,24 @@ void run()
         ints(a, b, c);
         roads[a].pb({c, b});
     }
-    fori(n)
-        sort(all(roads[i]));
     vector<vector<ll>> dp(n, vector<ll>(n, LL_MAX));
     fori(n)
     {
         auto& d = dp[i];
-        set<pair<ll, int>> s;
+        vector<bool> used(n, false);
         for (const auto& [c, v]: roads[i])
-            d[v] = c,
-            s.insert({c, v});
-        while (s.size())
+            d[v] = c;
+        forn(q, n)
         {
-            auto [dist, u] = *s.begin();
-            s.erase(s.begin());
-            int v = (u + 1) % n;
-            if (d[v] > d[u] + 1)
-                s.erase({d[v], v}),
-                d[v] = d[u] + 1,
-                s.insert({d[v], v});
-            for (auto [c, v]: roads[u])
-            {
-                v = (d[u] + v) % n;
-                if (d[v] > d[u] + c)
-                    s.erase({d[v], v}),
-                    d[v] = d[u] + c,
-                    s.insert({d[v], v});
-            }
+            int u;
+            ll dist = LL_MAX;
+            forj(n)
+                if (!used[j] && d[j] < dist)
+                    dist = d[j], u = j;
+            used[u] = true;
+            umin(d[(u + 1) % n], d[u] + 1);
+            for (const auto& [c, v]: roads[u])
+                umin(d[(d[u] + v) % n], d[u] + c);
         }
     }
     fori(n) dp[i][i] = 0;
