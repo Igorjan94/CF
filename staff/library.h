@@ -380,35 +380,42 @@ struct segmentTree
 //IgorjansparseTable
 //0-indexed, [l, r)
 template<typename T>
-struct sparseTable
+struct sparseTable // [l, r), 0-indexed
 {
-    int n;
-    vector<vector<T>> st;
-    vector<int> logs;
-    typedef function<T (T, T)> F;
-    F f;
+    vector<vector<T>> dp;
 
-    sparseTable(vector<T>& a, F g)
+    T NEUTRAL_ELEMENT = 0;
+    //T NEUTRAL_ELEMENT = numeric_limits<T>::max();
+    //T NEUTRAL_ELEMENT = numeric_limits<T>::min();
+    T f(const T& a, const T& b) const
     {
-        n = a.size();
-        f = g;
+        return a + b;
+    };
 
-        logs.push_back(0);
-        logs.push_back(0);
-        FOR(i, 2, n + 1) logs.push_back(logs[i / 2] + 1);
-        int L = logs.back() + 1;
-        st.resize(L, vector<T>(n));
-        fori(n)
-            st[0][i] = a[i];
-        FOR(k, 1, L)
-            for (int i = 0; i + (1 << k) <= n; i++)
-                st[k][i] = f(st[k - 1][i], st[k - 1][i + (1 << (k - 1))]);
+    int highestBit(int x) const { return 31 - __builtin_clz(x); }
+
+    sparseTable(vector<T> a)
+    {
+        int n = a.size();
+        int h = highestBit(n);
+        dp.resize(h, vector<T>(n + 1, NEUTRAL_ELEMENT));
+        forj(h)
+        {
+            int l = 1 << j;
+            for (int c = l; c < n + l; c += l * 2)
+            {
+                for (int i = c + 1; i <= min(n, c + l); ++i)
+                    dp[j][i] = f(dp[j][i - 1], a[i - 1]);
+                for (int i = min(n, c) - 1; i >= c - l; --i)
+                    dp[j][i] = f(a[i], dp[j][i + 1]);
+            }
+        }
     }
 
-    T get(int l, int r)
+    T get(int l, int r) const
     {
-        int len = logs[r - l];
-        return f(st[len][l], st[len][r - (1 << len)]);
+        int hb = highestBit(l ^ r);
+        return f(dp[hb][l], dp[hb][r]);
     }
 };
 
