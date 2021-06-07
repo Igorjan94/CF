@@ -43,7 +43,7 @@ struct modular
     template<typename T1> modular operator=(const T1& other) { value = other % mod; if (value < 0) value += mod; return *this; }
     template<typename T1> modular(T1 const& other) { value = other % mod; if (value < 0) value += mod; }
     template<typename T1> modular(T1 const& num, T1 const& den) { *this = modular(den) ^ (mod - 2) * num; }
-    template<typename T1> modular& operator^=(T1 const& deg) { modular a(*this); for (T1 n = deg - 1; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
+    template<typename T1> modular& operator^=(T1 const& deg) { if (deg == 0) { *this = modular(1); return *this; } modular a(*this); for (T1 n = deg - 1; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
     template<typename T1> modular  operator^ (T1 const& deg) const { return modular(*this) ^= deg; }
     inline modular& operator+=(modular const& t)       { value += t.value; if (value >= mod) value -= mod; return *this; }
     inline modular& operator-=(modular const& t)       { value -= t.value; if (value < 0  ) value += mod; return *this; }
@@ -71,7 +71,7 @@ void run()
     readln(s);
     int q = 0;
     fori(n) for (char& c: s[i]) q += c == '#';
-    writeln((modular(2) ^ q) - (q == n * m));
+    writeln((modular<int>(2) ^ q) - (q == n * m));
 }
 
 //{{{
