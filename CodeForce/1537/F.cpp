@@ -45,13 +45,13 @@ void run()
         g[u].pb(v);
         g[v].pb(u);
     }
-    ll ss = accumulate(all(s), 0ll);
-    ll tt = accumulate(all(t), 0ll);
-    if (abs(ss - tt) % 2)
+    if (abs(accumulate(all(s), 0ll) - accumulate(all(t), 0ll)) % 2)
         return writeln("NO");
     bool hasOddCycle = false;
     vector<int> color(n, -1);
+    vector<ll> sums(2, 0ll);
     function<void(int)> dfs = [&](int u) {
+        sums[color[u]] += t[u] - s[u];
         for (int v: g[u])
             if (color[v] == -1)
                 color[v] = 1 - color[u],
@@ -61,13 +61,7 @@ void run()
     };
     color[0] = 0;
     dfs(0);
-    if (hasOddCycle)
-        return writeln("YES");
-    ll sumOdd = 0;
-    ll sumEven = 0;
-    fori(n)
-        (color[i] ? sumEven : sumOdd) += t[i] - s[i];
-    writeln(sumOdd == sumEven ? "YES" : "NO");
+    writeln(hasOddCycle || sums[0] == sums[1] ? "YES" : "NO");
 
 }
 
