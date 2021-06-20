@@ -49,9 +49,6 @@ using namespace __gnu_pbds;
 #define INF 1000000007
 
 #define    ints(args...)     int args; readln(args)
-#define     lls(args...)      ll args; readln(args)
-#define   vints(args...)      vi args; readln(args)
-#define strings(args...)  string args; readln(args)
 
 //IgorjanprintTuple
 template<class Tuple, size_t... Is> ostream& print_tuple(ostream& os, const Tuple& t, index_sequence<Is...>) { ((os << (Is == 0 ? "" : " ") << get<Is>(t)), ...); return os; }
@@ -68,15 +65,19 @@ void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti vo
 ttta void readln(Args&... args){(read(args),...);}
 template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
 
+template<typename T,typename D>
+ostream&operator<<(ostream&os,T const&a);
 ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a);
 template<typename T,typename D=decltype(*begin(declval<T>())),typename enable_if<!is_same<T,basic_string<char>>::value>::type* =nullptr>
 ostream&operator<<(ostream&os,T const&a){auto it=begin(a);if(it!=end(a))os<<*it++;while(it!=end(a))os<<"\n "[is_fundamental<typename T::value_type>::value]<<*it++;return os;}
 ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
+ttti   istream&operator>>(istream&is,valarray<T>&a){fori(a.size())is>>a[i];return is;}
 ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
 ttti   istream&operator>>(istream&is,vector<T>&a){fori(a.size())is>>a[i];return is;}
 ttti void print(T&&a){cout<<" "<<a;}
 ttti void priws(T&&a){cout<<a;}
 ttti void read(T&a){cin>>a;}
+
 
 //Igorjandebug
 #ifndef ONLINE_JUDGE
@@ -377,12 +378,13 @@ struct segmentTree
     }
 };
 
-//IgorjansparseTable
-//0-indexed, [l, r)
+//IgorjandisjointSparseTable
 template<typename T>
-struct sparseTable // [l, r), 0-indexed
+struct disjointSparseTable // [l, r), 0-indexed
 {
     vector<vector<T>> dp;
+    int n;
+    int h;
 
     T NEUTRAL_ELEMENT = 0;
     //T NEUTRAL_ELEMENT = numeric_limits<T>::max();
@@ -394,10 +396,10 @@ struct sparseTable // [l, r), 0-indexed
 
     int highestBit(int x) const { return 31 - __builtin_clz(x); }
 
-    sparseTable(vector<T> a)
+    disjointSparseTable(vector<T> a)
     {
-        int n = a.size();
-        int h = highestBit(n);
+        n = a.size();
+        h = highestBit(n);
         dp.resize(h, vector<T>(n + 1, NEUTRAL_ELEMENT));
         forj(h)
         {
@@ -416,6 +418,45 @@ struct sparseTable // [l, r), 0-indexed
     {
         int hb = highestBit(l ^ r);
         return f(dp[hb][l], dp[hb][r]);
+    }
+};
+
+//IgorjansparseTable
+//0-indexed, [l, r)
+template<typename T>
+struct sparseTable
+{
+    int n;
+    vector<vector<T>> st;
+    vector<int> logs;
+    typedef function<T (T, T)> F;
+    F f;
+
+    int highestBit(int x) const { return 31 - __builtin_clz(x); }
+
+    sparseTable() {}
+
+    sparseTable(vector<T>& a, F g)
+    {
+        n = a.size();
+        f = g;
+
+        logs.push_back(0);
+        logs.push_back(0);
+        FOR(i, 2, n + 1) logs.push_back(logs[i / 2] + 1);
+        int L = logs.back() + 1;
+        st.resize(L, vector<T>(n));
+        fori(n)
+            st[0][i] = a[i];
+        FOR(k, 1, L)
+            for (int i = 0; i + (1 << k) <= n; i++)
+                st[k][i] = f(st[k - 1][i], st[k - 1][i + (1 << (k - 1))]);
+    }
+
+    T get(int l, int r)
+    {
+        int len = highestBit(r - l);
+        return f(st[len][l], st[len][r - (1 << len)]);
     }
 };
 
@@ -569,8 +610,8 @@ pointtt struct point
     T operator!() const { return x * x + y * y; }
     bool operator<(const point& b) const { return x == b.x ? y < b.y : x < b.x; }
 };
-pointtt istream&operator>>(istream&is,const point<T>&a){return is>>a.x>>a.y;}
-pointtt ostream&operator<<(ostream&os,point<T>&a){return os<<a.x<<" "<<a.y;}
+pointtt istream&operator>>(istream&is,point<T>&a){return is>>a.x>>a.y;}
+pointtt ostream&operator<<(ostream&os,const point<T>&a){return os<<a.x<<" "<<a.y;}
 pointtt T dist(const point<T>&a,const point<T>&b){return!point<T>(a-b);}
 //dist from point C to line AB equals to answer.first / sqrt(answer.second);
 pointtt pair<T,T> dist(const point<T>&a,const point<T>&b,const point<T>&c){return{abs((a-b)*c)+(a^b),dist(a,b)};}
@@ -1173,6 +1214,47 @@ struct cached
     }
 };
 
+//IgorjanlcaST
+struct lcaST
+{
+    vector<vector<int>> g;
+    vector<int> h, tin;
+    vector<pii> euler;
+    int n, l;
+    sparseTable<pii> st;
+
+    lcaST(const vector<vector<int>>& g, int root = 0) //O(n * log(n))
+    {
+        this->g = g;
+        n = SZ(g);
+        h.resize(n, -1);
+        tin.resize(n, -1);
+        dfs(root, -1);
+        st = sparseTable<pii>(euler, [](const pii& a, const pii& b) {
+            if (a.first < b.first)
+                return a;
+            else
+                return b;
+        });
+    }
+ 
+    void dfs(int u, int p) //O(n)
+    {
+        h[u] = h[p] + 1;
+        tin[u] = SZ(euler);
+        euler.emplace_back(h[u], u);
+        for (const int& v: g[u]) if (v != p)
+            dfs(v, u),
+            euler.emplace_back(h[u], u);
+    }
+
+    int get(int a, int b) //O(1)
+    {
+        if (tin[a] > tin[b]) swap(a, b);
+        return st.get(tin[a], tin[b] + 1).second;
+    }
+};
+
 //Igorjanlca
 struct lca
 {
@@ -1380,6 +1462,12 @@ struct chtTrick : multiset<line<T>, less<>>
         return sign * this->lower_bound(x)->get(x);
 	}
 };
+
+//Igorjanrng
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+//Igorjanrng64
+mt19937_64 rng64(chrono::steady_clock::now().time_since_epoch().count());
 
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
