@@ -69,37 +69,42 @@ void run()
     ints(n);
     vector<int> a(n);
     readln(a);
+    for (int& x: a) --x;
     vector<vector<int>> g(n * 2);
     fori(n)
-        g[i].pb(n + a[i] - 1);
+        g[i].pb(n + a[i]);
     auto ps = khun(g);
-    vector<int> ans(n);
-    set<int> used;
-    fori(n) used.insert(i);
-    map<int, int> back;
+
+    vector<int> ans(n, -1);
+    vector<bool> isUsed(n, false);
+    vector<int> back(n);
+
     for (auto& [from, to]: ps)
         if (from < to)
-            ans[from] = to - n + 1,
-            back[to - n + 1] = from,
-            used.erase(to - n);
+            to -= n,
+            ans[from] = to,
+            back[to] = from,
+            isUsed[to] = true;
 
-    writeln(ps.size() / 2);
+    vector<int> notUsed;
+    fori(n) if (!isUsed[i]) notUsed.pb(i);
+
     fori(n)
-        if (ans[i] == 0)
+        if (ans[i] == -1)
         {
-            auto temp = used.upper_bound(i);
-            if (temp == used.end())
-                temp = used.begin();
-            if (*temp != i)
-                ans[i] = *temp + 1;
+            auto temp = notUsed.back();
+            if (temp != i)
+                ans[i] = temp;
             else
             {
                 ans[i] = a[i];
-                ans[back[a[i]]] = i + 1;
+                ans[back[a[i]]] = i;
                 back[a[i]] = i;
             }
-            used.erase(temp);
+            notUsed.pop_back();
         }
+    for (int& x: ans) ++x;
+    writeln(ps.size() / 2);
     writeln(ans);
 }
 
