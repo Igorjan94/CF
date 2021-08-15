@@ -171,15 +171,19 @@ vector<bool> sieve(int n)
 struct linearSieve
 {
     vector<int> primes;
+    vector<int> mobius;
     vector<int> minPrime, prev;
 
     linearSieve(int N)
     {
         minPrime.resize(N, 0);
         prev.resize(N, 0);
+        mobius.resize(N, 0);
+        mobius[1] = 1;
         for (int i = 2; i < N; i++)
         {
             if (minPrime[i] == 0)
+                mobius[i] = -1,
                 primes.push_back(i),
                 minPrime[i] = i;
             for (int prime : primes)
@@ -187,6 +191,7 @@ struct linearSieve
                 int temp = prime * i;
                 if (temp < N && prime <= minPrime[i])
                     minPrime[temp] = prime,
+                    mobius[temp] = minPrime[i] == prime ? 0 : -mobius[i],
                     prev[temp] = i;
                 else
                     break;
@@ -309,37 +314,85 @@ struct segmentTree
 {
     int n;
     vector<T> t;
-    typedef function<T (T, T)> F;
-    F f;
-    T NEITRAL_ELEMENT;
+    vector<T> add;
+    //vector<T> pos;
+    function<T(const T&, const T&)> f = [](const T& a, const T& b) { return min(a, b); };
+    T NEITRAL_ELEMENT = numeric_limits<T>::max();
+ 
+    void push(int v, int tl, int tr)
+    {
+        if (add[v] == 0) return;
 
-    void build(vector<T>& a, int v, int l, int r)
+        t[v] += add[v];
+        if (tl != tr)
+            add[v * 2] += add[v],
+            add[v * 2 + 1] += add[v];
+        add[v] = 0;
+    }
+
+    void build(const vector<T>& a, int v, int l, int r)
     {
         if (l == r)
+        {
             t[v] = a[l];
+            //pos[v] = l;
+        }
         else 
         {
             int m = (l + r) / 2;
             build(a, v * 2, l, m);
             build(a, v * 2 + 1, m + 1, r);
-            t[v] = f(t[v * 2], t[v * 2 + 1]);
+            T left = t[v * 2];
+            T right = t[v * 2 + 1];
+
+            //if (left > right)
+                //pos[v] = pos[v * 2];
+            //else
+                //pos[v] = pos[v * 2 + 1];
+            t[v] = f(left, right);
         }
     };
-
-    segmentTree(vector<T>& a, F g, T ne = 0)
+ 
+    segmentTree(const vector<T>& a)
     {
         n = a.size();
-        t.resize(n * 4);
-        f = g;
-        if (ne != 0)
-            NEITRAL_ELEMENT = ne;
-        else
-            if (f(2, 4) == 6)
-                NEITRAL_ELEMENT = 0;
-            else
-                if (f(-2, 10) == -2)
-                    NEITRAL_ELEMENT = numeric_limits<T>::max();
+        t.resize(n * 4 + 10);
+        add.resize(n * 4 + 10, 0);
+        //pos.resize(n * 4 + 10, 0);
         build(a, 1, 0, n - 1);
+    }
+ 
+    void update(int l, int r, T value)
+    {
+        update(1, 0, n - 1, l, r, value);
+    }
+ 
+    void update(int v, int tl, int tr, int l, int r, T value) 
+    {
+        push(v, tl, tr);
+        if (l > r)
+            return;
+        if (tl == l && tr == r)
+        {
+            t[v] += value;
+            if (tl != tr)
+                add[v * 2] += value,
+                add[v * 2 + 1] += value;
+        }
+        else 
+        {
+            int tm = (tl + tr) / 2;
+            update(v * 2, tl, tm, l, min(r, tm), value);
+            update(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r, value);
+            T left = t[v * 2];
+            T right = t[v * 2 + 1];
+
+            //if (left > right)
+                //pos[v] = pos[v * 2];
+            //else
+                //pos[v] = pos[v * 2 + 1];
+            t[v] = f(left, right);
+        }
     }
 
     T get(int l, int r)
@@ -349,33 +402,20 @@ struct segmentTree
 
     T get(int v, int tl, int tr, int l, int r) 
     {
-        if (l > r)
-            return NEITRAL_ELEMENT;
-        if (l == tl && r == tr)
+        push(v, tl, tr);
+        if (l > r) return NEITRAL_ELEMENT;
+
+        if (tl == l && tr == r)
             return t[v];
-        int tm = (tl + tr) / 2;
-        return f(get(v * 2, tl, tm, l, min(r, tm)), get(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r));
-    }
-
-    void update(int position, T value)
-    {
-        update(1, 0, n - 1, position, value);
-    }
-
-    void update(int v, int tl, int tr, int position, T value) 
-    {
-        if (tl == tr)
-            t[v] = value;
         else 
         {
             int tm = (tl + tr) / 2;
-            if (position <= tm)
-                update(v * 2, tl, tm, position, value);
-            else
-                update(v * 2 + 1, tm + 1, tr, position, value);
-            t[v] = f(t[v * 2], t[v * 2 + 1]);
+            T left = get(v * 2, tl, tm, l, min(r, tm));
+            T right = get(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r);
+            return f(left, right);
         }
     }
+
 };
 
 //IgorjandisjointSparseTable
