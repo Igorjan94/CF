@@ -700,7 +700,7 @@ struct modularR
     template<typename T1> modularR operator=(const T1& other) { assert(mod); value = other % mod; if (value < 0) value += mod; return *this; }
     template<typename T1> modularR(T1 const& other, T1 const& mod) { this->mod = mod; value = other % mod; if (value < 0) value += mod; }
     template<typename T1> modularR(T1 const& num, T1 const& den, T1 const& mod) { *this = modularR(den, mod) ^ (mod - 2) * num; }
-    template<typename T1> modularR& operator^=(T1 const& deg) { modularR a(*this); for (T1 n = deg - 1; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
+    template<typename T1> modularR& operator^=(T1 const& deg) { modularR a(*this); value = T(1); for (T1 n = deg; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
     template<typename T1> modularR  operator^ (T1 const& deg) const { return modularR(*this) ^= deg; }
     template<typename T1> inline modularR& operator+=(T1 const& t)       { value += t; if (value >= mod) value -= mod; return *this; }
     template<typename T1> inline modularR& operator-=(T1 const& t)       { value -= t; if (value < 0  ) value += mod; return *this; }
@@ -731,7 +731,7 @@ struct modular
     template<typename T1> modular operator=(const T1& other) { value = other % mod; if (value < 0) value += mod; return *this; }
     template<typename T1> modular(T1 const& other) { value = other % mod; if (value < 0) value += mod; }
     template<typename T1> modular(T1 const& num, T1 const& den) { *this = modular(den) ^ (mod - 2) * num; }
-    template<typename T1> modular& operator^=(T1 const& deg) { modular a(*this); for (T1 n = deg - 1; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
+    template<typename T1> modular& operator^=(T1 const& deg) { modular a(*this); value = T(1); for (T1 n = deg; n > 0; n >>= 1) { if (n & 1) *this *= a; a *= a; } return *this; }
     template<typename T1> modular  operator^ (T1 const& deg) const { return modular(*this) ^= deg; }
     inline modular& operator+=(modular const& t)       { value += t.value; if (value >= mod) value -= mod; return *this; }
     inline modular& operator-=(modular const& t)       { value -= t.value; if (value < 0  ) value += mod; return *this; }
@@ -1508,6 +1508,92 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 //Igorjanrng64
 mt19937_64 rng64(chrono::steady_clock::now().time_since_epoch().count());
+
+//IgorjantwoSat
+struct twoSat
+{
+    vector<vector<int>> g, gt;
+    vector<bool> used;
+    vector<int> order;
+    vector<int> comp;
+    int n;
+
+    twoSat(int n)
+    {
+        n *= 2;
+        this->n = n;
+        g.resize(n);
+        gt.resize(n);
+        used.resize(n, false);
+        comp.resize(n, -1);
+    }
+
+    //(af ? not a : a) || (bf ? not b : b)
+    void addOr(int a, bool af, int b, bool bf) {
+        a += a + (af ^ 1);
+        b += b + (bf ^ 1);
+        addEdge(a ^ 1, b);
+        addEdge(b ^ 1, a);
+    }
+    
+    void addXor(int a, bool af, int b, bool bf) {
+        addOr(a, af, b, bf);
+        addOr(a, !af, b, !bf);
+    }
+    
+    void addImply(int a, bool af, int b, bool bf) {
+        a += a + (af ^ 1);
+        b += b + (bf ^ 1);
+        addEdge(a, b);
+    }
+    
+    void addEdge(int a, int b) {
+        g[a].push_back(b);
+        gt[b].push_back(a);
+    }
+    
+    //returns vector of n / 2 size -- if i / 2-th variable is true or false
+    optional<vector<bool>> solve()
+    {
+        fori(n)
+            if (!used[i])
+                dfs1(i);
+
+        reverse(all(order));
+
+        int j = 0;
+        for (const int& u: order)
+            if (comp[u] == -1)
+                dfs2(u, j++);
+
+        fori(n)
+            if (comp[i] == comp[i ^ 1])
+                return {};
+        vector<bool> ans(n / 2);
+        for (int i = 0; i < n; i += 2)
+            ans[i / 2] = comp[i] < comp[i ^ 1];
+        return ans;
+    }
+
+private:
+    void dfs1(int u)
+    {
+        used[u] = true;
+        for (const int& v: g[u])
+            if (!used[v])
+                dfs1(v);
+        order.push_back(u);
+    }
+
+    void dfs2(int u, int c)
+    {
+        comp[u] = c;
+        for (const int& v: gt[u])
+            if (comp[v] == -1)
+                dfs2(v, c);
+    }
+
+};
 
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
