@@ -669,7 +669,25 @@ pointtt point<T> reflect(const point<T>&a,const point<T>&b,const point<T>&c){
 };
 
 //IgorjanconvexHull
-pointtt void convexHull(const vector<point<T>>&a){sort(whole(a));int n=SZ(a),j=-1,k=0;ROF(i,n-2,0)a.push_back(a[i]);fori(n){while(j>k&&orientation(a[j-1],a[j],a[i])!=1)--j;a[++j]=a[i];if(!k&&i==n-1)k=j;}a.resize(j);}
+pointtt vector<point<T>> convexHull(vector<point<T>> a) //ANDREW
+{
+	if (a.size() <= 1) return a;
+    sort(a.begin(), a.end());
+    vector<point<T>> up, dn;
+    for (const auto& p: a)
+    {
+        while (up.size() > 1 && orientation(up[up.size() - 2], up.back(), p) != CCW)
+            up.pop_back();
+        while (dn.size() > 1 && orientation(dn[dn.size() - 2], dn.back(), p) != CW)
+            dn.pop_back();
+        up.push_back(p);
+        dn.push_back(p);
+    }
+    dn.pop_back();
+    copy(up.rbegin(), up.rend() - 1, back_inserter(dn));
+    if (dn.size() == 2 && dn[0] == dn[1]) dn.pop_back();
+    return dn;
+}
 
 //IgorjanprintAns
 ttta void printAnswerAndExit(Args... args){writeln(args...);exit(0);}
@@ -1186,11 +1204,12 @@ vector<int> topsort(const vector<vector<int>>& edges, bool reversed = false)
 }
 
 //Igorjanlis
-vector<int> lis(const vector<int>& a)
+template<typename T = int>
+vector<T> lis(const vector<T>& a)
 {
     int n = a.size();
-    vector<int> d(n + 1, INF), p(n + 1, -1), x(n + 1, -1);
-    d[0] = -INF;
+    vector<T> d(n + 1, numeric_limits<T>::max()), p(n + 1, -1), x(n + 1, -1);
+    d[0] = numeric_limits<T>::min();
  
     fori(n)
     {
@@ -1204,7 +1223,7 @@ vector<int> lis(const vector<int>& a)
     while (index <= n && d[index] < INF) ++index;
     index = x[--index];
 
-    vector<int> ans;
+    vector<T> ans;
     while (index != -1)
         ans.pb(a[index]),
         index = p[index];
