@@ -1,0 +1,1 @@
+print('Red panda')
