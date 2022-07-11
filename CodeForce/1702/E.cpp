@@ -50,6 +50,9 @@ void run()
         m[x].pb(i);
         m[y].pb(i);
     }
+    fori(n + 1)
+        if (m[i].size() > 2)
+            return writeln("NO");
         
     vector<int> color(n, -1);
     bool ok = true;
