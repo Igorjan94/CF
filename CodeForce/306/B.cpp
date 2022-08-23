@@ -1,76 +1,95 @@
-#include <cstdlib>
-#include <iostream>
-#include <stdio.h>
-#include <vector>
-#include <set>
-#include <algorithm>
-#define enter printf("\n");
+// Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
+#include <bits/stdc++.h>
+#ifdef ONLINE_JUDGE
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#endif
 
 using namespace std;
-int INF = 1000000007;
-int mn = INF, mx = 0;
-struct pai
+
+#define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
+#define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
+#define forn(i, n)   for (int i = 0; i < (int) (n); ++i)
+#define  fori1(n)    for (int i = 1; i < (int) (n); ++i)
+#define  forj1(n)    for (int j = 1; j < (int) (n); ++j)
+#define   fori(n)    for (int i = 0; i < (int) (n); ++i)
+#define   forj(n)    for (int j = 0; j < (int) (n); ++j)
+#define     SZ(a)    int(size(a))
+
+typedef  pair<int, int>   pii;
+typedef   vector<int>     vi;
+typedef    long long      ll;
+
+#define pb push_back
+#define all(a) begin(a), end(a)
+#define ints(a...) int a; readln(a)
+
+[[maybe_unused]] const int MOD = 1000000007;
+[[maybe_unused]] const int INTMAX = numeric_limits<int>::max();
+
+#define ttt12i template<class T1, class T2> inline
+#define  ttti  template<class T> inline
+
+void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
+template<class... Args> inline void readln(Args&... args){(read(args),...);}
+template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
+
+//Igorjan
+//}}}
+
+void run()
 {
-    int x, y, i;
-    pai(int x, int y, int z)
+    ints(n, m);
+    vector<array<int, 3>> segments(m);
+    fori(m)
     {
-        this->x = x;
-        this->y = y;
-        this->i = z;
+        ints(x, l);
+        segments[i] = {x, x + l, i + 1};
     }
-};
-
-bool cmp(pai a, pai b)
-{
-    if (a.x != b.x)
-    return a.x < b.x; else
-    return a.y > b.y;
-}
-
-vector< pai > a;
-vector<bool> b;
-void writeln(int a){printf("%d\n", a);}void writeln(int a, int b){printf("%d %d\n", a, b);}void writeln(int a, int b, int c){printf("%d %d %d\n", a, b, c);}void writeln(int a, int b, int c, int d){printf("%d %d %d %d\n", a, b, c, d);}void write(int a){printf("%d", a);}void write(int a, int b){printf("%d %d", a, b);}void write(int a, int b, int c){printf("%d %d %d", a, b, c);}void write(int a, int b, int c, int d){printf("%d %d %d %d", a, b, c, d);}void read(int &a){scanf("%d", &a);}void read(int &a, int &b){scanf("%d %d", &a, &b);}void read(int &a, int &b, int &c){scanf("%d %d %d", &a, &b, &c);}void read(int &a, int &b, int &c, int &d){scanf("%d %d %d %d", &a, &b, &c, &d);}void readln(int &a){scanf("%d\n", &a);}void readln(int &a, int &b){scanf("%d %d\n", &a, &b);}void readln(int &a, int &b, int &c){scanf("%d %d %d\n", &a, &b, &c);}void readln(int &a, int &b, int &c, int &d){scanf("%d %d %d %d\n", &a, &b, &c, &d);}
-
-void readln(vector<int> &a, int n)
-{
-    int x;
-    for (int i = 1; i <= n; i++)
+    sort(all(segments));
+    vector<int> ans;
+    int last = 0;
+    for (int i = 0; i < m; )
     {
-        read(x);
-        a.push_back(x);
+        last = max(last, segments[i][0]);
+
+        int j = i;
+        int found = -1;
+        int newLast = last;
+        while (j < m && segments[j][0] <= last)
+        {
+            if (segments[j][1] > newLast)
+                newLast = segments[j][1],
+                found = j;
+            ++j;
+        }
+        FOR(k, i, j)
+            if (k != found)
+                ans.pb(segments[k][2]);
+        i = j;
+        last = newLast;
     }
+    sort(all(ans));
+    writeln(ans.size());
+    writeln(ans);
 }
 
-void writeln(vector<int> &f)
-{
-    int x;
-    for (int i = 0; i < f.size(); i++)
-        printf("%d%c", f[i], i == f.size() - 1 ? '\n' : ' ');
-}
-
+//{{{
 int main()
 {
-   freopen("input.txt", "r", stdin);
-//freopen("output.txt", "w+", stdout);
-    int n, m, x, y;
-    readln(n, m);
-    b.resize(m + 1, false);
-    for (int i = 0; i < m; i++)
-        readln(x, y),
-        a.push_back(pai(x, y, i + 1));
-    sort(a.begin(), a.end(), cmp);
-    int j = 0;
-    mx = a[0].y + a[0].x;
-    for (int i = 1; i < m; i++)
-    {
-            if (a[i].x + a[i].y <= mx)
-            j++,
-            b[a[i].i] = true;
-        mx = max(mx, a[i].x + a[i].y);
-    }
-    writeln(j);
-    for (int i = 1; i <= m; i++)
-    if (b[i])
-    printf("%d ", i);
-   return 0;
+    ios_base::sync_with_stdio(false);
+    run();
+    cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
+    return 0;
 }
+
+#define a _a
+#define n _n
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a);
+template<typename T,typename D=decltype(*begin(declval<T>())),typename enable_if<!is_same<T,basic_string<char>>::value>::type* =nullptr>
+ostream&operator<<(ostream&os,T const&a){auto it=begin(a);if(it!=end(a))os<<*it++;while(it!=end(a))os<<"\n "[is_fundamental<typename T::value_type>::value]<<*it++;return os;}
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
+ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
+ttti   istream&operator>>(istream&is,vector<T>&a){fori(a.size())is>>a[i];return is;}
+ttti void print(T&&a){cout<<" "<<a;}
+ttti void priws(T&&a){cout<<a;}
+ttti void read(T&a){cin>>a;} //}}}
