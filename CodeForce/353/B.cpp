@@ -1,125 +1,95 @@
-#include <cstdlib>
-#include <iostream>
-#include <stdio.h>
-#include <vector>
-#include <set>
-#include <algorithm>
-#include <queue>
-#define enter printf("\n");
-#define pb push_back
-#define ll long long
-#define fors(it, r) for (set<int>::iterator it = r.begin(); it != r.end(); it++)
-#define forvit(it, r) for (vector<int>::iterator it = r.begin(); it != r.end(); it++)
-#define forv(i, vector) for (int i = 0; i < vector.size(); i++)
-#define forn(i, n) for (int i = 0; i < n; i++)
-#define vi vector<int>
+// Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
+#include <bits/stdc++.h>
+#ifdef ONLINE_JUDGE
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#endif
 
 using namespace std;
-int INF = 1000000007;
-string FILENAME = "start";
-string FILEINPUT = FILENAME;
 
-void writeln(int a){printf("%d\n", a);}void writeln(int a, int b){printf("%d %d\n", a, b);}void writeln(int a, int b, int c){printf("%d %d %d\n", a, b, c);}void writeln(int a, int b, int c, int d){printf("%d %d %d %d\n", a, b, c, d);}void write(int a){printf("%d", a);}void write(int a, int b){printf("%d %d", a, b);}void write(int a, int b, int c){printf("%d %d %d", a, b, c);}void write(int a, int b, int c, int d){printf("%d %d %d %d", a, b, c, d);}void read(int &a){scanf("%d", &a);}void read(int &a, int &b){scanf("%d %d", &a, &b);}void read(int &a, int &b, int &c){scanf("%d %d %d", &a, &b, &c);}void read(int &a, int &b, int &c, int &d){scanf("%d %d %d %d", &a, &b, &c, &d);}void readln(int &a){scanf("%d\n", &a);}void readln(int &a, int &b){scanf("%d %d\n", &a, &b);}void readln(int &a, int &b, int &c){scanf("%d %d %d\n", &a, &b, &c);}void readln(int &a, int &b, int &c, int &d){scanf("%d %d %d %d\n", &a, &b, &c, &d);}
-void readln(vector<int> &f, int n){int x;for (int i = 1; i <= n; i++){read(x);f.push_back(x);}}void writeln(vector<int> &f){for (int i = 0; i < f.size(); i++)printf("%d%c", f[i], i == f.size() - 1 ? '\n' : ' ');}
+#define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
+#define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
+#define forn(i, n)   for (int i = 0; i < (int) (n); ++i)
+#define  fori1(n)    for (int i = 1; i < (int) (n); ++i)
+#define  forj1(n)    for (int j = 1; j < (int) (n); ++j)
+#define   fori(n)    for (int i = 0; i < (int) (n); ++i)
+#define   forj(n)    for (int j = 0; j < (int) (n); ++j)
+#define     SZ(a)    int(size(a))
 
-struct pii
-{
-    int first, second, i;
-    pii(int i, int j)
-    {
-        first = i;
-        second = j;
-    }
-};
+typedef  pair<int, int>   pii;
+typedef   vector<int>     vi;
+typedef    long long      ll;
 
-bool cmp(pii i, pii j)
-{
-    return i.first < j.first;
-}
-bool cmp2(pii i, pii j)
-{
-    return i.second < j.second;
-}
+#define pb push_back
+#define all(a) begin(a), end(a)
+#define ints(a...) int a; readln(a)
+
+[[maybe_unused]] const int MOD = 1000000007;
+[[maybe_unused]] const int INTMAX = numeric_limits<int>::max();
+
+#define ttt12i template<class T1, class T2> inline
+#define  ttti  template<class T> inline
+
+void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
+template<class... Args> inline void readln(Args&... args){(read(args),...);}
+template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
+
+//Igorjan
+//}}}
 
 void run()
 {
-    int n, s1 = 0, s2 = 0, x, y;
-    readln(n);
-    vector< pii > a;
-    int m[101];
-    for (int i = 0; i <= 100; i++)
-        m[i] = 0;
-    forn(i, 2 * n)
-        read(x),
-        a.pb(pii(x, i)),
-        m[x]++;
-    int count = 0;
-    for (int i = 0; i <= 100; i++)
-        count += m[i] > 0;
-    sort(a.begin(), a.end(), cmp);
-    int k = 0, j2 = 0;
-    int i = 0;
-    int c1 = 0, c2 = 0;
-    for (int jj = 0; jj < count; jj++)
-    {
-        int t = m[a[i].first];
-        if (t > 1)
+    ints(n);
+    vi a(n * 2);
+    readln(a);
+    vector<int> ans(2 * n);
+    map<int, vector<int>> c;
+    fori(n * 2)
+        c[a[i]].pb(i);
+    int x = 2;
+    for (auto& [k, v]: c)
+        for (int i = 0; i + 1 < SZ(v); i += 2)
+            ans[v[i]] = 1,
+            ans[v[i + 1]] = 2;
+    for (auto& [k, v]: c)
+        if (SZ(v) == 1)
         {
-            if (t % 2 == 0)
-            {
-                for (int j = 0; j < t / 2; j++)
-                    a[i++].i = 0;
-                for (int j = 0; j < t / 2; j++)
-                    a[i++].i = 1;
-                c1 += t / 2;
-                c2 += t / 2;
-            } else
-            {
-                if (c1 >= c2)
-                {
-                    for (int j = 0; j < t / 2; j++)
-                        a[i++].i = 0;
-                    for (int j = 0; j < t - t / 2; j++)
-                        a[i++].i = 1;
-                    c1 += t / 2;
-                    c2 += t - t / 2;
-                } else
-                {
-                    for (int j = 0; j < t / 2; j++)
-                        a[i++].i = 1;
-                    for (int j = 0; j < t - t / 2; j++)
-                        a[i++].i = 0;
-                    c1 += t - t / 2;
-                    c2 += t / 2;
-                }
-            }
-            k++;
-            j2++;
-        } else
-        {
-            if (c1 <= c2)
-            {
-                a[i++].i = 0;
-                k++;
-                c1++;
-            } else
-            {
-                a[i++].i = 1;
-                j2++;
-                c2++;
-            }
+            ans[v.back()] = x;
+            v.pop_back();
+            x ^= 3;
         }
-    }
-    sort(a.begin(), a.end(), cmp2);
-    writeln(j2 * k);
-    forn(i, 2 * n)
-        printf("%d ", a[i].i + 1);
+    for (auto& [k, v]: c)
+        if (SZ(v) % 2 == 1)
+        {
+            ans[v.back()] = x;
+            x ^= 3;
+        }
+    set<int> s;
+    fori(n * 2)
+        if (ans[i] == 1)
+            forj(2 * n)
+                if (ans[j] == 2)
+                    s.insert(a[i] * 100 + a[j]);
+    writeln(s.size());
+    writeln(ans);
 }
 
+//{{{
 int main()
 {
-//    freopen(FILEINPUT.append(".in").c_str(), "r", stdin);
-  //  freopen(FILENAME.append(".out").c_str(), "w", stdout);
+    ios_base::sync_with_stdio(false);
     run();
+    cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
     return 0;
 }
+
+#define a _a
+#define n _n
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a);
+template<typename T,typename D=decltype(*begin(declval<T>())),typename enable_if<!is_same<T,basic_string<char>>::value>::type* =nullptr>
+ostream&operator<<(ostream&os,T const&a){auto it=begin(a);if(it!=end(a))os<<*it++;while(it!=end(a))os<<"\n "[is_fundamental<typename T::value_type>::value]<<*it++;return os;}
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
+ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
+ttti   istream&operator>>(istream&is,vector<T>&a){fori(a.size())is>>a[i];return is;}
+ttti void print(T&&a){cout<<" "<<a;}
+ttti void priws(T&&a){cout<<a;}
+ttti void read(T&a){cin>>a;} //}}}
