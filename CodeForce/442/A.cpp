@@ -1,233 +1,97 @@
-//template igorjan94 version from 05 June 2014
+// Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
 #include <bits/stdc++.h>
-
-#define pb push_back
-#define ll long long
-#define forit(it, r) for (auto it = r.begin(); it != r.end(); it++)
-#define forn(i, n) for (int i = 0; i < n; ++i)
-#define forn1(i, n) for (int i = 1; i < n; ++i)
-#define FOR(i, m, n) for (int i = m; i < n; ++i)
-#define ROF(i, m, n) for (int i = m; i >= n; --i)
-#define fori(n) for (int i = 0; i < n; ++i)
-#define forj(n) for (int j = 0; j < n; ++j)
-#define fori1(n) for (int i = 1; i < n; ++i)
-#define forj1(n) for (int j = 1; j < n; ++j)
-#define vi vector<int>
-#define vvi vector<vector<int> >
-#define vll vector<long long>
-#define pii pair<int, int>
-#define whole(a) a.begin(), a.end()
-
-#ifndef ONLINE_JUDGE
-#define lld I64d
+#ifdef ONLINE_JUDGE
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #endif
-
-#define FILENAME "input"
-#define INF 1000000007
-#define DOUBLEFORMAT "%f"
 
 using namespace std;
 
-template <class Head, class... Tail> void writeln(Head head, Tail... tail);
-template <class Head, class... Tail> void writeln2(Head head, Tail... tail);
-template <class Head, class... Tail> void readln(Head& head, Tail&... tail);
-void writeln(){printf("\n");}void writeln2(){printf("\n");}void readln(){}
+#define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
+#define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
+#define forn(i, n)   for (int i = 0; i < (int) (n); ++i)
+#define  fori1(n)    for (int i = 1; i < (int) (n); ++i)
+#define  forj1(n)    for (int j = 1; j < (int) (n); ++j)
+#define   fori(n)    for (int i = 0; i < (int) (n); ++i)
+#define   forj(n)    for (int j = 0; j < (int) (n); ++j)
+#define     SZ(a)    int(size(a))
 
-///----------------------------------------------------------------------------------------------------------------------------
+typedef  pair<int, int>   pii;
+typedef   vector<int>     vi;
+typedef    long long      ll;
 
-int n, m, k;
-int table[6][6];
-int got[6][6];
+#define pb push_back
+#define all(a) begin(a), end(a)
+#define ints(a...) int a; readln(a)
+
+[[maybe_unused]] const int MOD = 1000000007;
+[[maybe_unused]] const int INTMAX = numeric_limits<int>::max();
+
+#define ttt12i template<class T1, class T2> inline
+#define  ttti  template<class T> inline
+
+void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
+template<class... Args> inline void readln(Args&... args){(read(args),...);}
+template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
+
+//Igorjan
+//}}}
 
 int f(char c)
 {
     switch(c)
     {
-        case 'R': return 0;
-        case 'G': return 1;
-        case 'B': return 2;
-        case 'W': return 3;
-        case 'Y': return 4;
-        return 5;
+        case 'R': return 5;
+        case 'G': return 6;
+        case 'B': return 7;
+        case 'W': return 8;
+        case 'Y': return 9;
     }
+    return 5;
 }
 
 void run()
 {
-    readln(n);
-    char c, cc, d;
-    readln(cc);
+    ints(n);
+    vector<int> a;
     fori(n)
-        readln(c, d, cc),
-        table[f(c)][d - '1'] = 1;
-    int count = 0;
-    set<int> color, ma;
-    fori(5)
-        forj(5)
-            if (table[i][j])
-                count++,
-                color.insert(i),
-                ma.insert(j);
-    if (count == 1)
     {
-        writeln(0);
-        return;
+        string s;
+        readln(s);
+        a.pb((1 << f(s[0])) | (1 << (s[1] - '1')));
     }
-    if (count == 2)
+    sort(all(a));
+    a.resize(unique(all(a)) - a.begin());
+    int ans = 10;
+    fori(1 << 10)
     {
-        writeln(1);
-        return;
+        int cur = __builtin_popcount(i);
+        set<int> unknown;
+        bool ok = true;
+        for (int x: a)
+            ok &= unknown.insert(x & i).second;
+        if (ok)
+            ans = min(ans, cur);
     }
-    if (color.size() == 1)
-    {
-        writeln(ma.size() - 1);
-        return;
-    }
-    if (ma.size() == 1)
-    {
-        writeln(color.size() - 1);
-        return;
-    }
-    vi permut;
-    m = 10;
-    fori(m)
-        permut.pb(i);
-    int mn = INF;
-    while (next_permutation(whole(permut)))
-    {
-        fori(5)
-            forj(5)
-                got[i][j] = 0;
-        forn(q, m)
-        {
-            int temp = permut[q];
-            if (temp >= m / 2)
-                forj(5)
-                    got[temp - m / 2][j]++;
-            else
-                fori(5)
-                    got[i][temp]++;
-            int cur = 0;
-            int flag = 0;
-            fori(5)
-            {
-                int currow = 0;
-                forj(5)
-                    if (table[i][j])
-                    {
-                        if (got[i][j] == 2)
-                            cur++;
-                        else
-                            if (got[i][j] == 1)
-                                currow++,
-                                cur++;
-                    }
-                if (currow >= 2)
-                {
-                    flag = 1;
-                    break;
-                }
-            }
-            if (cur < count - 1)
-                continue;
-            forj(5)
-            {
-                int curcol = 0;
-                fori(5)
-                    if (table[i][j])
-                        if (got[i][j] == 1)
-                            curcol++;
-                if (curcol >= 2)
-                {
-                    flag = 1;
-                    break;
-                }
-            }
-            if (!flag)
-            {
-                mn = min(mn, q + 1);
-                break;
-            }
-        }
-    }
-    writeln(mn);
+    writeln(ans);
 }
 
+//{{{
 int main()
 {
-//    freopen(FILENAME".in", "r", stdin);
-//    freopen(FILENAME".out", "w", stdout);
+    ios_base::sync_with_stdio(false);
     run();
+    cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
     return 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void print(double a){printf(" " DOUBLEFORMAT,a);}
-void print(int a){printf(" %d",a);}
-void print(string a){printf(" %s",a.c_str());}
-void print(long long a){printf(" %lld",a);}
-void print(unsigned long a){printf(" %ld",a);}
-void print(unsigned int a){printf(" %d",a);}
-void print(char a){printf(" %c",a);}
-void print_no_space(double a){printf(DOUBLEFORMAT, a);}
-void print_no_space(int a){printf("%d", a);}
-void print_no_space(string a){printf("%s", a.c_str());}
-void print_no_space(long long a){printf("%lld", a);}
-void print_no_space(unsigned long a){printf("%ld", a);}
-void print_no_space(unsigned int a){printf("%d", a);}
-void print_no_space(char a){printf("%c", a);}
-
-template<class Type>
-void print_no_space(vector<Type>& a);
-template<class Type>
-void print(vector<Type>& a){for(int i=0;i<a.size();++i)print(a[i]);}
-template<class Type>
-void print(vector<vector<Type> >& a){if(a.size())(a.size()==1)?print(a[0]):writeln2(a[0]);for(int i=1;i<a.size()-1;++i)writeln2(a[i]);if(a.size()>=2)print_no_space(a.back());}
-template<class Type1, class Type2>
-void print(pair<Type1, Type2>& a){print(a.first);print(a.second);}
-
-template<class Type>
-void print_no_space(vector<Type>& a){if(a.size())print_no_space(a[0]);for(int i=1;i<a.size();++i)print(a[i]);}
-template<class Type>
-void print_no_space(vector<vector<Type> >&a){for(int i=0;i<a.size()-1;++i)writeln(a[i]);if(a.size())print_no_space(a.back());}
-template<class Type1, class Type2>
-void print_no_space(pair<Type1, Type2>&a){print_no_space(a.first);print(a.second);}
-template <class Head, class... Tail>
-void writeln2(Head head, Tail... tail){print(head);writeln2(tail...);}
-template <class Head, class... Tail>
-void writeln(Head head, Tail... tail){print_no_space(head);writeln2(tail...);}
-
-void read(double &a){scanf("%lf",&a);}
-void read(int &a){scanf("%d",&a);}
-void read(string &a){cin>>a;}
-void read(long long &a){scanf("%lld",&a);}
-void read(char &a){scanf("%c",&a);}
-template<class Type1, class Type2>
-void read(pair<Type1, Type2>&a){readln(a.first, a.second);}
-template<class Type>
-void read(vector<Type> &a){if(a.size()==0){int n;read(n);a.resize(n);}for(int i=0;i<a.size();++i)readln(a[i]);}
-template <class Head,class... Tail>
-void readln(Head& head,Tail&... tail){read(head);readln(tail...);}
+#define a _a
+#define n _n
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a);
+template<typename T,typename D=decltype(*begin(declval<T>())),typename enable_if<!is_same<T,basic_string<char>>::value>::type* =nullptr>
+ostream&operator<<(ostream&os,T const&a){auto it=begin(a);if(it!=end(a))os<<*it++;while(it!=end(a))os<<"\n "[is_fundamental<typename T::value_type>::value]<<*it++;return os;}
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
+ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
+ttti   istream&operator>>(istream&is,vector<T>&a){fori(a.size())is>>a[i];return is;}
+ttti void print(T&&a){cout<<" "<<a;}
+ttti void priws(T&&a){cout<<a;}
+ttti void read(T&a){cin>>a;} //}}}
