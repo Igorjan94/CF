@@ -1,138 +1,89 @@
+// Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
 #include <bits/stdc++.h>
-
-#define pb push_back
-#define ll long long
-#define forit(it, r) for (auto it = r.begin(); it != r.end(); it++)
-#define forn(i, n) for (int i = 0; i < n; i++)
-#define forn1(i, n) for (int i = 1; i < n; i++)
-#define fori(n) for (int i = 0; i < n; i++)
-#define forj(n) for (int j = 0; j < n; j++)
-#define vi vector<int>
-#define vll vector<long long>
-#define pii pair<int, int>
-#ifndef ONLINE_JUDGE
-#define lld I64d
+#ifdef ONLINE_JUDGE
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #endif
-#define FILENAME "input"
-#define INF 1000000007
 
 using namespace std;
 
-template <class Head, class... Tail> void writeln(Head head, Tail... tail);
-template <class Head, class... Tail> void readln(Head& head, Tail&... tail);
-void writeln(){printf("\n");}void readln(){}
-struct graph{vector<vector<int>> edges;int n;graph(int);graph(int, int);graph();void createGraph(int);void add_edge(int, int);void add_or_edge(int, int);void writelnMatrix();void writeln();};
+#define FOR(i, m, n) for (int i = m; i <  (int) (n); ++i)
+#define ROF(i, m, n) for (int i = m; i >= (int) (n); --i)
+#define forn(i, n)   for (int i = 0; i < (int) (n); ++i)
+#define  fori1(n)    for (int i = 1; i < (int) (n); ++i)
+#define  forj1(n)    for (int j = 1; j < (int) (n); ++j)
+#define   fori(n)    for (int i = 0; i < (int) (n); ++i)
+#define   forj(n)    for (int j = 0; j < (int) (n); ++j)
+#define     SZ(a)    int(size(a))
 
-///----------------------------------------------------------------------------------------------------------------------------
+typedef  pair<int, int>   pii;
+typedef   vector<int>     vi;
+typedef    long long      ll;
 
-int n, m, k;
-ll a[1001][1001];
-ll w[1001][1001];
-ll x[1001][1001];
-ll y[1001][1001];
-ll z[1001][1001];
-ll du[1001];
-ll ud[1001];
-ll lr[1001];
-ll rl[1001];
+#define pb push_back
+#define all(a) begin(a), end(a)
+#define ints(a...) int a; readln(a)
 
+[[maybe_unused]] const int MOD = 1000000007;
+[[maybe_unused]] const int INTMAX = numeric_limits<int>::max();
+
+#define ttt12i template<class T1, class T2> inline
+#define  ttti  template<class T> inline
+
+void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
+template<class... Args> inline void readln(Args&... args){(read(args),...);}
+template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
+
+//Igorjan
+//}}}
 
 void run()
 {
-    readln(n, m);
+    ints(n, m);
+    vector<vector<int>> a(n, vector<int>(m));
+    vector<vector<int>> b(n + 2, vector<int>(m + 2));
+    vector<vector<int>> c(n + 2, vector<int>(m + 2));
+    vector<vector<int>> d(n + 2, vector<int>(m + 2));
+    vector<vector<int>> e(n + 2, vector<int>(m + 2));
+    readln(a);
     fori(n)
         forj(m)
-            readln(a[i][j]),
-            w[i][j] = x[i][j] = y[i][j] = z[i][j] = a[i][j];
+            b[i + 1][j + 1] = a[i][j] + max(b[i + 1][j], b[i][j + 1]);
+    ROF(i, n - 1, 0)
+        forj(m)
+            c[i + 1][j + 1] = a[i][j] + max(c[i + 1][j], c[i + 2][j + 1]);
+    ROF(i, n - 1, 0)
+        ROF(j, m - 1, 0)
+            d[i + 1][j + 1] = a[i][j] + max(d[i + 1][j + 2], d[i + 2][j + 1]);
     fori(n)
-        du[i] = i,
-        ud[i] = n - i - 1;
-    forj(m)
-        lr[j] = j,
-        rl[j] = m - j - 1;
-    forn1(i, n)
-    {
-        w[du[i]][lr[0]] += w[du[i - 1]][lr[0]];
-        x[du[i]][rl[0]] += x[du[i - 1]][rl[0]];
-        y[ud[i]][rl[0]] += y[ud[i - 1]][rl[0]];
-        z[ud[i]][lr[0]] += z[ud[i - 1]][lr[0]];
-    }
-    forn1(j, m)
-    {
-        w[du[0]][lr[j]] += w[du[0]][lr[j - 1]];
-        x[du[0]][rl[j]] += x[du[0]][rl[j - 1]];
-        y[ud[0]][rl[j]] += y[ud[0]][rl[j - 1]];
-        z[ud[0]][lr[j]] += z[ud[0]][lr[j - 1]];
-    }
-
-    forn1(i, n)
-        forn1(j, m)
-        {
-            w[du[i]][lr[j]] += max(w[du[i]][lr[j - 1]], w[du[i - 1]][lr[j]]);
-            x[du[i]][rl[j]] += max(x[du[i]][rl[j - 1]], x[du[i - 1]][rl[j]]);
-            y[ud[i]][rl[j]] += max(y[ud[i]][rl[j - 1]], y[ud[i - 1]][rl[j]]);
-            z[ud[i]][lr[j]] += max(z[ud[i]][lr[j - 1]], z[ud[i - 1]][lr[j]]);
-        }
-    ll ans = 0;
-    forn1(i, n - 1)
-        forn1(j, m - 1)
-            ans = max(ans, w[i][j] + x[i][j] + y[i][j] + z[i][j] - a[i][j] * 4);
+        ROF(j, m - 1, 0)
+            e[i + 1][j + 1] = a[i][j] + max(e[i + 1][j + 2], e[i][j + 1]);
+    int ans = 0;
+    FOR(i, 2, n)
+        FOR(j, 2, m)
+            ans = max({ans,
+                        b[i][j - 1] + d[i][j + 1] + c[i + 1][j] + e[i - 1][j],
+                        b[i - 1][j] + d[i + 1][j] + c[i][j - 1] + e[i][j + 1]
+                    });
     writeln(ans);
 }
 
+//{{{
 int main()
 {
-//    freopen(FILENAME".in", "r", stdin);
-//    freopen(FILENAME".out", "w", stdout);
+    ios_base::sync_with_stdio(false);
     run();
+    cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
     return 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-graph::graph(int n){this->n = n;edges.resize(n);int t;fori(n){edges[i].resize(n);forj(n)readln(t),edges[i][j] = t == '1';}}graph::graph(int n, int m){this->n = n;edges.resize(n);int u, v;fori(m)readln(u, v),add_edge(u - 1, v - 1);}void graph::add_edge(int u, int v){edges[u].pb(v);}void graph::add_or_edge(int u, int v){edges[u].pb(v);edges[v].pb(u);}graph::graph(){};void graph::createGraph(int n){edges.resize(n);}void graph::writeln(){fori(n)forj(edges[i].size())::writeln(i, edges[i][j]);}void graph::writelnMatrix(){::writeln(edges);}
-void print(double a){printf("%f ", a);}
-void print(int a){printf("%d ", a);}
-void print(string a){printf("%s ", a.c_str());}
-void print(long long a){printf("%lld ", a);}
-void print(unsigned long a){printf("%ld ", a);}
-void print(char a){printf("%c ", a);}
-template<class Type>
-void print(vector<Type>& a){for(int i = 0; i < a.size(); ++i)print(a[i]);}
-template<class Type>
-void print(vector<vector<Type>>& a){for(int i = 0; i < a.size(); ++i)writeln(a[i]);}
-void read(double &a){scanf("%lf", &a);}
-void read(int &a){scanf("%d", &a);}
-void read(string &a){cin>>a;}
-void read(long long &a){scanf("%lld", &a);}
-void read(char &a){scanf("%c", &a);}
-template<class Type>
-void read(vector<Type> &a){if (a.size() == 0){int n; read(n); a.resize(n);}for(int i = 0; i < a.size(); ++i)read(a[i]);}
-template<class Type>
-void read(vector<vector<Type>> &a){for(int i = 0; i < a.size(); ++i)readln(a[i]);}
-template <class Head, class... Tail>
-void writeln(Head head, Tail... tail){print(head);writeln(tail...);}
-template <class Head, class... Tail>
-void readln(Head& head, Tail&... tail){read(head);readln(tail...);}
+#define a _a
+#define n _n
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a);
+template<typename T,typename D=decltype(*begin(declval<T>())),typename enable_if<!is_same<T,basic_string<char>>::value>::type* =nullptr>
+ostream&operator<<(ostream&os,T const&a){auto it=begin(a);if(it!=end(a))os<<*it++;while(it!=end(a))os<<"\n "[is_fundamental<typename T::value_type>::value]<<*it++;return os;}
+ttt12i ostream&operator<<(ostream&os,pair<T1,T2>const&a){return os<<a.first<<" "<<a.second;}
+ttt12i istream&operator>>(istream&is,pair<T1,T2>&a){return is>>a.first>>a.second;}
+ttti   istream&operator>>(istream&is,vector<T>&a){fori(a.size())is>>a[i];return is;}
+ttti void print(T&&a){cout<<" "<<a;}
+ttti void priws(T&&a){cout<<a;}
+ttti void read(T&a){cin>>a;} //}}}
