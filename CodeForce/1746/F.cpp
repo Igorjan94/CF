@@ -89,43 +89,68 @@ struct fenwickTree
 
 //}}}
 
-unordered_map<int, int> id;
 fenwickTree<int> trees[TREES];
 bitset<N + Q> used[TREES];
+
+struct query {
+    int type;
+    int l, r, k;
+    query() {}
+};
+
+istream& operator>>(istream& is, query& q) {
+    is >> q.type;
+    if (q.type == 1)
+        is >> q.l >> q.k;
+    else
+        is >> q.l >> q.r >> q.k;
+    return is;
+}
+vector<query> queries;
 
 void run()
 {
     ints(n, q);
     vi a(n);
-    readln(a);
+    vector<query> queries(q);
+    readln(a, queries);
+    vector<array<int, 3>> coords;
+    fori(n)
+        coords.pb({a[i], 1, i});
+    fori(q)
+        if (queries[i].type == 1)
+            coords.pb({queries[i].k, 0, i});
+    sort(all(coords));
+
+    int counter = 0;
+    for (int i = 0; i < SZ(coords); )
+    {
+        int j = i;
+        while (j < SZ(coords) && coords[j][0] == coords[i][0])
+            ++j;
+        FOR(k, i, j)
+            if (coords[k][1] == 0)
+                queries[coords[k][2]].k = counter;
+            else
+                a[coords[k][2]] = counter;
+
+        ++counter;
+        i = j;
+    }
 
     fori(TREES)
         forj(N + Q)
             used[i][j] = (rng() & 1) != 0;
 
-    auto getId = [&](int x)
-    {
-        auto it = id.find(x);
-        if (it != id.end())
-            return it->second;
-        int sz = id.size();
-        return id[x] = sz;
-    };
-
-    forj(n)
-    {
-        int id = getId(a[j]);
-        fori(TREES)
-            if (used[i][id])
+    fori(TREES)
+        forj(n)
+            if (used[i][a[j]])
                 trees[i].update(j + 1, 1);
-    }
 
-    forn(Q, q)
+    for (auto& [t, l, r, k]: queries)
     {
-        ints(t);
         if (t == 2)
         {
-            ints(l, r, k);
             bool ok = (r - l + 1) % k == 0;
             for (int i = 0; i < TREES && ok; ++i)
                 ok &= trees[i].sum(l, r) % k == 0;
@@ -133,17 +158,14 @@ void run()
         }
         else
         {
-            ints(j, x);
-            int oldId = getId(a[j - 1]);
-            int newId = getId(x);
-            a[j - 1] = x;
             fori(TREES)
             {
-                if (used[i][oldId])
-                    trees[i].update(j, -1);
-                if (used[i][newId])
-                    trees[i].update(j, 1);
+                if (used[i][a[l - 1]])
+                    trees[i].update(l, -1);
+                if (used[i][k])
+                    trees[i].update(l, 1);
             }
+            a[l - 1] = k;
         }
     }
 }
