@@ -6,12 +6,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-/*
+//IgorjanPDBS
 #undef _GLIBCXX_HAVE_ICONV
 #include <bits/extc++.h>
 using namespace __gnu_cxx;
 using namespace __gnu_pbds; 
-*/ //typedef tree<int, int/*null_type*/, less<int>, rb_tree_tag, tree_order_statistics_node_update> orderedMap;
+typedef tree<int, int/*null_type*/, less<int>, rb_tree_tag, tree_order_statistics_node_update> orderedMap;
 
 //IgorjanDefines
 #define forit(it, r) for (auto it = r.begin(); it != r.end(); it++)
@@ -1613,6 +1613,60 @@ private:
     }
 
 };
+
+//Igorjanffs
+template<typename T>
+int ffs(T i)
+{
+    if (T(0) == i)
+        return 0;
+
+    int bit = 1;
+    while (!(i & 1))
+        ++bit,
+        i >>= 1;
+    return bit;
+}
+
+//IgorjanmaxClique
+//0-indexed, 3 ^ (n / 3), source: https://github.com/ShahjalalShohag/code-library/blob/master/Graph%20Theory/Maximum%20Clique.cpp
+//p -- price (pass vector<int>(n, 1) to count vertices)
+template<typename T>
+int maxClique(const vector<vector<int>>& g, const vector<T>& p)
+{
+    T res = 0;
+    int n = g.size();
+    vector<ll> edges(n);
+    fori(n)
+        forj(n)
+            if (g[i][j])
+                edges[i] |= 1ll << j;
+
+    auto BronKerbosch = [&](auto BronKerbosch, ll R, ll P, ll X) -> void
+    {
+        if (!P && !X)
+        {
+            int t = 0;
+            fori(n)
+                if (R & (1ll << i))
+                    t += p[i];
+            res = max(res, t);
+            return;
+        }
+        int u = ffs(P | X) - 1;
+
+        for (int v = 0; v < n; v++)
+            if (ll V = 1ll << v; (V & P) && !(V & edges[u])) 
+            {
+                BronKerbosch(BronKerbosch, R | V, P & edges[v], X & edges[v]);
+                P -= V;
+                X |= V;
+            }
+    };
+    BronKerbosch(BronKerbosch, 0, (1ll << n) - 1, 0);
+    return res;
+}
+
 
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
