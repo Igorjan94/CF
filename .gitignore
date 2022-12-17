@@ -43,3 +43,6 @@ codeforces.stat
 *.pch
 scripts/A+B/tests
 *__pycache__*
+cg
+kovcg
+*node_modules*
