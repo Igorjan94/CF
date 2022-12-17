@@ -1,5 +1,8 @@
 // Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
 #include <bits/stdc++.h>
+#ifdef ONLINE_JUDGE
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#endif
 
 using namespace std;
 
@@ -33,33 +36,28 @@ template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(
 //Igorjan
 //}}}
 
-ll get(ll x)
-{
-    ll temp = x & 3;
-    if (temp == 0) return x;
-    if (temp == 1) return 1;
-    if (temp == 2) return x + 1;
-    return 0;
-}
-
 void run()
 {
     ints(n);
-    ll ans = 0;
-    fori(n)
-    {
-        ll x, m;
-        readln(x, m);
-        ans ^= get(x - 1) ^ get(x + m - 1);
-    }
-    writeln(ans ? "tolik" : "bolik");
+    string s;
+    readln(s);
+    string t;
+    bool odd = false;
+    fori1(n)
+        if (s[i] == '0')
+            t.pb('+');
+        else
+            t.pb(odd ? '+' : '-'),
+            odd ^= 1;
+    writeln(t);
+
 }
 
 //{{{
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    run();
+    ios_base::sync_with_stdio(false); cin.tie(0);
+    ints(t); fori(t) run();
     cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
     return 0;
 }
