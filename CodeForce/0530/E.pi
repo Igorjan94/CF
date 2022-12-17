@@ -1,0 +1,10 @@
+main =>
+	N = read_real(),
+	D = read_real(),
+	X = D + N,
+	
+	foreach (I in 3 .. N)		
+		print("1 ")
+	end,
+	print("2 "),
+	println(X).

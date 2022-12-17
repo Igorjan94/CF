@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Registrants/Participants count</title>
+
+</head>
+<body>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+
+    <div style="height: 100vh">
+    	<div class="plotly-graph-div js-plotly-plot" style="height:inherit" id="plotly_graph"></div>
+    </div>
+	
+	<script src="registrants.json"></script>
+	<script>Plotly.plot('plotly_graph', graphs, {});</script>
+</body>
+</html>

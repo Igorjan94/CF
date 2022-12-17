@@ -1,0 +1,15 @@
+main =>
+	A = read_real(),
+	B = read_real(),
+	C = read_real(),
+	
+	D = sqrt(B * B - 4 * A * C),
+	
+	X = (-B - D) / (2 * A),
+	Y = (-B + D) / (2 * A),
+	
+	if (X == Y) then print(X) end,
+	
+	if (X > Y) then print(Y), print(" "), print(X) end,
+	
+	if (X < Y) then print(X), print(" "), print(Y) end.

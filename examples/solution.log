@@ -1,0 +1,6 @@
+query: ParseResult(scheme='', netloc='', path='/', params='', query='', fragment='')
+query: ParseResult(scheme='', netloc='', path='/ping', params='', query='', fragment='')
+query: ParseResult(scheme='', netloc='', path='/favicon.ico', params='', query='', fragment='')
+query: ParseResult(scheme='', netloc='', path='/ping', params='', query='', fragment='')
+query: ParseResult(scheme='', netloc='', path='/ping', params='', query='', fragment='')
+query: ParseResult(scheme='', netloc='', path='/shutdown', params='', query='', fragment='')

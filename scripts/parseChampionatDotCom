@@ -50,7 +50,7 @@ actions = json.loads(s)['matches']
 # actions = requests.get(url).json()['matches']
 # actions = requests.get('https://www.championat.com/stat/2018-10-06.json?_=' + str(math.floor(time.time() * 1000))).json()
 # actions = requests.get('https://www.championat.com/live/live/?_=' + str(math.floor(time.time() * 1000))).json()
-names = ['Россия - Премьер-Лига', 'Олимп - Суперкубок России', 'Лига чемпионов', 'Кубок России', 'Товарищеские матчи (сборные)', 'Лига наций УЕФА', 'Суперкубок УЕФА', 'Лига Европы', 'КХЛ', 'ЧМ', 'ЧЕ',  'Еврохоккейтур', 'Кубок мира']
+names = ['Россия - Премьер-Лига', 'Суперкубок России', 'Лига чемпионов', 'Кубок России', 'Товарищеские матчи (сборные)', 'Лига наций УЕФА', 'Суперкубок УЕФА', 'Лига Европы', 'КХЛ', 'ЧМ', 'ЧЕ',  'Еврохоккейтур', 'Кубок мира', 'Россия - Переходные матчи']
 
 datas = [ ('Хоккей', 'hockey'), ('Футбол', 'football'), ('Биатлон', 'biathlon') ]
 
@@ -88,8 +88,8 @@ def printTour(temp, name):
                 team2 = setColor('yellow', team2)
 
         score = str(goals1) + ':' + str(goals2)
-        if result['extra'] != '': score += ' (' + result['extra'] + ')'
-        arr = [team1, team2, time, score, status]
+        if result['extra'] != '': score += ' (' + result['extra'].replace(' ', '') + ')'
+        arr = [team1, team2, time, score, status['name']]
         if our:
             arr[3] = '> ' + arr[3] + ' <'
             arr = list(map(lambda x: colors['BOLD'] + x, arr))
@@ -110,7 +110,7 @@ for (name, nameKey) in datas:
     for tour in actions[nameKey]['tournaments'].values():
         found = False
         for name in names:
-            if tour['name'].find(name) != -1 and tour['name'].find('АФК') == -1:
+            if tour['name'].find(name) != -1 and tour['name'].find('АФК') == -1 and tour['name'].find('(ж)') == -1:
                 printTour(tour, name)
 
 

@@ -1,0 +1,25 @@
+main =>
+  A = read_line(),
+  B = read_line(),
+  N = length(B),
+  M = length(A),
+  D = new_array(M + 1, N + 1),
+  foreach(I in 1..M + 1)
+    foreach(J in 1..N + 1)
+      D[I, J] := 0
+    end
+  end,
+  foreach(I in 1..M)
+    D[I + 1, 1] := D[I, 1] + ord(A[I]) - 96
+  end,
+  foreach(J in 1..N)
+    D[1, J + 1] := D[1, J] + ord(B[J]) - 96
+  end,
+  foreach(I in 1..M)
+    foreach(J in 1..N)
+        D[I + 1, J + 1] := D[I, J] + abs(ord(A[I]) - ord(B[J])),
+        D[I + 1, J + 1] := min(D[I + 1, J + 1], D[I, J + 1] + ord(A[I]) - 96),
+        D[I + 1, J + 1] := min(D[I + 1, J + 1], D[I + 1, J] + ord(B[J]) - 96)
+    end
+  end,
+  println(D[M + 1, N + 1]).

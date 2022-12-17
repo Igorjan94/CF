@@ -65,16 +65,15 @@ def getParticipants(contestId):
     saveJsonInFile(contest, f'/home/igorjan/.cache/cf/contests/{contestId}.json')
     saveJsonInFile(participants_all, participantsFile)
 
-if False:
-    for i in range(1, 14):
+load = len(sys.argv) >= 2 and sys.argv[1] == '--load'
+if load:
+    for i in range(1, 1000):
         stop = False
-        url = f'https://codeforces.com/contests/page/{i}?locale=ru'
+        url = f'https://codeforces.com/contests/page/{i}?locale=ru&complete=true'
+        print(f'Loading {i}-th page of contests')
         html = requests.get(url).text.split('\n', 2)[2]
         page = BeautifulSoup(html, 'html5lib')
-        j = 0
         for tr in page.body.find('div', attrs={'class': 'contests-table'}).find('div', attrs={'class': 'datatable'}).find_all('tr'):
-            j += 1
-            if j == 20: break
             cid = tr.get('data-contestid')
             if not cid: continue
             if cid in participants_all:
@@ -88,6 +87,8 @@ if False:
         saveJsonInFile([div1, div2, div3, div4, educ, comb, othe], filename)
         if stop:
             break
+    print('Loaded!')
+    sys.exit()
 
 from statistics import median
 import plotly.graph_objects as go
@@ -162,8 +163,8 @@ def getButton(t, **kwargs):
 
 roundButtons = [
     getButton('All', f = ''),
-    getButton('Participants', f = 'part'),
-    getButton('Registrants', f = 'reg'),
+    getButton('Par', f = 'part'),
+    getButton('Reg', f = 'reg'),
     *[getButton(t) for t in ['div1', 'div2', 'div3', 'educ', 'comb', 'othe', 'div4']]
 ]
 
@@ -209,7 +210,7 @@ fig.update_layout(
     ]
 )
 fig.update_traces(hoverinfo = 'all', hovertemplate = '%{x}, %{y}<br><a href="https://codeforces.com">%{text}</a>')
-fig.update_layout(xaxis_range = [datetime(2020, 1, 1), datetime(2020, 6, 1)], hovermode = 'x')
+# fig.update_layout(xaxis_range = [datetime(2020, 1, 1), datetime(2020, 6, 1)], hovermode = 'x')
 fig.show()
 
 graphJSON = json.dumps(fig, cls = plotly.utils.PlotlyJSONEncoder)

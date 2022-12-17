@@ -1,5 +1,8 @@
 // Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
 #include <bits/stdc++.h>
+#ifdef ONLINE_JUDGE
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#endif
 
 using namespace std;
 
@@ -45,7 +48,7 @@ void run()
 //{{{
 int main()
 {
-    ios_base::sync_with_stdio(false);
+    ios_base::sync_with_stdio(false); cin.tie(0);
     run();
     cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
     return 0;

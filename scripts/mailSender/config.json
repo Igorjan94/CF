@@ -1,0 +1,14 @@
+{
+  "emailSettings": {
+    "domains": [
+      "yandex.ru"
+    ],
+    "host": "smtp.yandex.ru",
+    "secureConnection": true,
+    "port": 465,
+    "auth": {
+      "user": "zaikapoznaika@yandex.ru",
+      "pass": "tj8CUe@fw2YFE9F"
+    }
+  }
+} 

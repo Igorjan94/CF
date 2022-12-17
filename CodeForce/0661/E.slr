@@ -1,0 +1,14 @@
+print =: 1!:2&2
+read =: 1!:1[3
+
+in =. (read-.LF)-.CR
+x =: ". in
+quicksort=: (($:@(<#[), (=#[), $:@(>#[)) ({~ ?@#)) ^: (1<#)
+l =: (# x) - 1
+x =: quicksort x
+q =: l { x
+x =: l {. x
+sum =: +/ x
+print (+ / (((q <.@% x) * x) = q)) = l
+
+exit ''

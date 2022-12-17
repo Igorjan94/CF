@@ -3,6 +3,7 @@ import random
 import json
 import time
 import os
+import datetime
 
 import click
 import click_completion
@@ -43,7 +44,9 @@ class dotdict(dict):
                 self[k] = v
 
 def decorateFunction(original):
-    def decorated(*args, **kwargs): return dotdict(original(*args, **kwargs))
+    def decorated(*args, **kwargs):
+        value = original(*args, **kwargs)
+        return dotdict(value) if isinstance(value, dict) else value
     return decorated
 
 def unlimited(f, field, max_count, verbose = False, count_field = 'count', offset_field = 'offset', starting_offset = 0, **kwargs):
@@ -75,8 +78,8 @@ def unlimited(f, field, max_count, verbose = False, count_field = 'count', offse
         time.sleep(1 / 3)
     return res
 
-json.loads = decorateFunction(json.loads)
-requests.Response.json = decorateFunction(requests.Response.json)
+# json.loads = decorateFunction(json.loads)
+# requests.Response.json = decorateFunction(requests.Response.json)
 
 def getFilename(filename):
     if filename.startswith('~'):

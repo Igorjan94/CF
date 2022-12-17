@@ -1,0 +1,22 @@
+main =>
+  A = read_int(),
+  X = [I : I in 1..1000],
+  foreach(I in 1..A)
+    L = read_int(),
+    R = read_int(),
+    while (R >= L)
+        X[R] := 0,
+        R := R - 1
+    end
+  end,
+  Y = [],
+  foreach(I in 1..1000)
+    if (X[I] != 0) then
+        Y := Y ++ [I]
+    end
+  end,
+  print(length(Y)),
+  foreach(I in Y)
+    print(" "),
+    print(I)
+  end.

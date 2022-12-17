@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import PIL.Image
 import PIL.ExifTags
 
@@ -9,8 +11,8 @@ from library import *
 def getDate(x):
     return datetime.datetime.strptime(x, '%Y:%m:%d %H:%M:%S')
 
-# @completion.command()
-# @click.argument('directory', required=True, type=click.Path(file_okay=False), nargs=1)
+@completion.command()
+@click.argument('directory', required=True, type=click.Path(file_okay=False), nargs=1)
 def findPanos(directory):
     def getExif(filename):
         try:
@@ -58,5 +60,5 @@ def findPanos(directory):
             filename = exif.filename
             os.rename(os.path.join(directory, filename), os.path.join(dst, filename))
 
-
-findPanos('/run/media/igorjan/Новый том/photos/vottovaara')
+if __name__ == "__main__":
+    completion()

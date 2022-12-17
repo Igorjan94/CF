@@ -4,7 +4,6 @@ import re
 import os.path
 import argparse
 import sys
-from pytube import YouTube
 import subprocess
 
 def getTime(kwargs):
@@ -54,6 +53,7 @@ if fileExists(args.url):
 
     process_call_str = FFMPEG.format(args.url, time, download_file_path)
 else:
+    from pytube import YouTube
     yt = YouTube(args.url)
     download_file_path = '{0}.mp4'.format(yt.title)
     if args.output != None: download_file_path = args.output
