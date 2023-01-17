@@ -41,6 +41,8 @@ void run()
     ints(n);
     vi a(n);
     readln(a);
+    if (n == 1)
+        return writeln(1000000000);
     vector<int> p(n + 1, 0);
     vector<int> s(n + 1, 0);
     fori(n)
