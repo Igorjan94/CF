@@ -11,7 +11,8 @@ using namespace std;
 #include <bits/extc++.h>
 using namespace __gnu_cxx;
 using namespace __gnu_pbds; 
-typedef tree<int, int/*null_type*/, less<int>, rb_tree_tag, tree_order_statistics_node_update> orderedMap;
+typedef tree<int, int,       less<int>, rb_tree_tag, tree_order_statistics_node_update> orderedMap;
+typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> orderedSet;
 
 //IgorjanDefines
 #define forit(it, r) for (auto it = r.begin(); it != r.end(); it++)
@@ -89,16 +90,36 @@ ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(wr
 #define wr(args...) 42
 #endif
 
-//IgorjanbinSearch
+//IgorjanbinarySearch
 //x \in [l, r]-> min, f(x) == true
 template<typename T, typename F>
-T binSearch(T l, T r, F f, T eps = 1)
+T binarySearch(T l, T r, F f, T eps = 1)
 {
     T m;
     while (abs(r - l) > eps)
         m = l + (r - l) / 2,
         (f(m) ? r : l) = m;
     return f(l) ? l : r;
+}
+
+//IgorjanbinSearch
+//x \in [l, r]-> min, f(x) == true
+// l                           r
+// 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1
+//                 ^
+template<typename T, typename F>
+T binSearch(T l, T r, F f)
+{
+    T m;
+    while (l < r)
+    {
+        m = (r + l + 1) / 2;
+        if (f(m))
+            r = m - 1;
+        else
+            l = m;
+    }
+    return l;
 }
 
 //IgorjanternarySearch
