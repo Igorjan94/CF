@@ -34,6 +34,26 @@ template<class... Args> inline void readln(Args&... args){(read(args),...);}
 template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
 
 //Igorjan
+//binSearch
+//x \in [l, r]-> min, f(x) == true
+// l                           r
+// 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1
+//                 ^
+template<typename T, typename F>
+T binSearch(T l, T r, F f)
+{
+    T m;
+    while (l < r)
+    {
+        m = (r + l + 1) / 2;
+        if (f(m))
+            r = m - 1;
+        else
+            l = m;
+    }
+    return l;
+}
+
 //}}}
 
 void run()
@@ -41,67 +61,32 @@ void run()
     ints(n, s);
     vi a(n);
     readln(a);
-    set<pii> left;
-    set<pii> right;
+    vector<pii> left(n);
+    vector<ll> sums(n + 1);
     fori(n)
-        left.insert({a[i] + i + 1, i}),
-        right.insert({a[i] + n - i, i});
-
-    auto cl = left;
-    auto cr = right;
-    auto cs = s;
-
-    int minDiff = n * 2;
-
-    auto del = [&](set<pii>& left, set<pii>& right, int i) {
+    {
         int l = a[i] + i + 1;
         int r = a[i] + n - i;
-        minDiff = min(minDiff, l - r);
-        left.erase({l, i});
-        right.erase({r, i});
-    };
-
-    int cnt = 0;
-    bool hasLeft = false;
-    while (s && !left.empty())
-    {
-        int p, i;
-        bool ok = false;
-        if (left.begin()->first <= right.begin()->first)
-            tie(p, i) = *left.begin(),
-            ok = true;
-        else
-            tie(p, i) = *right.begin();
-
-        if (p > s)
-            break;
-        del(left, right, i);
-        s -= p;
-        ++cnt;
-        hasLeft |= ok;
+        int m = min(l, r);
+        left[i] = {m, l};
     }
+    sort(all(left));
+    fori1(n + 1) sums[i] = sums[i - 1] + left[i - 1].first;
 
-    if (hasLeft || !cnt || s >= minDiff) 
-        return writeln(cnt);
+    int ans = 0;
+    fori(n)
+        if (left[i].second <= s)
+        {
+            int l = binSearch(0, n, [&](int m) {
+                ll sum = sums[m] + left[i].second;
+                if (m > i)
+                    sum -= left[i].first;
+                return sum > s;
+            });
+            ans = max(ans, l + (l <= i));
+        }
 
-    cnt = 0;
-    bool first = true;
-    while (cs && !cl.empty())
-    {
-        int p, i;
-        if (first || cl.begin()->first <= cr.begin()->first)
-            tie(p, i) = *cl.begin();
-        else
-            tie(p, i) = *cr.begin();
-
-        if (p > cs)
-            break;
-        del(cl, cr, i);
-        cs -= p;
-        ++cnt;
-        first = false;
-    }
-    writeln(cnt);
+    writeln(ans);
 }
 
 //{{{
