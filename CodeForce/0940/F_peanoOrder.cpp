@@ -1,4 +1,3 @@
-
 // Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
 #include <bits/stdc++.h>
 
@@ -139,7 +138,6 @@ int get(int x) {
     return coords[x] = sz;
 }
 
-//MO with updates
 void run()
 {
     cin >> n >> q;

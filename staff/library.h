@@ -1688,6 +1688,406 @@ int maxClique(const vector<vector<int>>& g, const vector<T>& p)
     return res;
 }
 
+//IgorjanfastSet
+//Can correctly work with numbers in range [0; MAXN]. If element is not found return NOT_FOUND
+//Supports all std::set operations in O(1) on random queries / dense arrays, O(log_64(N)) in worst case (sparce array).
+//Count operation works in O(1) always.
+//SOURCE: https://codeforces.com/contest/1793/submission/193330718
+using uint = unsigned int;
+using ull = unsigned long long;
+
+template<uint MAXN, uint NOT_FOUND>           
+class fastSet {
+    static constexpr ull lowest_bitsll[] = {0ull, 1ull, 3ull, 7ull, 15ull, 31ull, 63ull, 127ull, 255ull, 511ull, 1023ull, 2047ull, 4095ull, 8191ull, 16383ull, 32767ull, 65535ull, 131071ull, 262143ull, 524287ull, 1048575ull, 2097151ull, 4194303ull, 8388607ull, 16777215ull, 33554431ull, 67108863ull, 134217727ull, 268435455ull, 536870911ull, 1073741823ull, 2147483647ull, 4294967295ull, 8589934591ull, 17179869183ull, 34359738367ull, 68719476735ull, 137438953471ull, 274877906943ull, 549755813887ull, 1099511627775ull, 2199023255551ull, 4398046511103ull, 8796093022207ull, 17592186044415ull, 35184372088831ull, 70368744177663ull, 140737488355327ull, 281474976710655ull, 562949953421311ull, 1125899906842623ull, 2251799813685247ull, 4503599627370495ull, 9007199254740991ull, 18014398509481983ull, 36028797018963967ull, 72057594037927935ull, 144115188075855871ull, 288230376151711743ull, 576460752303423487ull, 1152921504606846975ull, 2305843009213693951ull, 4611686018427387903ull, 9223372036854775807ull, 18446744073709551615ull};
+
+    static const uint PREF = (MAXN <= 64 ? 0 :
+                              MAXN <= 4096 ? 1 :
+                              MAXN <= 262144 ? 1 + 64 :
+                              MAXN <= 16777216 ? 1 + 64 + 4096 :
+                              MAXN <= 1073741824 ? 1 + 64 + 4096 + 262144 : 227) + 1;
+    static const uint SZ = PREF + (MAXN + 63) / 64 + 1;
+    ull m[SZ] = {0};
+ 
+    inline uint left(uint v) const {return (v - 62) * 64;}
+    inline uint parent(uint v) const {return v / 64 + 62;}
+    inline void setbit(uint v) {m[v >> 6] |= 1ull << (v & 63);}
+    inline void resetbit(uint v) {m[v >> 6] &= ~(1ull << (v & 63));}
+    inline uint getbit(uint v) const {return m[v >> 6] >> (v & 63) & 1;}
+    inline ull childs_value(uint v) const {return m[left(v) >> 6];}
+ 
+    inline uint left_go(uint x, const uint c) const {
+        const ull rem = x & 63;
+        uint bt = PREF * 64 + x;
+        ull num = m[bt >> 6] & lowest_bitsll[rem + c];
+        if (num) return (x ^ rem) | __lg(num);
+        for (bt = parent(bt); bt > 62; bt = parent(bt)) {
+            const ull rem = bt & 63;
+            num = m[bt >> 6] & lowest_bitsll[rem];
+            if (num) {bt = (bt ^ rem) | __lg(num); break;}
+        }
+        if (bt == 62) return NOT_FOUND;
+        while (bt < PREF * 64) bt = left(bt) | __lg(m[bt - 62]);
+        return bt - PREF * 64;
+    }
+ 
+    inline uint right_go(uint x, const uint c) const {
+        const ull rem = x & 63;
+        uint bt = PREF * 64 + x;
+        ull num = m[bt >> 6] & ~lowest_bitsll[rem + c];
+        if (num) return (x ^ rem) | __builtin_ctzll(num);
+        for (bt = parent(bt); bt > 62; bt = parent(bt)) {
+            const ull rem = bt & 63;
+            num = m[bt >> 6] & ~lowest_bitsll[rem + 1];
+            if (num) {bt = (bt ^ rem) | __builtin_ctzll(num); break;}
+        }
+        if (bt == 62) return NOT_FOUND;
+        while (bt < PREF * 64) bt = left(bt) | __builtin_ctzll(m[bt - 62]);
+        return bt - PREF * 64;
+    }
+ 
+public:
+    fastSet() {
+        assert(PREF != 228);
+        setbit(62);
+    }
+ 
+    bool empty() const {return getbit(63);}
+ 
+    void clear() {fill(m, m + SZ, 0); setbit(62);}
+ 
+    bool count(uint x) const {return m[PREF + (x >> 6)] >> (x & 63) & 1;}
+ 
+    void insert(uint x) {
+        for (uint v = PREF * 64 + x; !getbit(v); v = parent(v)) {
+            setbit(v);
+        }
+    }
+ 
+    void erase(uint x) {
+        if (!getbit(PREF * 64 + x)) return;
+        resetbit(PREF * 64 + x);
+        for (uint v = parent(PREF * 64 + x); v > 62 && !childs_value(v); v = parent(v)) {
+            resetbit(v);
+        }
+    }
+ 
+    uint lower_bound(uint x) const {return right_go(x, 0);}
+    uint upper_bound(uint x) const {return right_go(x, 1);}
+    uint inverse_lower_bound(uint x) const {return left_go(x, 1);}
+    uint inverse_upper_bound(uint x) const {return left_go(x, 0);}
+};
+
+//IgorjanMoAlgorithm
+inline ll hilbertOrder(int x, int y, int pow, int rotate = 0) {
+    if (pow == 0) {
+        return 0;
+    }
+    int hpow = 1 << (pow - 1);
+    int seg = (x < hpow) ? (
+        (y < hpow) ? 0 : 3
+    ) : (
+        (y < hpow) ? 1 : 2
+    );
+    seg = (seg + rotate) & 3;
+    const int rotateDelta[4] = {3, 0, 0, 1};
+    int nx = x & (x ^ hpow), ny = y & (y ^ hpow);
+    int nrot = (rotate + rotateDelta[seg]) & 3;
+    ll subSquareSize = 1ll << (2 * pow - 2);
+    ll ans = seg * subSquareSize;
+    ll add = hilbertOrder(nx, ny, pow - 1, nrot);
+    ans += (seg == 1 || seg == 2) ? add : (subSquareSize - add - 1);
+    return ans;
+}
+
+template<typename S, typename T>
+struct MO
+{
+    int n;
+    int w;
+    int q = 0;
+    vector<tuple<ll, int, int, int, T>> queries;
+    vector<S> answers;
+
+    const void f(const int&);
+    void (*addLeft)(const int&);
+    void (*addRight)(const int&);
+    void (*delLeft)(const int&);
+    void (*delRight)(const int&);
+    S (*getAnswer)(const int&, const int&, const T&);
+
+    void addQuery(int l, int r, const T& t) {
+        queries.push_back({hilbertOrder(l, r, w), l, r, q++, t});
+    }
+
+    MO(unsigned int maxN,
+        void addLeft(const int&),
+        void addRight(const int&),
+        void delLeft(const int&),
+        void delRight(const int&),
+        S getAnswer(const int&, const int&, const T&)
+    ) {
+        n = maxN;
+        w = bit_width(maxN);
+        this->addLeft = addLeft;
+        this->addRight = addRight;
+        this->delLeft = delLeft;
+        this->delRight = delRight;
+        this->getAnswer = getAnswer;
+    }
+
+    vector<S> go(
+    ) {
+        answers.resize(q);
+        sort(all(queries), [&](const auto& a, const auto& b) {
+            return get<0>(a) < get<0>(b);
+        });
+
+        int L = 0;
+        int R = -1;
+
+        for (int i = 0; i < q; ++i)
+        {
+            const auto& [_, l, r, id, t] = queries[i];
+            while (L > l) addLeft(--L);
+            while (R < r) addRight(++R);
+            while (L < l) delLeft(L++);
+            while (R > r) delRight(R--);
+            answers[id] = getAnswer(l, r, t);
+        }
+        return answers;
+    }
+};
+
+//IgorjanMOWithUpdates
+//Usage example: 940/F.cpp
+template<typename T>
+struct query
+{
+    int l;
+    int r;
+    int i;
+    int updates;
+    T q;
+
+    int lb;
+    int rb;
+
+    query(int b, int l, int r, int i, int updates, const T& q) : l(l), r(r), i(i), updates(updates), q(q) 
+    {
+        this->lb = l / b;
+        this->rb = r / b;
+    }
+};
+
+template<typename S, typename T, typename U>
+struct MOWithUpdates
+{
+    int n;
+    int b = 0;
+    vector<query<T>> queries;
+    vector<U> updates;
+    vector<S> answers;
+
+    const void f(int);
+    void (*addLeft)(int);
+    void (*addRight)(int);
+    void (*delLeft)(int);
+    void (*delRight)(int);
+    void (*update)(int, int, int, bool, const U&);
+    S (*getAnswer)(int, int, const T&);
+
+    void addQuery(int l, int r, const T& t) {
+        int i = queries.size();
+        queries.push_back(query(b, l, r, i, updates.size(), t));
+    }
+
+    void addUpdate(const U& u) {
+        updates.push_back(u);
+    }
+
+    MOWithUpdates(
+        unsigned int maxN,
+        unsigned int maxQ,
+        void addLeft(int),
+        void addRight(int),
+        void delLeft(int),
+        void delRight(int),
+        void update(int, int, int, bool, const U&),
+        S getAnswer(int, int, const T&)
+    ) {
+        queries.reserve(maxQ);
+        updates.reserve(maxQ);
+        n = maxN;
+        b = pow(n, 2. / 3);
+        this->addLeft = addLeft;
+        this->addRight = addRight;
+        this->delLeft = delLeft;
+        this->delRight = delRight;
+        this->update = update;
+        this->getAnswer = getAnswer;
+    }
+
+    vector<S> go(
+    ) {
+        answers.resize(queries.size());
+        sort(all(queries), [&](const auto& a, const auto& b) {
+            if (a.lb != b.lb)
+                return a.lb < b.lb;
+            if (a.rb != b.rb)
+                return a.lb & 1 ? a.rb < b.rb : a.rb > b.rb;
+            return a.lb & 1 ^ a.rb & 1 ? a.updates < b.updates : a.updates > b.updates;
+        });
+
+        int L = 0;
+        int R = -1;
+        int E = 0;
+
+        for (const auto& [l, r, id, t, q, _, __]: queries) 
+        {
+            while (E < t) { update(E, L, R, true, updates[E]); ++E; }
+            while (E > t) { --E; update(E, L, R, false, updates[E]); }
+            while (L > l) addLeft(--L);
+            while (R < r) addRight(++R);
+            while (L < l) delLeft(L++);
+            while (R > r) delRight(R--);
+            answers[id] = getAnswer(l, r, q);
+        }
+        return answers;
+    }
+};
+
+//IgorjandownTree
+//0-indexed, [l..r)
+template<typename T, typename F>
+struct downTree {
+    F f;
+    vector<T> t;
+    int n;
+
+    downTree(int sz, const F &g, T defaultValue = T()) : f(g)
+    {
+        n = 1;
+        while (n <= sz) n <<= 1;
+        t.resize(n * 2, defaultValue);
+    }
+
+    downTree(vector<T> &a, const F &g, T defaultValue = T()) : downTree(a.size(), g, defaultValue)
+    {
+        for (int i = 0; i < SZ(a); ++i)
+            t[i + n] = a[i];
+        for (int i = n - 1; i >= 1; --i)
+            t[i] = f(t[i << 1], t[i << 1 | 1]);
+    }
+
+    void update(int i, const T& x)
+    {
+        i += n;
+        t[i] = f(t[i], x);
+        for (i >>= 1; i > 1; i >>= 1)
+            t[i] = f(t[i << 1], t[i << 1 | 1]);
+    }
+
+    T get(int l, int r)
+    {
+        T resL = t[0];
+        T resR = t[0];
+        l += n;
+        r += n;
+        while (l < r)
+        {
+            if (l & 1)
+                resL = f(resL, t[l++]);
+            if (r & 1)
+                resR = f(t[--r], resR);
+            l >>= 1;
+            r >>= 1;
+        }
+        return f(resL, resR);
+    }
+};
+
+//IgorjanheavyLight
+template<typename T, typename F>
+struct heavyLight 
+{
+    F f;
+    vector<T> a;
+    downTree<T, F> tree;
+
+    int n;
+    int paths = 0;
+    vector<int> sizes;  //Size of subtree
+    vector<int> depth;  //Depth of vertex
+    vector<int> parent; //Parent vertex
+    vector<int> path;   //Path to which vertex belongs (like in disjoint set union)
+    vector<int> heavy;  //Heavy child if exists else -1
+    vector<int> index;  //Index of vertex in segment tree
+    vector<int> first;  //Highest vertex of path
+
+    heavyLight(const vector<vector<int>>& g, const vector<T>& a, const F& f, const T& defaultValue) : tree(a, f, defaultValue) 
+    {
+        this->a = a;
+        this->f = f;
+        n = g.size();
+        sizes.resize(n, 1);
+        depth.resize(n, 0);
+        parent.resize(n, -1);
+        path.resize(n, -1);
+        heavy.resize(n, -1);
+        index.resize(n, -1);
+        first.resize(n, -1);
+
+        auto dfs = [&](auto dfs, int u, int p) -> void
+        {
+            for (const int& v: g[u]) if (v != p)
+            {
+                depth[v] = depth[u] + 1;
+                parent[v] = u;
+                dfs(dfs, v, u);
+                sizes[u] += sizes[v];
+            }
+            for (const int& v: g[u]) if (v != p)
+                if (sizes[v] * 2 >= sizes[u])
+                    heavy[u] = v;
+        };
+        dfs(dfs, 0, -1);
+
+        int cur = -1;
+        fori(n)
+            if (heavy[i] == -1)
+            {
+                int u = i;
+                vector<int> currentPath;
+                while (true)
+                {
+                    currentPath.pb(u);
+                    path[u] = paths;
+                    int nu = parent[u];
+                    if (nu == -1 || heavy[nu] != u)
+                        break;
+                    u = nu;
+                }
+
+                reverse(all(currentPath));
+                for (int v: currentPath)
+                    first[v] = u,
+                    index[v] = ++cur;
+                ++paths;
+            }
+    }
+
+    T get(int u, int v) 
+    {
+        int l = path[u];
+        int r = path[v];
+        if (l == r)
+            return tree.get(index[u], index[v]);
+        if (depth[first[u]] < depth[first[v]])
+            swap(u, v);
+        int left = tree.get(index[u], index[first[u]]);
+        return f(left, get(parent[first[u]], v));
+    }
+};
 
 //IgorjanEndIfIgorjan
 #endif /* IGORJAN94 */
