@@ -92,6 +92,7 @@ def histogramMessagesByDate(peer_ids, stacked, separated):
     from datetime import datetime
     import matplotlib.pyplot as plt
     import matplotlib.dates as mdates
+    import numpy
 
     friends = getConversations()
     MAX_COUNT = 200
@@ -124,7 +125,12 @@ def histogramMessagesByDate(peer_ids, stacked, separated):
         add(curr, peer_id)
 
     fig, ax = plt.subplots(1, 1)
-    ax.hist(list(map(mdates.epoch2num, dates)), bins=max(days), stacked=stacked)
+    datelist = []
+    for xx in dates:
+        cur = numpy.array(list(map(lambda x: x * 1000, xx)), dtype='datetime64[ms]')
+        datelist.append(list(map(int, mdates.date2num(cur))))
+
+    ax.hist(datelist, bins=max(days), stacked=stacked)
     ax.legend(legend)
     ax.xaxis.set_major_formatter(mdates.DateFormatter(DATE_FORMAT))
     plt.xlabel('Date')

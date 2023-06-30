@@ -1,7 +1,7 @@
 dateRegex="^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\ [0-9][0-9]:[0-9][0-9]:[0-9][0-9]$"
 dateShortRegex="^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] +"
 for f in "$@"; do
-    date=$(exiv2 -p e "$f" | grep 'Exif.Image.DateTime' | awk '{print $4 " " $5;}' | sed 's/:/-/' | sed 's/:/-/')
+    date=$(exiv2 -p e "$f" | grep 'Exif.Photo.DateTimeOriginal' | awk '{print $4 " " $5;}' | sed 's/:/-/' | sed 's/:/-/')
     shift='+0300'
     echo "Trying date $f '$date'"
     if [[ ${date} = '' ]]; then
@@ -17,7 +17,7 @@ for f in "$@"; do
             date="${date}00:00"
             echo "Found short date $f $date"
         else
-            date=$(exiv2 -p e "$f" | grep 'Exif.Photo.DateTimeOriginal' | awk '{print $4 " " $5; }' | sed 's/:/-/' | sed 's/:/-/')
+            date=$(exiv2 -p e "$f" | grep 'Exif.Image.DateTime' | awk '{print $4 " " $5; }' | sed 's/:/-/' | sed 's/:/-/')
             echo "Trying original $f $date"
             if ! [[ ${date} =~ $dateRegex ]]; then
                 if [[ ${date} =~ $dateShortRegex ]]; then
@@ -32,5 +32,7 @@ for f in "$@"; do
         fi
     fi
     echo "Date found $f $date $shift"
+    exiv2 -v -M"set Exif.Image.DateTime $date" $f 1>/dev/null 2>&1
+    exiv2 -v -M"set Exif.Photo.DateTimeOriginal $date" $f 1>/dev/null 2>&1
     touch -d "$date $shift" "$f"
 done

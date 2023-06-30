@@ -5,9 +5,13 @@ from library import *
 
 def cf(method, **kwargs):
     params = dotdict(kwargs)
-    ret = requests.get('https://codeforces.com/api/' + method, params = params).json()
-    if ret.status != 'OK':
-        print(f'Error in {method} {ret.status}: {ret.comment}', kwargs)
+    req = requests.get('https://codeforces.com/api/' + method, params = params)
+    ret = req.json()
+    status = ret['status']
+    if status != 'OK':
+        comment = ret['comment']
+        print(f'Error in {method} {status}: {comment}', kwargs)
+        print(req.text)
         return None
     return ret
 

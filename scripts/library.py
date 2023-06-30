@@ -78,8 +78,8 @@ def unlimited(f, field, max_count, verbose = False, count_field = 'count', offse
         time.sleep(1 / 3)
     return res
 
-# json.loads = decorateFunction(json.loads)
-# requests.Response.json = decorateFunction(requests.Response.json)
+json.loads = decorateFunction(json.loads)
+requests.Response.json = decorateFunction(requests.Response.json)
 
 def getFilename(filename):
     if filename.startswith('~'):
