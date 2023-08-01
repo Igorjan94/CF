@@ -4,9 +4,10 @@ import pygame
 
 class Ovochschevoz():
     currentSong = None
+    isStarted = None
 
     def nextSong(self):
-        if self.currentSong:
+        if self.currentSong and self.isStarted:
             print(self.currentSong)
             print('-------------------')
             print()
@@ -14,6 +15,7 @@ class Ovochschevoz():
         self.currentSong = self.current_list.pop(0)
         pygame.mixer.music.load(os.path.join(self.directory, self.currentSong))
         self.isPlaying = False
+        self.isStarted = False
         self.length = 1
         self.startTime = random.randint(0, 60)
         self.timer = 0
@@ -22,6 +24,17 @@ class Ovochschevoz():
     def setTitle(self):
         self.title = self.font.render(f'{round(self.timer / 1000, 1)} / {self.length}', True, (255, 255, 0))
 
+    def pause(self):
+        self.isPlaying = False
+        pygame.mixer.music.pause()
+
+    def unpause(self):
+        self.isPlaying = True
+        if self.timer > 0:
+            pygame.mixer.music.unpause()
+        else:
+            self.play()
+
     def play(self, later = None):
         pygame.mixer.music.rewind()
         pygame.mixer.music.play()
@@ -29,8 +42,11 @@ class Ovochschevoz():
             pygame.mixer.music.set_pos(self.startTime)
         else:
             pygame.mixer.music.set_pos(self.startTime + self.length)
+            self.timer = self.length * 1000
+            self.length *= 2
 
         self.isPlaying = True
+        self.isStarted = True
 
     def stop(self):
         if self.isPlaying:
@@ -38,8 +54,11 @@ class Ovochschevoz():
             self.timer = 0
             pygame.mixer.music.stop()
 
-    def increase(self):
-        self.length += 1
+    def increase(self, mul = False):
+        if mul:
+            self.length *= 2
+        else:
+            self.length += 1
         self.setTitle()
 
     def decrease(self):
@@ -76,18 +95,20 @@ class Ovochschevoz():
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN and event.unicode:
                     if event.unicode == ' ':
-                        if not self.isPlaying:
-                            self.play()
-                    elif event.unicode == '$':
+                        if self.isPlaying:
+                            self.pause()
+                        else:
+                            self.unpause()
+                    elif event.unicode == '$' or event.unicode == '4':
                         if not self.isPlaying:
                             self.play(True)
-                    elif event.unicode == '+':
-                        if not self.isPlaying:
-                            self.increase()
+                    elif event.unicode == '*' or event.unicode == '8':
+                        self.increase(True)
+                    elif event.unicode == '+' or event.unicode == '=':
+                        self.increase()
                     elif event.unicode == '-':
-                        if not self.isPlaying:
-                            self.decrease()
-                    elif event.unicode == '@':
+                        self.decrease()
+                    elif event.unicode == '@' or event.unicode == '2':
                         if not self.isPlaying:
                             self.nextSong()
                     else:
