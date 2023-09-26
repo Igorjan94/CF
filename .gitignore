@@ -41,8 +41,13 @@ trash
 codeforces.stat
 *vk200*
 *.pch
-scripts/A+B/tests
+scripts/testlib/A+B/tests*
 *__pycache__*
 cg
 kovcg
 *node_modules*
+*build*
+*env
+*.iml
+*GPS*
+CodeForce/registrants.json

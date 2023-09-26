@@ -66,15 +66,21 @@ class Ovochschevoz():
             self.length -= 1
             self.setTitle()
 
+    def updateVolume(self, diff):
+        self.volume = min(1, max(0, self.volume + diff))
+        pygame.mixer.music.set_volume(self.volume)
+
     def __init__(self):
         self.title = ''
         self.directory = '/home/igorjan/documents/music'
+        self.volume = 0.1
+
         play_list = [f for f in os.listdir(self.directory) if f.endswith('.mp3')]
         self.current_list = play_list[:]
         random.shuffle(self.current_list)
 
         pygame.init()
-        pygame.mixer.music.set_volume(0.1)
+        self.updateVolume(0)
         self.window = pygame.display.set_mode((800, 100))
         self.font = pygame.font.SysFont(None, 40)
         self.clock = pygame.time.Clock()
@@ -93,7 +99,7 @@ class Ovochschevoz():
                     self.stop()
 
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN and event.unicode:
+                if event.type == pygame.KEYDOWN:
                     if event.unicode == ' ':
                         if self.isPlaying:
                             self.pause()
@@ -104,14 +110,18 @@ class Ovochschevoz():
                             self.play(True)
                     elif event.unicode == '*' or event.unicode == '8':
                         self.increase(True)
-                    elif event.unicode == '+' or event.unicode == '=':
+                    elif event.unicode == '+' or event.unicode == '=' or event.scancode == 79: # right
                         self.increase()
-                    elif event.unicode == '-':
+                    elif event.unicode == '-' or event.scancode == 80: # left
                         self.decrease()
                     elif event.unicode == '@' or event.unicode == '2':
                         if not self.isPlaying:
                             self.nextSong()
-                    else:
+                    elif event.scancode == 81: # down
+                        self.updateVolume(-0.05)
+                    elif event.scancode == 82: # up
+                        self.updateVolume(+0.05)
+                    elif event.unicode:
                         print(event.unicode)
                         self.stop()
 
