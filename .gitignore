@@ -46,3 +46,7 @@ scripts/A+B/tests
 cg
 kovcg
 *node_modules*
+*build*
+*env
+*.iml
+map/yandexMap/GPS*

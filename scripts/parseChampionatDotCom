@@ -44,7 +44,7 @@ colors = {
 def setColor(color, s):
     return colors[color.upper()] + s + colors['ENDC']
 
-url = 'https://www.championat.com/stat/{}.json?_={}'.format(getArgs(), str(math.floor(time.time() * 1000)))
+url = 'https://www.championat.com/stat/data/{}?_={}'.format(getArgs(), str(math.floor(time.time() * 1000)))
 s = subprocess.check_output(["curl", url], stderr = open(os.devnull, 'w'))
 actions = json.loads(s)['matches']
 # actions = requests.get(url).json()['matches']

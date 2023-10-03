@@ -1,0 +1,28 @@
+{
+  "name": "igorjan94-scripts",
+  "version": "1.0.0",
+  "description": "Scripts of Igorjan94",
+  "main": "./build/index.js",
+  "bin": {
+    "photo-scripts": "./build/index.js"
+  },
+  "scripts": {
+    "tsc": "tsc -p tsconfig.json",
+    "build": "etsc --clean --config=esbuild.cjs"
+  },
+  "devDependencies": {
+    "@total-typescript/ts-reset": "^0.5.1",
+    "@types/argparse": "^2.0.11",
+    "@types/node": "^20.8.2",
+    "esbuild": "^0.17.18",
+    "esbuild-node-tsc": "^2.0.5",
+    "saas-globals": "bitbucket:Igorjan94/saas-globals#2023.10.03",
+    "typescript": "^5.2.0"
+  },
+  "author": "Igorjan94",
+  "license": "MIT",
+  "dependencies": {
+    "argparse": "^2.0.1",
+    "piexif-ts": "^2.0.16"
+  }
+}
