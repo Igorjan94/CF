@@ -9,7 +9,10 @@
     "sourceMap": true,
     "composite": true,
     "strict": true,
+<<<<<<< HEAD
     "noUncheckedIndexedAccess": true,
+=======
+>>>>>>> 8be70f422290c0c0c50e22cdba1cf56b9808c96a
     "noImplicitAny": false,
     "strictNullChecks": true,
     "moduleResolution": "node",
