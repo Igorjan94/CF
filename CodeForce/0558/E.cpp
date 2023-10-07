@@ -1,6 +1,5 @@
 // Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
 #include <bits/stdc++.h>
-#include <limits>
 #ifdef ONLINE_JUDGE
 #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #endif
@@ -34,44 +33,62 @@ void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti vo
 template<class... Args> inline void readln(Args&... args){(read(args),...);}
 template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
 
+//Igorjan
+//}}}
+
 struct Update {
-    ll u = 0;
+    // 0 -- += value
+    // 1 -- reset
+    int type = 0;
+    int value = 0;
 
     Update() {}
 
-    Update(ll u) : u(u) {}
+    Update(int type, int value) : type(type), value(value) {}
 
     void operator+=(const Update& b) {
-        u += b.u;
+        if (b.type == 1)
+            type = 1,
+            value = 0;
+        else
+            type = 0,
+            value = b.value;
     };
 
     bool empty() const {
-        return u == 0;
+        return type == 0 && value == 0;
     }
 
     void reset() {
-        u = 0;
+        type = 0;
+        value = 0;
     }
 };
 
 struct R 
 {
-    ll l;
+    int v;
+    int l;
+    int pos;
 
-    R() : l(numeric_limits<ll>::max()) {}
-    R(ll l, int pl) : l(l) {}
+    R() : v(0), l(0), pos(0) {}
+    R(int v, int pos) : v(v), l(1), pos(pos) {}
+    R(int v, int l, int pos) : v(v), l(l), pos(pos) {}
+
     R operator+(const R& b) const {
-        return R(min(l, b.l), 0);
+        return R(v + b.v, l + b.l, pos);
     }
 
     void operator+=(const Update& update) {
-        l += update.u;
+        if (update.type == 1)
+            v = 0;
+        else
+            v = update.value * l;
     }
 };
 
 ostream&operator<<(ostream&os,R const&a){return os<<a.l;}
 
-//Igorjan
 //segmentTree
 //0-indexed, [l..r]
 template<typename V, typename T, typename U>
@@ -159,42 +176,49 @@ struct segmentTree
             return left + right;
         }
     }
-
 };
 
-//}}}
+static const int z = 26;
 
 void run()
 {
-    ints(n);
-    vector<ll> a(n);
-    readln(a);
-    segmentTree<ll, R, Update> t(a);
+    ints(n, q);
     string s;
-    ints(q);
-    getline(cin, s);
+    readln(s);
+    vector<segmentTree<int, R, Update>> trees;
+    vector cnt(z, 0);
+    fori(z)
+    {
+        vector a(n, 0);
+        forj(n)
+            a[j] = s[j] - 'a' == i;
+        trees.pb(segmentTree<int, R, Update>(a));
+    }
     forn(Q, q)
     {
-        getline(cin, s);
-        stringstream ss(s);
-        int l, r, v;
-        ss >> l >> r;
-        if (ss >> v)
+        ints(l, r, k); --l; --r;
+        fori(z)
+            cnt[i] = trees[i].get(l, r).v,
+            trees[i].update(l, r, Update(1, 0));
+        if (k == 0)
         {
-            if (l <= r)
-                t.update(l, r, v);
-            else
-                t.update(l, n - 1, v),
-                t.update(0, r, v);
+            ROF(i, z - 1, 0)
+                if (cnt[i])
+                    trees[i].update(l, l + cnt[i] - 1, Update(0, 1)),
+                    l += cnt[i];
         }
         else
-        {
-            if (l <= r)
-                writeln(t.get(l, r));
-            else
-                writeln(t.get(l, n - 1) + t.get(0, r));
-        }
+            fori(z)
+                if (cnt[i])
+                    trees[i].update(l, l + cnt[i] - 1, Update(0, 1)),
+                    l += cnt[i];
     }
+    string t;
+    forj(n)
+        fori(z)
+            if (trees[i].get(j, j).v == 1)
+                t.pb('a' + i);
+    writeln(t);
 }
 
 //{{{

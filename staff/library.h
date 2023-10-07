@@ -330,65 +330,52 @@ struct fenwickTree
 
 //IgorjansegmentTree
 //0-indexed, [l..r]
-template<typename T>
+//Example: 558E, 52C
+template<typename V, typename T, typename U>
 struct segmentTree
 {
     int n;
     vector<T> t;
-    vector<T> add;
-    //vector<T> pos;
-    function<T(const T&, const T&)> f = [](const T& a, const T& b) { return min(a, b); };
-    T NEITRAL_ELEMENT = numeric_limits<T>::max();
+    vector<U> add;
  
     void push(int v, int tl, int tr)
     {
-        if (add[v] == 0) return;
-
+        if (add[v].empty()) return;
+        
         t[v] += add[v];
         if (tl != tr)
             add[v * 2] += add[v],
             add[v * 2 + 1] += add[v];
-        add[v] = 0;
+        add[v].reset();
     }
 
-    void build(const vector<T>& a, int v, int l, int r)
+    void build(const vector<V>& a, int v, int l, int r)
     {
         if (l == r)
-        {
-            t[v] = a[l];
-            //pos[v] = l;
-        }
+            t[v] = T(a[l], l);
         else 
         {
             int m = (l + r) / 2;
             build(a, v * 2, l, m);
             build(a, v * 2 + 1, m + 1, r);
-            T left = t[v * 2];
-            T right = t[v * 2 + 1];
-
-            //if (left > right)
-                //pos[v] = pos[v * 2];
-            //else
-                //pos[v] = pos[v * 2 + 1];
-            t[v] = f(left, right);
+            t[v] = t[v * 2] + t[v * 2 + 1];
         }
     };
  
-    segmentTree(const vector<T>& a)
+    segmentTree(const vector<V>& a)
     {
         n = a.size();
         t.resize(n * 4 + 10);
-        add.resize(n * 4 + 10, 0);
-        //pos.resize(n * 4 + 10, 0);
+        add.resize(n * 4 + 10);
         build(a, 1, 0, n - 1);
     }
  
-    void update(int l, int r, T value)
+    void update(int l, int r, U value)
     {
         update(1, 0, n - 1, l, r, value);
     }
  
-    void update(int v, int tl, int tr, int l, int r, T value) 
+    void update(int v, int tl, int tr, int l, int r, U value) 
     {
         push(v, tl, tr);
         if (l > r)
@@ -405,14 +392,7 @@ struct segmentTree
             int tm = (tl + tr) / 2;
             update(v * 2, tl, tm, l, min(r, tm), value);
             update(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r, value);
-            T left = t[v * 2];
-            T right = t[v * 2 + 1];
-
-            //if (left > right)
-                //pos[v] = pos[v * 2];
-            //else
-                //pos[v] = pos[v * 2 + 1];
-            t[v] = f(left, right);
+            t[v] = t[v * 2] + t[v * 2 + 1];
         }
     }
 
@@ -424,7 +404,7 @@ struct segmentTree
     T get(int v, int tl, int tr, int l, int r) 
     {
         push(v, tl, tr);
-        if (l > r) return NEITRAL_ELEMENT;
+        if (l > r) return T();
 
         if (tl == l && tr == r)
             return t[v];
@@ -433,10 +413,9 @@ struct segmentTree
             int tm = (tl + tr) / 2;
             T left = get(v * 2, tl, tm, l, min(r, tm));
             T right = get(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r);
-            return f(left, right);
+            return left + right;
         }
     }
-
 };
 
 //IgorjandisjointSparseTable

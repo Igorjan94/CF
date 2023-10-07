@@ -1,3 +1,5 @@
+source ./.env
+
 file="$1.out"
 if [[ $2 != '' ]]; then
     file="$2"
