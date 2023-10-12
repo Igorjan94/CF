@@ -1,5 +1,8 @@
-// Igorjan94, template version from 13 October 2017. C++17 version, modified 14 september 2019 (writeln<T>, main) {{{
+// Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
 #include <bits/stdc++.h>
+#ifdef ONLINE_JUDGE
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#endif
 
 using namespace std;
 
@@ -16,27 +19,22 @@ typedef  pair<int, int>   pii;
 typedef   vector<int>     vi;
 typedef    long long      ll;
 
-#define    pb    push_back
-#define whole(a) begin(a), end(a)
-#define   next   next__
-#define   prev   prev__
-#define  count   count__
+#define pb push_back
+#define all(a) begin(a), end(a)
+#define ints(a...) int a; readln(a)
 
-#define ints(a...)  int a; readln(a)
-#define wr(args...) err(#args, args)
+[[maybe_unused]] const int MOD = 1000000007;
+[[maybe_unused]] const int INTMAX = numeric_limits<int>::max();
 
 #define ttt12i template<class T1, class T2> inline
-#define  tthti template<class H, class...T> inline
-#define  ttta  template<class... Args> inline
 #define  ttti  template<class T> inline
 
-const int MOD = 1000000007;
-const int INTMAX = numeric_limits<int>::max();
-
 void writeln(){cout<<"\n";}ttti void print(T&& a);ttti void priws(T&& a);ttti void read(T& a);
-ttta void readln(Args&... args){(read(args),...);}tthti void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
-vector<string>split(string&s,string d){vector<string>v;size_t p=0;while((p=s.find(d))!=string::npos)v.pb(s.substr(0,p)),s.erase(0,p+d.length());v.pb(s);return v;}
-ttta void err(string v,Args...args){auto vv=split(v,", ");auto it=vv.begin();(writeln(*it++,"=",args),...);}
+template<class... Args> inline void readln(Args&... args){(read(args),...);}
+template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
+
+//Igorjan
+//}}}
 
 //Igorjan
 //umax
@@ -46,16 +44,9 @@ T1 umax(T1& a, T2 b)
     return a < T2(b) ? a = b : a;
 }
 
-//umin
-template<typename T1, typename T2>
-T1 umin(T1& a, T2 b)
-{
-    return a > T2(b) ? a = b : a;
-}
-
 //dijkstra
 template<typename T>
-vector<T> dijkstra(const vector<vector<int>> g, const int start)
+vector<T> dijkstra(const vector<vector<T>> g, const int start)
 {
     int n = SZ(g);
     vector<T> d(n, numeric_limits<T>::max());
@@ -75,44 +66,40 @@ vector<T> dijkstra(const vector<vector<int>> g, const int start)
     }
     return d;
 }
-
 //}}}
 
 void run()
 {
-    int n, m, k;
-    scanf("%d%d%d", &n, &m, &k);
+    ints(n, m, k);
     vi a(k);
-    fori(k)
-        scanf("%d", &a[i]), --a[i];
+    readln(a); for (int& x: a) --x;
     vector<vector<int>> g(n);
-    int u, v;
-    fori(m)
-        scanf("%d%d", &u, &v), --u, --v,
-        g[u].pb(v),
+    fori(m) 
+    {
+        ints(u, v); --u; --v;
+        g[u].pb(v);
         g[v].pb(u);
-    vector<int> d = dijkstra<int>(g, 0);
-    vector<int> b = dijkstra<int>(g, n - 1);
+    }
+    auto d = dijkstra(g, 0);
+    auto b = dijkstra(g, n - 1);
     vector<pii> dd;
     for (int x: a)
-        dd.pb({d[x], x});
-    sort(whole(dd));
-    reverse(whole(dd));
-    bool all = true;
-    fori(k - 1)
-        all &= dd[i].first > dd[i + 1].first,
-        all &= b[dd[i].second] < b[dd[i + 1].second];
-    if (!all)
-        return writeln(d[n - 1]);
-    int temp = INTMAX;
-    fori(k - 1)
-        umin(temp, dd[i].first - dd[i + 1].first);
-    writeln(d[n - 1] - temp + 1);
+        dd.pb({d[x] - b[x], x});
+    sort(all(dd));
+    int ans = 0;
+    int mx = -MOD;
+    for (const auto& [_, x]: dd) 
+    {
+        umax(ans, mx + b[x]);
+        umax(mx, d[x]);
+    }
+    writeln(min(d[n - 1], ans + 1));
 }
 
 //{{{
 int main()
 {
+    ios_base::sync_with_stdio(false); cin.tie(0);
     run();
     cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
     return 0;
