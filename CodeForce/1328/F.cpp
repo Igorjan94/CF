@@ -1,5 +1,8 @@
 // Igorjan94, template version from 13 October 2017. C++17 version, modified 18 march 2020 (writeln<tuple>, whole->all) {{{
 #include <bits/stdc++.h>
+#ifdef ONLINE_JUDGE
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#endif
 
 using namespace std;
 
@@ -31,13 +34,6 @@ template<class... Args> inline void readln(Args&... args){(read(args),...);}
 template<class H, class...T> inline void writeln(H&& h,T&&...t){priws(h);(print(t),...);writeln();}
 
 //Igorjan
-//umin
-template<typename T1, typename T2>
-T1 umin(T1& a, T2 b)
-{
-    return a > T2(b) ? a = b : a;
-}
-
 //}}}
 
 void run()
@@ -45,64 +41,32 @@ void run()
     ints(n, k);
     vi a(n);
     readln(a);
-    if (k == 1) return writeln(0);
-    auto get = [&](const vector<int>& a, int mul) {
-        map<int, set<pair<int, ll>>> ans;
-        multiset<int> s(all(a));
-        ans[*s.begin() * mul].insert({1, 0});
-        ll cnt = 1;
-        ll cur = 0;
-        auto take = [&]() {
-            int x = *s.begin();
-            s.erase(s.begin());
-            return x;
-        };
-        fori1(n)
-        {
-            int x = take();
-            int y = *s.begin();
-            cur += cnt++ * (y - x);
-            ans[mul * y].insert({i + 1, cur});
-        }
-        return ans;
-    };
-    auto ans1 = get(a, 1);
-    for (int& y: a) y *= -1;
-    auto ans2 = get(a, -1);
-    ll ans = numeric_limits<ll>::max();
-    for (auto& [key, value]: ans1)
-        for (auto& [c1, x1]: value)
-            if (c1 == k)
-                umin(ans, x1);
-    for (auto& [key, value]: ans2)
-        for (auto& [c1, x1]: value)
-            if (c1 == k)
-                umin(ans, x1);
-    auto update = [&](const auto& ans1, const auto& ans2) {
-        for (auto& [key, value]: ans1)
-        {
-            auto& [c1, x1] = *value.rbegin();
-            auto other = ans2.upper_bound(key);
-            if (other == ans2.end())
-                continue;
-            auto& [key2, value2] = *other;
-            auto& [c2, x2] = *value2.rbegin();
-            ll diff = key2 - key;
-            ll temp = x1 + x2 + (diff - 1) * c2 + (k - c1);
-            umin(ans, temp);
-        }
-    };
-    update(ans1, ans2);
-    update(ans2, ans1);
-    //writeln(ans1);
-    //writeln(ans2);
+    sort(all(a));
+    map<int, int> m;
+    for (int x: a) ++m[x];
+    for (auto& [_, c]: m)
+        if (c >= k)
+            return writeln(0);
+
+    vector p(n, 0ll), s(n, 0ll);
+    fori1(n)
+        p[i] = p[i - 1] + i * 1ll * (a[i] - a[i - 1]);
+    ROF(i, n - 2, 0)
+        s[i] = s[i + 1] + (n - i - 1) * 1ll * (a[i + 1] - a[i]);
+    int left = k - 1;
+    while (left < n && a[left] == a[k - 1]) ++left; --left; left -= k - 1;
+    int right = n - k;
+    while (right >= 0 && a[right] == a[n - k]) --right; ++right; right = n - k - right;
+    ll ans = min(p[k - 1] - left, s[n - k] - right);
+    fori(n)
+        ans = min(ans, p[i] + s[i] - n + max(k, m[a[i]]));
     writeln(max(0ll, ans));
 }
 
 //{{{
 int main()
 {
-    ios_base::sync_with_stdio(false);
+    ios_base::sync_with_stdio(false); cin.tie(0);
     run();
     cerr << fixed << setprecision(0) << "Execution time = " << 1000.0 * clock() / CLOCKS_PER_SEC << "ms\n";
     return 0;
