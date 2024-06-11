@@ -51,3 +51,4 @@ kovcg
 *.iml
 *GPS*
 CodeForce/registrants.json
+contest.platform/submit.py

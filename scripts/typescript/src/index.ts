@@ -16,11 +16,13 @@ import { copyExifFromTo } from './scripts/copy-exif-from-to'
 import { copyExifToScreenshots } from './scripts/copy-exif-to-screenshots'
 import { fixDate } from './scripts/fix-date'
 import { extractPanos } from './scripts/extract-panos'
+import { shiftDate } from './scripts/shift-date'
 
 const available = [
     copyExifFromTo,
     copyExifToScreenshots,
     fixDate,
+    shiftDate,
     extractPanos,
 ] as const
 

@@ -176,6 +176,22 @@ struct dsu
     }
 };
 
+//IgorjaneulerTotient
+int phi(int n) 
+{
+    int ans = n;
+    for (int i = 2; i * 1ll * i <= n; i++)
+        if (n % i == 0) 
+        {
+            while (n % i == 0)
+                n /= i;
+            ans -= ans / i;
+        }
+    if (n > 1)
+        ans -= ans / n;
+    return ans;
+}
+
 //Igorjansieve
 vector<bool> sieve(int n)
 {
@@ -193,10 +209,12 @@ struct linearSieve
 {
     vector<int> primes;
     vector<int> mobius;
+    vector<int> phi;
     vector<int> minPrime, prev;
 
-    linearSieve(int N)
+    linearSieve(int N, bool calcPhi = false)
     {
+        ++N;
         minPrime.resize(N, 0);
         prev.resize(N, 0);
         mobius.resize(N, 0);
@@ -217,6 +235,15 @@ struct linearSieve
                 else
                     break;
             }
+        }
+        if (calcPhi) 
+        {
+            phi.resize(N, 0);
+            iota(all(phi), 0);
+            for (int i = 2; i < N; i++)
+                if (phi[i] == i)
+                    for (int j = i; j < N; j += i)
+                        phi[j] -= phi[j] / i;
         }
     }
 
@@ -415,6 +442,49 @@ struct segmentTree
             T right = get(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r);
             return left + right;
         }
+    }
+};
+
+struct Update {
+    ll value = 0;
+ 
+    Update() {}
+ 
+    Update(ll value) : value(value) {}
+ 
+    void operator+=(const Update& b) {
+        value += b.value;
+    };
+ 
+    Update operator-() {
+        return Update(-value);
+    };
+ 
+    bool empty() const {
+        return value == 0;
+    }
+ 
+    void reset() {
+        value = 0;
+    }
+};
+ 
+struct Node 
+{
+    ll v;
+    int pos;
+    int l = 1;
+ 
+    Node() : v(0), pos(0) {}
+    Node(ll v, int pos) : v(v), pos(pos) {}
+    Node(ll v, int pos, int l) : v(v), pos(pos), l(l) {}
+ 
+    Node operator+(const Node& b) const {
+        return Node(v + b.v, min(pos, b.pos), l + b.l);
+    }
+ 
+    void operator+=(const Update& update) {
+        v += update.value * l;
     }
 };
 
@@ -2066,6 +2136,63 @@ struct heavyLight
         int left = tree.get(index[u], index[first[u]]);
         return f(left, get(parent[first[u]], v));
     }
+};
+
+//IgorjanRerooter
+template<class T, class E>
+struct Rerooter {
+	int n;
+	vector<vector<E>> g;
+	vector<vector<T>> pre, suf;
+    vector<T> res;
+
+	Rerooter(const vector<vector<E>>& g, bool addVertexToAns = false)
+    {
+        this->g = g;
+        n = g.size();
+        res.resize(n);
+        pre.resize(n);
+        suf.resize(n);
+        fori(n)
+        {
+			pre[i].resize(SZ(g[i]) + 1);
+			suf[i].resize(SZ(g[i]) + 1);
+		}
+		down(0);
+		up(0);
+        fori(n)
+            res[i] = addVertexToAns
+                ? pre[i].back().promote(i, Edge())
+                : pre[i].back();
+                
+	}
+
+	T get(int u, int i = 0)
+    {
+		T& v = suf[u][i + 1];
+		if (i) v = pre[u][i] + v; 
+		return v.promote(u, g[u][i]);
+	};
+
+	T down(int u, int p = -1)
+    {
+        fori(SZ(g[u]))
+            if (g[u][i].getTo() == p)
+                swap(g[u][i], g[u][0]);
+		for (int i = SZ(g[u]) - 1; i > -(p < 0); --i)
+			suf[u][i] = down(g[u][i].getTo(), u) + suf[u][i + 1];
+		return get(u);
+	}
+
+	void up(int u, int p = -1) {
+        for (int i = p != -1; i < SZ(g[u]); ++i)
+        {
+            int v = g[u][i].getTo();
+			pre[u][i + 1] = pre[u][i] + get(v);
+			pre[v][1] = get(u, i);
+			up(v, u);
+		}
+	}
 };
 
 //IgorjanEndIfIgorjan

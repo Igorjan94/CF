@@ -1,6 +1,10 @@
 import fs, { utimesSync } from 'fs'
-import { Exif, ExifRecord, dumpExif, exec, getExif } from './exif'
+import { Exif, ExifRecord, dumpExif, exec, fixVideoDate, getExif } from './exif'
 import { getType } from 'mime'
+
+import initDebug from '../debug-instance'
+
+const debug = initDebug(__filename)
 
 const dateKeys = [
     'Exif.Image.DateTime',
@@ -27,7 +31,7 @@ const getCreatedDateFromExif = async (filename: string): Promise<string | undefi
                 return date.replace(':', '-').replace(':', '-') + '.000 +0000'
         }
     } else if (type?.startsWith('video')) {
-        const { stdout } = await exec(`ffmpeg -i ${filename} 2>&1 | grep creation_time | head -1`)
+        const { stdout } = await exec(`ffmpeg -i "${filename}" 2>&1 | grep creation_time | head -1`)
         return stdout.pysplit(': ', 1)?.[1]?.trim()
     }
     return undefined
@@ -59,6 +63,10 @@ const getDate = async (filename: string): Promise<Date | undefined> => {
 
 const updateDateInExif = async (filename: string, date?: Date) => {
     if (!date) return
+    const type = getType(filename)
+    if (type?.startsWith('video')) {
+        return fixVideoDate(filename, date)
+    }
     if (!getType(filename)?.startsWith('image')) return
     const exif: Exif = {}
     const dateString = date.toISOString().replace('T', ' ').substring(0, 19).replace(/-/g, ':')
@@ -85,6 +93,20 @@ export const fixPhotoDate = async (filename: string, timezone?: number) => {
     if (timezone && date) {
         date.setHours(date.getHours() + timezone)
     }
+    await setPhotoDate(filename, date)
+}
+
+export const setPhotoDate = async (filename: string, date?: Date) => {
     await updateDateInExif(filename, date)
+    if (date)
+        date.setHours(date.getHours() - 3)
     setCreationDate(filename, date)
+}
+
+export const shiftPhotoDate = async (filename: string, diff: number) => {
+    const date = await getDate(filename)
+    validate(date, 'No date found in file')
+    date.setTime(date.getTime() + diff)
+    debug(filename, date)
+    await setPhotoDate(filename, date)
 }

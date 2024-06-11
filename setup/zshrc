@@ -459,7 +459,6 @@ export PATH="/home/igorjan/206round/timetable:${PATH}"
 export PATH="/home/igorjan/206round/staff:${PATH}"
 export PATH="/home/igorjan/206round/vk200/out:${PATH}"
 export PATH="/home/igorjan/206round/scripts:${PATH}"
-export PATH="/home/igorjan/cpt:${PATH}"
 
 
 alias h='htop'

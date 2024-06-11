@@ -71,7 +71,8 @@ if load:
         stop = False
         url = f'https://codeforces.com/contests/page/{i}?locale=ru&complete=true'
         print(f'Loading {i}-th page of contests')
-        html = requests.get(url).text.split('\n', 2)[2]
+        raw = requests.get(url).text
+        html = raw.split('\n', 2)[2]
         page = BeautifulSoup(html, 'html5lib')
         for tr in page.body.find('div', attrs={'class': 'contests-table'}).find('div', attrs={'class': 'datatable'}).find_all('tr'):
             cid = tr.get('data-contestid')
@@ -146,10 +147,10 @@ def draw(title, rounds):
 draw('div1', div1)
 draw('div2', div2)
 draw('div3', div3)
+draw('div4', div4)
 draw('educ', educ)
 draw('comb', comb)
-# draw('othe', othe)
-# draw('div4', div4)
+draw('othe', othe)
 def x(t):
     return list(map(lambda g: g.name.find(t) >= 0, data))
 
@@ -165,7 +166,7 @@ roundButtons = [
     getButton('All', f = ''),
     getButton('Par', f = 'part'),
     getButton('Reg', f = 'reg'),
-    *[getButton(t) for t in ['div1', 'div2', 'div3', 'educ', 'comb', 'othe', 'div4']]
+    *[getButton(t) for t in ['div1', 'div2', 'div3', 'div4', 'educ', 'comb', 'othe']]
 ]
 
 fig = go.Figure(data = data)
