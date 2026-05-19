@@ -15,7 +15,7 @@
     "@types/argparse": "^2.0.11",
     "@types/mime": "^3.0.2",
     "@types/node": "^20.8.2",
-    "esbuild": "^0.17.18",
+    "esbuild": "^0.25.0",
     "esbuild-node-tsc": "^2.0.5",
     "saas-globals": "bitbucket:Igorjan94/saas-globals#2023.10.03",
     "typescript": "^5.2.0"
